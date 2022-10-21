@@ -148,8 +148,6 @@ const generateTimeBars = (data) => {
             validTimeBar = `${mLen}:${qLen}:0`
         }
 
-
-
         withTimeBars.push({
             ...d,
             timeBar: validTimeBar
@@ -160,10 +158,11 @@ const generateTimeBars = (data) => {
 }
 
 const noteLens = [
+    // { name: "1m", value: 4, num: 1, mod: 'm'},
     { name: "1n", value: 1, num: 1, mod: 'n' },
     { name: "2n", value: 0.5, num: 2, mod: 'n' },
     { name: "4n", value: 0.25, num: 4, mod: 'n' },
-    { name: "8n", value: 0.08, num: 8, mod: 'n' }
+    // { name: "8n", value: 0.08, num: 8, mod: 'n' }
 ]
 
 const generateNoteLen02 = (data) => {
@@ -213,7 +212,7 @@ const generateTimeBars02 = (data) => {
             }
 
             if (previousQn === 1) {
-                qTime = qTime + 4
+                mTime = mTime + 1
             }
 
             if (sTime > 16) {
@@ -226,15 +225,6 @@ const generateTimeBars02 = (data) => {
                 mTime = mTime + 1
             }
 
-            
-
-            // let qTime = Number(previousQTime) + previousQn
-
-            // if (qTime > 4) {
-            //     qTime = qTime % 4
-            //     mTime = mTime + 1
-            // }
-
             validTimeBar = `${mTime}:${qTime}:${sTime}`
         }
 
@@ -243,6 +233,18 @@ const generateTimeBars02 = (data) => {
     })
 
     return withTimeBars;
+}
+
+const doTrimNotes = (data) => {
+    const trimmed = [];
+    data.map(d => {
+        if (d.notes.length > 2) {
+            d.notes = d.notes.slice(0, 2)
+        }
+        trimmed.push(d)
+    })
+
+    return trimmed
 }
 
 export const buildLoop = (data) => {
@@ -255,7 +257,10 @@ export const buildLoop = (data) => {
     const withTimeBars = generateTimeBars02(withNoteLen)
     console.log('withTimeBars:', withTimeBars)
 
-    return withTimeBars
+    const trimNotes = doTrimNotes(withTimeBars)
+    console.log("trimNotes:", trimNotes)
+
+    return trimNotes
 
 
 

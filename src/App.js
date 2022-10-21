@@ -14,67 +14,50 @@ function App() {
   }
 
   // const getKeyData = (tonic, scale) => scale === "major" ? setChords(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
-  
+
   const setChords = (data) => setStateChords(processMajor(data))
 
   const handleBuildLoop = (data) => setStateChords(buildLoop(data))
   const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
- 
 
-
-  // const noteLens = ["1n", "2n", "4n", "8n"]
-
-
-  // console.log(Progression.fromRomanNumerals("C", progs[0]))
+  const stopTransport = () => Tone.Transport.stop()
 
   const playNotes = () => {
     Tone.Transport.bpm.value = 120;
     const now = Tone.now();
 
-    const synth = new Tone.PolySynth(Tone.FMSynth).toDestination()
+    // const synth = new Tone.PolySynth(Tone.FMSynth).toDestination()
 
-    // const chordToPlay = stateChords[getRand(0, Object.keys(stateChords).length)].notes
-    // const withOct = chordToPlay.map((c, i) => c = c + (i === chordToPlay.length - 1 ? 4 : 3))
+    const piano01 = new Tone.Sampler({
+      urls: {
+        A3: "a-3.mp3",
+        A4: "a-4.mp3",
+        B3: "b3.mp3",
+        B4: "b4.mp3",
+        C3: "c-3.mp3",
+        C4: "c-4.mp3",
+        D3: "d-3.mp3",
+        D4: "d-4.mp3",
+        E3: "e3.mp3",
+        E4: "e4.mp3",
+        F3: "f-3.mp3",
+        F4: "f-4.mp3",
+        G3: "g-3.mp3",
+        G4: "g-4.mp3",
+      },
+      release: 1,
+      baseUrl: "http://localhost:3000/samples/",
+    }).toDestination();
 
-    
-
-    // const slimOct = [];
-    // // if (withOct.length > 3) {
-    //   const amountToGet = 3;
-    //   for (let i = 1; i <= amountToGet; i += 1) {
-    //     slimOct.push(withOct[getRand(0, withOct.length)])
-    //   }
-    // // }
-
-    // console.log('slimOct:', slimOct)
-
-    // stateChords.map((s, i) => {
-    //   // console.log('s.notes:', s.notes + 3)
-    //   synth.triggerAttackRelease(s.notes + 3, "2n", now)
-    // })
-
-    // const makeBars = () => {}
-
-    // makeLoop({ notes: withOct, len: "2n"})
-
-    // console.log('chordToPlay:', chordToPlay)
-    // console.log('withOct:', withOct)
-    
-    stateChords.map(c => {
-      synth.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
+    Tone.loaded().then(() => {
+      stateChords.map(c => {
+        piano01.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
+      })
     })
-    
 
-    // const loop01 = new Tone.Loop((time) => {
-
-    //   synth.triggerAttackRelease(slimOct, "4n")
-    // }).start("0:0:0").stop('1:0:0')
-
-    Tone.Transport.start()
-    // introLoop()
-    // synth.triggerAttackRelease(withOct[1], "2n", now + 1)
-    // synth.triggerAttackRelease(withOct[2], "2n", now + 2)
-    // synth.triggerAttackRelease(withOct[3], "2n", now + 3)
+    // stateChords.map(c => {
+    //   synth.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
+    // })
   }
 
   return (
@@ -83,6 +66,7 @@ function App() {
       <Button onClick={playNotes} label="Play Notes" />
       <br />
       <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" />
+      <Button onClick={stopTransport} label="Stop Transport" />
     </div>
   );
 }
