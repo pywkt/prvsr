@@ -23,13 +23,34 @@ export const getProgression = (tonic) => {
 
 }
 
-export const processMajor = (data, useProg) => {
+export const processMajor = (data, useProg, amount) => {
     // console.log('processMajor data:', data)
+    const maxedAmount = [];
+    // console.log('amount:', amount)
     const { chordScales, tonic } = data
     const randScale = chordScales[getRand(0, chordScales.length)]
     const randScaleData = { ...Scale.get(randScale), chords: Scale.scaleChords(randScale) }
 
+    // const withAmount = () => {
+    //     const maxedAmount = [];
+    //     for (let i = 0; i <= amount; i += 1) {
+    //         maxedAmount.push(data[getRand(0, randScaleData.length)])
+    //     }
+
+    //     return maxedAmount;
+    // }
+
+    // const fff = withAmount()
+
+    // console.log('***:', fff)
+
     const chordsToUse = [];
+
+    // if (amount) {
+    //     for (let i = 0; i <= 20; i += 1) {
+    //         chordsToUse.push(chordsToUse[getRand(0, chordsToUse.length)])
+    //     }
+    // } else {
     randScaleData.notes.forEach(note => {
         const currentChord = Chord.getChord(randScaleData.chords[getRand(0, randScaleData.chords.length)], randScaleData.notes[getRand(0, randScaleData.notes.length)])
 
@@ -41,13 +62,38 @@ export const processMajor = (data, useProg) => {
 
         chordsToUse.push({ notes: currentChord.notes, symbol: currentChord.symbol, name: currentChord.name })
     })
+    // }
+
+    // console.log('chordsToUse:', chordsToUse)
 
     // console.log('chordsToUse:', chordsToUse)
 
     const progOut = getProgression(tonic)
     // console.log("progOut:", progOut)
 
-    return useProg ? progOut : chordsToUse
+    // console.log('ch:', chordsToUse)
+
+    const withAmount = () => {
+        for (let i = 0; i <= 20; i += 1) {
+            maxedAmount.push(chordsToUse[getRand(0, chordsToUse.length)])
+        }
+    }
+
+    if (amount) {
+        withAmount()
+    }
+
+    // console.log('***:', maxedAmount)
+
+    if (useProg) {
+        return progOut;
+    } else if (amount) {
+        return maxedAmount;
+    } else {
+        return chordsToUse
+    }
+
+    // return useProg ? progOut : chordsToUse
 
 }
 
@@ -104,22 +150,6 @@ const generateNoteLen = (data) => {
     return withNoteLen
 }
 
-// const trimDupes = (data) => {
-//     console.log('trimDupes:', data)
-//     const trimmedDupes = [];
-
-//     data.map((d, i, a) => {
-//         const dReg = d.noteLen.match(/(\d+)([a-z])/)
-//         // const timeSplit = d.timeBars.split(':')
-//         // console.log('timesplit:', timeSplit)
-//         console.log('dReg:', dReg)
-//         // if (dReg[1])
-//     })
-
-//     return trimmedDupes;
-
-// }
-
 const generateTimeBars = (data) => {
     const withTimeBars = [];
     const noteReg = /(\d+)([a-z])/
@@ -127,7 +157,7 @@ const generateTimeBars = (data) => {
 
     data.map((d, i, a) => {
         const noteNumber = d.noteLen.match(/(\d+)([a-z])/)[1]
-        console.log(noteNumber)
+        // console.log(noteNumber)
 
         let validTimeBar;
         if (i === 0) {
@@ -158,7 +188,7 @@ const generateTimeBars = (data) => {
 }
 
 const noteLens = [
-    // { name: "1m", value: 4, num: 1, mod: 'm'},
+    // { name: "1m", value: 4, num: 1, mod: 'm' },
     { name: "1n", value: 1, num: 1, mod: 'n' },
     { name: "2n", value: 0.5, num: 2, mod: 'n' },
     { name: "4n", value: 0.25, num: 4, mod: 'n' },
@@ -181,65 +211,58 @@ const generateNoteLen02 = (data) => {
 }
 
 const generateTimeBars02 = (data) => {
-    console.log('data:', data)
+    console.log('data time:', data)
     const withTimeBars = [];
-    let validTimeBar;
+    const newTimeBar = []
+    let validTimeBar = null;
     let mTime = 0;
     let qTime = 0;
     let sTime = 0;
 
-    data.map((d, i, a) => {
-        const { name, num, value } = d.noteData
-
+    data.map((d, i) => {
         if (i === 0) {
-            validTimeBar = "0:0:0"
+            withTimeBars.push({ ...d, tBar: "0:0:0" })
+
         } else {
-            let previousQn = withTimeBars[i - 1].noteData.num
-            let previousTime = withTimeBars[i - 1].timeBar
-            let previousQTime = previousTime.split(':')[1]
-            let previousMTime = previousTime.split(':')[0]
+            // console.log(data[i - 1])
+            const prev = data[i - 1]
+            const prevName = prev.noteData.name
 
-            if (previousQn === 8) {
-                sTime = sTime + 8
+            if (prevName === "4n") {
+                qTime = qTime += 1
             }
 
-            if (previousQn === 4) {
-                qTime = qTime + 1
+            if (prevName === "2n") {
+                qTime = qTime += 2
             }
 
-            if (previousQn === 2) {
-                qTime = qTime + 2
-            }
-
-            if (previousQn === 1) {
-                mTime = mTime + 1
-            }
-
-            if (sTime > 16) {
-                sTime = sTime % 16
-                qTime = qTime + 1
+            if (prevName === "1n") {
+                qTime = qTime += 4
             }
 
             if (qTime > 4) {
-                qTime = qTime % 4
-                mTime = mTime + 1
+                mTime = mTime += 1
+                qTime = qTime % 5
             }
 
             validTimeBar = `${mTime}:${qTime}:${sTime}`
+
+            withTimeBars.push({ ...d, tBar: validTimeBar })
         }
-
-        withTimeBars.push({ ...d, timeBar: validTimeBar })
-
     })
+
+    console.log('newTimeBar 0202020:', newTimeBar)
+    console.log('withTimeBars:', withTimeBars)
 
     return withTimeBars;
 }
 
-const doTrimNotes = (data) => {
+const doTrimNotes = (data, unisonCount) => {
+    // console.log('data trim:', data)
     const trimmed = [];
     data.map(d => {
-        if (d.notes.length > 2) {
-            d.notes = d.notes.slice(0, 2)
+        if (d.notes.length > 1) {
+            d.notes = d.notes.slice(0, unisonCount)
         }
         trimmed.push(d)
     })
@@ -247,21 +270,108 @@ const doTrimNotes = (data) => {
     return trimmed
 }
 
-export const buildLoop = (data) => {
-    const chordObj = processMajor(data)
-    const withOct = addOct(chordObj)
+const doMakeBars = (data, amountOfBars) => {
+    // console.log('data01:', data)
+    const bars = [];
 
-    const withNoteLen = generateNoteLen02(withOct)
-    // console.log('withNoteLen:', withNoteLen)
+    data.forEach(d => {
+        if (d.tBar.split(':')[0] < amountOfBars) {
+            bars.push(d)
+        }
+    })
 
-    const withTimeBars = generateTimeBars02(withNoteLen)
-    console.log('withTimeBars:', withTimeBars)
+    return bars;
+}
 
-    const trimNotes = doTrimNotes(withTimeBars)
-    console.log("trimNotes:", trimNotes)
+const makeLoops = (data, loopTimes) => {
+    // console.log('data:', data)
+    const finalLoops = [];
+    const newLoop = [];
 
-    return trimNotes
+    // Push in data x amount of loopTimes
+    for (let i = 1; i < loopTimes; i += 1) {
+        data.forEach(d => finalLoops.push(d))
+    }
+
+    // console.log('finalLoops:', finalLoops)
+
+    // console.log("data.length:", data.length)
+    finalLoops.forEach((f, i) => {
+        let measure = Number(f.tBar.split(":")[0])
+
+        // console.log("i:", i)
+        if (i <= data.length) {
+            newLoop.push(f)
+        } else if (i >= data.length - 1) {
+            // console.log("measure:", measure, i)
+            measure = measure += 4
+            f.tBar = `${measure}:0:0`
+            newLoop.push(f)
+        }
+    })
+
+    return newLoop;
+}
+
+const doMakeLoops = (data, loopCount, maxBars) => {
+    console.log('doMakeLoops data:', data)
+    const allLoops = [];
+    const newLoops = [];
+    const oneBarLoop = [];
+    const highestMVal = Number(data[data.length - 1].tBar[0])
+    console.log("highest:", highestMVal)
+    let barCount = highestMVal;
+
+    for (let i = 1; i <= loopCount; i += 1) {
+        allLoops.push(...data)
+    }
+
+    console.log('data.length:', data.length)
+
+    allLoops.map((a, i) => {
+        const tBar = a.tBar
+        const splitTbar = tBar.split(':')
+        const mVal = splitTbar[0]
+        const mValNum = Number(mVal)
+        const prevMbar = i !== 0 && Number(allLoops[i - 1].tBar.split(":")[0])
+
+        if (maxBars === 1) {
+            if (i !== 0 && i % data.length === 0) {
+                barCount += 1
+            }
+            oneBarLoop.push({...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}}` })
+        }
 
 
 
+        if (i !== 0 && ((prevMbar !== mValNum))) {
+            barCount += 1
+        }
+
+        if (i > data.length - 1) {
+            newLoops.push({ ...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}}` })
+        } else {
+            newLoops.push(a)
+        }
+    })
+
+    return maxBars === 1 ? oneBarLoop : newLoops;
+}
+
+export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
+    const chordObj = processMajor(data, false, 20);
+    const withOct = addOct(chordObj);
+    const withNoteLen = generateNoteLen02(withOct);
+    const withTimeBars = generateTimeBars02(withNoteLen);
+    // console.log('withTime:', withTimeBars)
+
+    const trimNotes = doTrimNotes(withTimeBars, unisonCount);
+    // console.log("trimNotes:", trimNotes)
+
+    const makeBars = doMakeBars(trimNotes, maxBars);
+    console.log('makeBars:', makeBars)
+
+    const looped = doMakeLoops(makeBars, loopTimes, maxBars)
+    console.log('looped:', looped)
+    return maxBars ? makeBars : trimNotes
 }
