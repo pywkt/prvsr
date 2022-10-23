@@ -192,7 +192,7 @@ const noteLens = [
     { name: "1n", value: 1, num: 1, mod: 'n' },
     { name: "2n", value: 0.5, num: 2, mod: 'n' },
     { name: "4n", value: 0.25, num: 4, mod: 'n' },
-    // { name: "8n", value: 0.08, num: 8, mod: 'n' }
+    { name: "8n", value: 0.08, num: 8, mod: 'n' }
 ]
 
 const generateNoteLen02 = (data) => {
@@ -228,6 +228,10 @@ const generateTimeBars02 = (data) => {
             const prev = data[i - 1]
             const prevName = prev.noteData.name
 
+            if (prevName === "8n") {
+                sTime = sTime += 2
+            }
+
             if (prevName === "4n") {
                 qTime = qTime += 1
             }
@@ -238,6 +242,11 @@ const generateTimeBars02 = (data) => {
 
             if (prevName === "1n") {
                 qTime = qTime += 4
+            }
+
+            if (sTime >= 16) {
+                qTime = qTime += 1
+                sTime = sTime % 16
             }
 
             if (qTime >= 4) {

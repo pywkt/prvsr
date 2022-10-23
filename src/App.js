@@ -26,7 +26,7 @@ function App() {
    * @param {number} loopTimes
    * @returns 
    */
-  const handleBuildLoop = (data) => setStateChords(buildLoop(data, 3, 4, 4))
+  const handleBuildLoop = (data) => setStateChords(buildLoop(data, 1, 2, 4))
   const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
 
   const stopTransport = () => Tone.Transport.stop()
