@@ -240,9 +240,9 @@ const generateTimeBars02 = (data) => {
                 qTime = qTime += 4
             }
 
-            if (qTime > 4) {
+            if (qTime >= 4) {
                 mTime = mTime += 1
-                qTime = qTime % 5
+                qTime = qTime % 4
             }
 
             validTimeBar = `${mTime}:${qTime}:${sTime}`
@@ -339,17 +339,15 @@ const doMakeLoops = (data, loopCount, maxBars) => {
             if (i !== 0 && i % data.length === 0) {
                 barCount += 1
             }
-            oneBarLoop.push({...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}}` })
-        }
 
-
-
-        if (i !== 0 && ((prevMbar !== mValNum))) {
-            barCount += 1
-        }
+            oneBarLoop.push({ ...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}` })
+        } else
+            if (i !== 0 && ((prevMbar !== mValNum))) {
+                barCount += 1
+            }
 
         if (i > data.length - 1) {
-            newLoops.push({ ...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}}` })
+            newLoops.push({ ...a, tBar: `${barCount - highestMVal}:${splitTbar[1]}:${splitTbar[2]}` })
         } else {
             newLoops.push(a)
         }
@@ -373,5 +371,6 @@ export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
 
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)
     console.log('looped:', looped)
-    return maxBars ? makeBars : trimNotes
+
+    return looped
 }

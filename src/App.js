@@ -8,7 +8,7 @@ import { allNotes, buildLoop, getRand, processMajor } from './util';
 
 function App() {
   const [stateChords, setStateChords] = useState({})
-  // console.log('state:', stateChords)
+  console.log('state:', stateChords)
 
   const processMinor = (data) => {
     console.log('processMinor data:', data)
@@ -26,7 +26,7 @@ function App() {
    * @param {number} loopTimes
    * @returns 
    */
-  const handleBuildLoop = (data) => setStateChords(buildLoop(data, 1, 2, 2))
+  const handleBuildLoop = (data) => setStateChords(buildLoop(data, 3, 4, 4))
   const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
 
   const stopTransport = () => Tone.Transport.stop()
@@ -46,8 +46,14 @@ function App() {
     Tone.loaded().then(() => {
 
       stateChords.map(c => {
+        console.log(c)
         piano01.triggerAttackRelease(c.notes, c.noteData.name, c.tBar)
       })
+
+      // const loop = stateChords.map(c => {
+      //   console.log(c)
+      //   piano01.triggerAttackRelease(c.notes, c.noteData.name, c.tBar)
+      // })
 
       // const notes = () => stateChords.map(c => {
       //   return piano01.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
@@ -60,7 +66,7 @@ function App() {
 
     Tone.start()
     // loop01.start();
-    Tone.Transport.start()
+    // Tone.Transport()
     // loop01.start()
   }
 
