@@ -11,17 +11,15 @@ function App() {
   const { register, handleSubmit, setValue } = useForm();
 
   const [stateChords, setStateChords] = useState([])
-  console.log('state:', stateChords)
+  const [scaleData, setScaleData] = useState({})
+  console.log('stateChords:', stateChords)
+  console.log('scaleData:', scaleData)
 
-  const tempChords = useRef([])
+  const currentScaleData = useRef({})
 
   const processMinor = (data) => {
     console.log('processMinor data:', data)
   }
-
-  // const getKeyData = (tonic, scale) => scale === "major" ? setChords(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
-
-  // const setChords = (data) => setStateChords(processMajor(data))
 
   /**
    * buildLoop()
@@ -32,91 +30,42 @@ function App() {
    * @returns 
    */
   const handleBuildLoop = (data) => {
-    const currentLoop = buildLoop(data, 1, 2, 4)
+    console.log('buildLoop:', data)
+    const currentLoop = buildLoop(data, 1, 4, 1)
     // tempChords.current = currentLoop
-    setStateChords(currentLoop)
-    setValue("editedJson", JSON.stringify(currentLoop, null, 2))
+    setStateChords(currentLoop.partData)
+    setScaleData(currentLoop.scaleData)
+    currentScaleData.current = currentLoop.scaleData
+    setValue("editedJson", JSON.stringify(currentLoop.partData, null, 2))
   }
   const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
 
   const playNotes = () => {
     Tone.Transport.bpm.value = 120;
-    const now = Tone.now();
 
     // const synth = new Tone.DuoSynth().toDestination()
-    // const synth = new Tone.PolySynth(Tone.MonoSynth, {
-    //   oscillator: {
-    //     type: "am"
-    //   },
-    //   envelope: {
-    //     attack: 0.0
-    //   }
-    // }).toDestination();
-
-    // const notes = (time) => stateChords.map(c => {
-    //     return piano01.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
-    //   })
-
-    //   console.log('notes:', notes())
-    // Tone.start()
-    // Tone.Transport.start(0)
 
     Tone.loaded().then(() => {
-
-      // Tone.Transport.schedule((time) => {
-      // console.log('schedule:', time)
       stateChords.map(c => {
-        // console.log(Tone.now())
         Tone.Transport.schedule((time) => {
           piano01.triggerAttackRelease(c.notes, c.noteData.name)
         }, c.tBar)
-
       })
-      // }, "0:0:0")
-
-
-      // const loop = stateChords.map(c => {
-      //   console.log(c)
-      //   piano01.triggerAttackRelease(c.notes, c.noteData.name, c.tBar)
-      // })
-
-      // const notes = () => stateChords.map(c => {
-      //   return piano01.triggerAttackRelease(c.notes, c.noteData.name, c.timeBar)
-      // })
-      // console.log('notes:', notes())
-
     })
-
-
-
-
-    // loop01.start();
-
-    // loop01.start()
   }
 
   const startTransport = () => {
-
     Tone.start();
     Tone.Transport.start()
-    // console.log(Tone.Transport)
   }
 
   const pauseTransport = () => {
     const currentTime = Tone.Transport.now()
-    // console.log(Tone.now())
-    // Tone.Transport.cancel(currentTime)
-    // Tone.start()
     Tone.Transport.pause(currentTime + 0.4)
-
-    // Tone.Transport.start("+1", "0:0:0")
-    // Tone.Transport.pause(currentTime + 0.2)
   }
 
   const stopTransport = () => {
     Tone.Transport.stop()
-    // Tone.Transport.cancel()
-    // Tone.Transport.seconds = 0
   }
 
   const logTime = () => {
@@ -126,21 +75,13 @@ function App() {
     console.log('propositiongress:', position)
   }
 
-  // const updateTempChords = (e) => {
-  //   console.log("temp:" ,e.target.value)
-  //   tempChords.current = JSON.stringify(e).target.value
-  //   setValue("editedJson", e.target.value)
-  // }
-
   const onSubmit = (data) => {
-    // console.log(data.editedJson)
     Tone.Transport.clear()
     Tone.Transport.cancel()
     setStateChords(JSON.parse(data.editedJson))
 
     Tone.loaded().then(() => {
       JSON.parse(data.editedJson).map(c => {
-        // console.log(Tone.now())
         Tone.Transport.schedule((time) => {
           piano01.triggerAttackRelease(c.notes, c.noteData.name)
         }, c.tBar)
@@ -152,7 +93,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="Get Data" /> */}
       <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" />
       <Button onClick={playNotes} label="Play Notes" />
       <Button onClick={logTime} label="Log Time" />
@@ -169,6 +109,10 @@ function App() {
         <br />
         <Button type="submit" label="update stateChords" />
       </form>
+
+      <p>
+        <strong>{scaleData?.name}</strong>
+      </p>
 
     </div>
   );

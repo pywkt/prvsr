@@ -5,52 +5,31 @@ export const allNotes = ["C", "D", "E", "F", "G", "A", "B", "Cb", "Db", "Eb", "F
 export const getRand = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 export const getProgression = (tonic) => {
-    // console.log('tonic:', Chord.get(tonic))
     const progs = [["I", "V", "vi", "IV"], ["I", "IV", "V", "I"]];
-
     const prog = Progression.fromRomanNumerals(tonic, progs[getRand(0, progs.length)]);
-    // console.log('prog in func:', prog)
 
     const progArr = [];
     prog.forEach(p => {
         const currentNote = Chord.get(p)
         const cleanNotes = currentNote.notes.map(n => n = Note.simplify(n))
-        // console.log('clean:', cleanNotes)
         progArr.push({ notes: cleanNotes, symbol: currentNote.symbol, name: currentNote.name })
     })
-    // console.log('prog02:', progArr)
     return progArr
 
 }
 
 export const processMajor = (data, useProg, amount) => {
-    // console.log('processMajor data:', data)
     const maxedAmount = [];
-    // console.log('amount:', amount)
+    const chordsToUse = [];
     const { chordScales, tonic } = data
+
+    // Get a random scale from the random chord
     const randScale = chordScales[getRand(0, chordScales.length)]
+
+    // Get the data for the scale
     const randScaleData = { ...Scale.get(randScale), chords: Scale.scaleChords(randScale) }
 
-    // const withAmount = () => {
-    //     const maxedAmount = [];
-    //     for (let i = 0; i <= amount; i += 1) {
-    //         maxedAmount.push(data[getRand(0, randScaleData.length)])
-    //     }
-
-    //     return maxedAmount;
-    // }
-
-    // const fff = withAmount()
-
-    // console.log('***:', fff)
-
-    const chordsToUse = [];
-
-    // if (amount) {
-    //     for (let i = 0; i <= 20; i += 1) {
-    //         chordsToUse.push(chordsToUse[getRand(0, chordsToUse.length)])
-    //     }
-    // } else {
+    // Get a random chord for every note in the scale
     randScaleData.notes.forEach(note => {
         const currentChord = Chord.getChord(randScaleData.chords[getRand(0, randScaleData.chords.length)], randScaleData.notes[getRand(0, randScaleData.notes.length)])
 
@@ -62,19 +41,13 @@ export const processMajor = (data, useProg, amount) => {
 
         chordsToUse.push({ notes: currentChord.notes, symbol: currentChord.symbol, name: currentChord.name })
     })
-    // }
 
-    // console.log('chordsToUse:', chordsToUse)
-
-    // console.log('chordsToUse:', chordsToUse)
-
+    // Needs work. ToDo: Pick a random progression from the list and generate the chords and put them in order
     const progOut = getProgression(tonic)
-    // console.log("progOut:", progOut)
 
-    // console.log('ch:', chordsToUse)
-
+    // Pick n amount of notes from the chords that were generated above
     const withAmount = () => {
-        for (let i = 0; i <= 20; i += 1) {
+        for (let i = 0; i <= amount; i += 1) {
             maxedAmount.push(chordsToUse[getRand(0, chordsToUse.length)])
         }
     }
@@ -83,18 +56,15 @@ export const processMajor = (data, useProg, amount) => {
         withAmount()
     }
 
-    // console.log('***:', maxedAmount)
+    console.log("randScale:", randScaleData)
 
     if (useProg) {
         return progOut;
     } else if (amount) {
-        return maxedAmount;
+        return {partData: maxedAmount, scaleData: randScaleData};
     } else {
         return chordsToUse
     }
-
-    // return useProg ? progOut : chordsToUse
-
 }
 
 const addOct = (data) => {
@@ -113,78 +83,6 @@ const addOct = (data) => {
     })
 
     return slimOct;
-}
-
-const makeBars = () => {
-    const measure = getRand(0, 4)
-    const quarter = getRand(0, 4)
-    const sixteenth = getRand(0, 16)
-    // return `${measure}:${quarter}:${sixteenth}`
-    return `${measure}:${quarter}:0`
-}
-
-const makeNoteLen = () => {
-    // const noteLens = ["1n", "2n", "4n", "8n"]
-    const noteLens = [
-        { name: "1n", value: 1 },
-        { name: "2n", value: 0.5 },
-        { name: "4n", value: 0.25 },
-        { name: "8n", value: 0.08 }
-    ]
-    return noteLens[getRand(0, noteLens.length)]
-}
-
-const generateNoteLen = (data) => {
-    // console.log('generateTime data:', data)
-    const withNoteLen = [];
-
-    data.map(d => {
-        withNoteLen.push({
-            ...d,
-            // timeBars: makeBars(),
-            noteLen: makeNoteLen()
-        })
-
-    })
-
-    return withNoteLen
-}
-
-const generateTimeBars = (data) => {
-    const withTimeBars = [];
-    const noteReg = /(\d+)([a-z])/
-    let mLen = 0
-
-    data.map((d, i, a) => {
-        const noteNumber = d.noteLen.match(/(\d+)([a-z])/)[1]
-        // console.log(noteNumber)
-
-        let validTimeBar;
-        if (i === 0) {
-            validTimeBar = "0:0:0"
-            console.log('one')
-        }
-        else {
-            let qLen = (withTimeBars[i - 1].noteLen).match(/\d+/)[0]
-            let previousBeat = String((withTimeBars[i - 1].timeBar)).split(':')[1]
-
-            qLen = Number(qLen) + Number(previousBeat)
-
-            if ((previousBeat + qLen) > 4) {
-                qLen = qLen % 4
-                mLen = mLen + 1
-            }
-
-            validTimeBar = `${mLen}:${qLen}:0`
-        }
-
-        withTimeBars.push({
-            ...d,
-            timeBar: validTimeBar
-        })
-    })
-
-    return withTimeBars
 }
 
 const noteLens = [
@@ -303,36 +201,6 @@ const doMakeBars = (data, amountOfBars) => {
     return bars;
 }
 
-const makeLoops = (data, loopTimes) => {
-    // console.log('data:', data)
-    const finalLoops = [];
-    const newLoop = [];
-
-    // Push in data x amount of loopTimes
-    for (let i = 1; i < loopTimes; i += 1) {
-        data.forEach(d => finalLoops.push(d))
-    }
-
-    // console.log('finalLoops:', finalLoops)
-
-    // console.log("data.length:", data.length)
-    finalLoops.forEach((f, i) => {
-        let measure = Number(f.tBar.split(":")[0])
-
-        // console.log("i:", i)
-        if (i <= data.length) {
-            newLoop.push(f)
-        } else if (i >= data.length - 1) {
-            // console.log("measure:", measure, i)
-            measure = measure += 4
-            f.tBar = `${measure}:0:0`
-            newLoop.push(f)
-        }
-    })
-
-    return newLoop;
-}
-
 const doMakeLoops = (data, loopCount, maxBars) => {
     console.log('doMakeLoops data:', data)
     const allLoops = [];
@@ -377,8 +245,9 @@ const doMakeLoops = (data, loopCount, maxBars) => {
 }
 
 export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
-    const chordObj = processMajor(data, false, 20);
-    const withOct = addOct(chordObj);
+    const {partData, scaleData } = processMajor(data, false, 30);
+    console.log('partData:', partData)
+    const withOct = addOct(partData);
     const withNoteLen = generateNoteLen02(withOct);
     const withTimeBars = generateTimeBars02(withNoteLen);
     // console.log('withTime:', withTimeBars)
@@ -392,5 +261,5 @@ export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)
     console.log('looped:', looped)
 
-    return looped
+    return {scaleData, partData: looped}
 }
