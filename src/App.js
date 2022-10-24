@@ -9,7 +9,7 @@ import { allNotes, buildLoop, getRand, processMajor } from './util';
 
 function App() {
   const { register, handleSubmit, setValue } = useForm();
-  
+
   const [stateChords, setStateChords] = useState([])
   console.log('state:', stateChords)
 
@@ -32,14 +32,12 @@ function App() {
    * @returns 
    */
   const handleBuildLoop = (data) => {
-    const currentLoop = buildLoop(data, 3, 1, 1)
+    const currentLoop = buildLoop(data, 1, 2, 4)
     // tempChords.current = currentLoop
     setStateChords(currentLoop)
     setValue("editedJson", JSON.stringify(currentLoop, null, 2))
   }
   const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
-
-  const stopTransport = () => Tone.Transport.stop()
 
   const playNotes = () => {
     Tone.Transport.bpm.value = 120;
@@ -60,13 +58,22 @@ function App() {
     //   })
 
     //   console.log('notes:', notes())
+    // Tone.start()
+    // Tone.Transport.start(0)
 
     Tone.loaded().then(() => {
 
+      // Tone.Transport.schedule((time) => {
+      // console.log('schedule:', time)
       stateChords.map(c => {
-        console.log(c)
-        piano01.triggerAttackRelease(c.notes, c.noteData.name, c.tBar)
+        // console.log(Tone.now())
+        Tone.Transport.schedule((time) => {
+          piano01.triggerAttackRelease(c.notes, c.noteData.name)
+        }, c.tBar)
+
       })
+      // }, "0:0:0")
+
 
       // const loop = stateChords.map(c => {
       //   console.log(c)
@@ -82,13 +89,42 @@ function App() {
 
 
 
-    Tone.start()
+
     // loop01.start();
-    // Tone.Transport()
+
     // loop01.start()
   }
 
-  const startTransport = () => Tone.start()
+  const startTransport = () => {
+
+    Tone.start();
+    Tone.Transport.start()
+    // console.log(Tone.Transport)
+  }
+
+  const pauseTransport = () => {
+    const currentTime = Tone.Transport.now()
+    // console.log(Tone.now())
+    // Tone.Transport.cancel(currentTime)
+    // Tone.start()
+    Tone.Transport.pause(currentTime + 0.4)
+
+    // Tone.Transport.start("+1", "0:0:0")
+    // Tone.Transport.pause(currentTime + 0.2)
+  }
+
+  const stopTransport = () => {
+    Tone.Transport.stop()
+    // Tone.Transport.cancel()
+    // Tone.Transport.seconds = 0
+  }
+
+  const logTime = () => {
+    const currentTime = Tone.Transport.now()
+    const position = Tone.Transport.position
+    console.log("currentTime:", currentTime)
+    console.log('propositiongress:', position)
+  }
 
   // const updateTempChords = (e) => {
   //   console.log("temp:" ,e.target.value)
@@ -97,25 +133,43 @@ function App() {
   // }
 
   const onSubmit = (data) => {
-    console.log(data.editedJson)
+    // console.log(data.editedJson)
+    Tone.Transport.clear()
+    Tone.Transport.cancel()
     setStateChords(JSON.parse(data.editedJson))
+
+    Tone.loaded().then(() => {
+      JSON.parse(data.editedJson).map(c => {
+        // console.log(Tone.now())
+        Tone.Transport.schedule((time) => {
+          piano01.triggerAttackRelease(c.notes, c.noteData.name)
+        }, c.tBar)
+
+      })
+    })
+
   }
 
   return (
     <div className="App">
-      <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="Get Data" />
-      <Button onClick={playNotes} label="Play Notes" />
-      <br />
+      {/* <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="Get Data" /> */}
       <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" />
-      <Button onClick={startTransport} label="start Transport" />
+      <Button onClick={playNotes} label="Play Notes" />
+      <Button onClick={logTime} label="Log Time" />
+
+
+      <br />
+      <Button onClick={startTransport} label="Start Transport" />
+      <Button onClick={stopTransport} label="Stop Transport" />
+      <Button onClick={pauseTransport} label="Pause Transport" />
 
       <br />
       <form onSubmit={handleSubmit(onSubmit)}>
-      <textarea cols="50" rows="20" defaultValue={stateChords.length ? stateChords : ""} {...register("editedJson")} style={{ fontSize: 10 }}/>
-      <br />
-      <Button type="submit" label="update stateChords" />
+        <textarea cols="50" rows="20" defaultValue={stateChords.length ? stateChords : ""} {...register("editedJson")} style={{ fontSize: 10 }} />
+        <br />
+        <Button type="submit" label="update stateChords" />
       </form>
-      
+
     </div>
   );
 }
