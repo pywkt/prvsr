@@ -192,7 +192,9 @@ const noteLens = [
     { name: "1n", value: 1, num: 1, mod: 'n' },
     { name: "2n", value: 0.5, num: 2, mod: 'n' },
     { name: "4n", value: 0.25, num: 4, mod: 'n' },
-    { name: "8n", value: 0.08, num: 8, mod: 'n' }
+    // { name: "4n.", value: 0.40, num: 4, mod: 'n' },
+    { name: "8n", value: 0.08, num: 8, mod: 'n' },
+    { name: "8n.", value: 0.10, num: 8, mod: 'n.'}
 ]
 
 const generateNoteLen02 = (data) => {
@@ -232,9 +234,18 @@ const generateTimeBars02 = (data) => {
                 sTime = sTime += 2
             }
 
+            if (prevName === "8n.") {
+                sTime = sTime += 4
+            }
+
             if (prevName === "4n") {
                 qTime = qTime += 1
             }
+
+            if (prevName === "4n.") {
+                qTime = qTime += 1.2
+            }
+            
 
             if (prevName === "2n") {
                 qTime = qTime += 2
