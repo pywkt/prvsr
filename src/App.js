@@ -1,25 +1,31 @@
 import React, { useState, useRef } from 'react';
 import { Chord, Key, Note, Progression, Scale } from '@tonaljs/tonal';
 import * as Tone from 'tone';
-import { useForm } from 'react-hook-form';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import './App.css';
 import Button from './components/Button';
 import { piano01 } from './instruments/piano01'
+import { synth01 } from './instruments/synth01'
 import { allNotes, buildLoop, getRand, processMajor } from './util';
 
 function App() {
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue, control, reset, getValues } = useForm();
+  const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
   const [stateChords, setStateChords] = useState([])
   const [scaleData, setScaleData] = useState({})
   console.log('stateChords:', stateChords)
-  console.log('scaleData:', scaleData)
+  // console.log('scaleData:', scaleData)
 
-  const currentScaleData = useRef({})
+  // const currentScaleData = useRef({})
 
   const processMinor = (data) => {
     console.log('processMinor data:', data)
   }
+
+  const currentScaleData = useRef({})
+  const allChords = useRef([])
+  console.log('allChords:', allChords)
 
   /**
    * buildLoop()
@@ -29,29 +35,54 @@ function App() {
    * @param {number} loopTimes
    * @returns 
    */
-  const handleBuildLoop = (data) => {
-    console.log('buildLoop:', data)
-    const currentLoop = buildLoop(data, 1, 4, 1)
-    // tempChords.current = currentLoop
-    setStateChords(currentLoop.partData)
+  const handleBuildLoop = async (data, newData) => {
+    console.log("build data:", data)
+    console.log("build currentScale:", currentScaleData.current)
+    currentScaleData.current = data
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, 1, 4, 4)
+    console.log('getValues:', getValues(`instrumentArray`))
+    // console.log("currentLoop:", currentLoop.partData)
+
+    allChords.current.push(currentLoop.partData)
+    // console.log("allChords:", allChords.current)
+
+    const rhfData = getValues(`instrumentArray`)
+    setStateChords(rhfData)
     setScaleData(currentLoop.scaleData)
-    currentScaleData.current = currentLoop.scaleData
-    setValue("editedJson", JSON.stringify(currentLoop.partData, null, 2))
+    return currentLoop
   }
-  const getKeyData = (tonic, scale) => scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
+
+  const getKeyData = (tonic, scale) => {
+    // console.log('instrument:', tonic, scale)
+    return scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
+  }
 
   const playNotes = () => {
     Tone.Transport.bpm.value = 120;
 
-    // const synth = new Tone.DuoSynth().toDestination()
-
     Tone.loaded().then(() => {
-      stateChords.map(c => {
-        Tone.Transport.schedule((time) => {
-          piano01.triggerAttackRelease(c.notes, c.noteData.name)
-        }, c.tBar)
+      console.log('*** stateChords:', stateChords)
+      stateChords.map((c, i) => {
+        console.log('c.slug', c.slug)
+        const fff = c.slug
+        c.data.partData.map(p => {
+          Tone.Transport.schedule((time) => {
+            fff.triggerAttackRelease(p.notes, p.noteData.name)
+          }, p.tBar)
+        })
+
       })
     })
+
+    // const synth = new Tone.DuoSynth().toDestination()
+
+    // Tone.loaded().then(() => {
+    //   stateChords.map(c => {
+    //     Tone.Transport.schedule((time) => {
+    //       piano01.triggerAttackRelease(c.notes, c.noteData.name)
+    //     }, c.tBar)
+    //   })
+    // })
   }
 
   const startTransport = () => {
@@ -71,23 +102,45 @@ function App() {
   const logTime = () => {
     const currentTime = Tone.Transport.now()
     const position = Tone.Transport.position
-    console.log("currentTime:", currentTime)
-    console.log('propositiongress:', position)
+    // console.log("currentTime:", currentTime)
+    // console.log('propositiongress:', position)
   }
 
   const onSubmit = (data) => {
-    Tone.Transport.clear()
-    Tone.Transport.cancel()
-    setStateChords(JSON.parse(data.editedJson))
+    console.log('onSubmit:', data)
+  }
 
-    Tone.loaded().then(() => {
-      JSON.parse(data.editedJson).map(c => {
-        Tone.Transport.schedule((time) => {
-          piano01.triggerAttackRelease(c.notes, c.noteData.name)
-        }, c.tBar)
 
-      })
-    })
+
+  const instruments = [{ name: "" }, { name: "synth", slug: "synth" }, { name: "Piano 01", slug: "piano01" }]
+  const [selectedInstrument, setSelectedInstrument] = useState('')
+
+  const handleSelectedInstrument = async (e, index) => {
+    // console.log("Object.keys(currentScaleData.current).length === 0:", Object.keys(currentScaleData.current).length === 0)
+    const newData = Object.keys(currentScaleData.current).length === 0 ?
+      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", index) :
+      await getKeyData(currentScaleData.current.tonic, "major", index)
+    // console.log("newData:", newData)
+    // currentScaleData.current = newData.scaleData
+    setSelectedInstrument(e.target.value)
+
+    const getInstrumentData = () => {
+      const slug = instruments.find(i => i.name === e.target.value).slug
+
+      switch (slug) {
+        case 'piano01':
+          return piano01
+        case 'synth':
+          return synth01
+        default:
+          return 'piano01-default'
+      }
+    }
+
+    console.log('ind:', index)
+    setValue(`instrumentArray.${index}.instrument`, e.target.value)
+    setValue(`instrumentArray.${index}.data`, newData)
+    setValue(`instrumentArray.${index}.slug`, getInstrumentData())
 
   }
 
@@ -104,11 +157,91 @@ function App() {
       <Button onClick={pauseTransport} label="Pause Transport" />
 
       <br />
+
       <form onSubmit={handleSubmit(onSubmit)}>
+        <ul>
+
+
+          {fields.map((item, index) => (
+            <li key={item.id}>
+              <select {...register(`instruments${index}`)} onChange={(e) => handleSelectedInstrument(e, index)}>
+                {instruments.map((i) => (
+                  <option value={i.name} key={i.name} >
+                    {i.name}
+                  </option>
+                ))}
+              </select>
+
+              <button type="button" onClick={() => remove(index)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={() => append({ instrument: selectedInstrument, data: [] })}
+        >
+          Add Instrument
+        </button>
+        <input type="submit" />
+      </form>
+
+      {/*
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <ul>
+          {fields.map((item, index) => (
+            <li key={item.id}>
+
+              <label htmlFor="instrument-selector">Instrument:</label>
+              {/* <select name="instrument-selector" id="instrument-selector" {...register(`instrument.${index}.value`)}>
+                {instruments.map((item, index) => (
+                  <option value={item.name} key={item.name}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+
+              <Controller
+                render={({ field }) => {
+                  console.log("item:", item)
+                  console.log('field:', field)
+                  return <select name="instrument-selector" id="instrument-selector" >
+                    {instruments.map((i) => (
+                      <option value={i.name} key={i.name}  {...field}>
+                        {i.name}
+                      </option>
+                    ))}
+                  </select>
+                }
+                }
+                name={`instrument.${index}`}
+                control={control}
+                defaultValue="synth"
+              />
+
+              <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major", item.instrument, index)} label="buildLoop" />
+              <button type="button" onClick={() => remove(index)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+
+        <button type="button" onClick={() => append(
+          {
+            instrument: 'synth',
+            part: []
+          }
+        )}
+        >
+          Append
+        </button>
+        <input type="submit" />
+        </form> */}
+
+
+      {/* <form onSubmit={handleSubmit(onSubmit)}>
         <textarea cols="50" rows="20" defaultValue={stateChords.length ? stateChords : ""} {...register("editedJson")} style={{ fontSize: 10 }} />
         <br />
         <Button type="submit" label="update stateChords" />
-      </form>
+      </form> */}
 
       <p>
         <strong>{scaleData?.name}</strong>

@@ -18,16 +18,20 @@ export const getProgression = (tonic) => {
 
 }
 
+let prevScale;
+
 export const processMajor = (data, useProg, amount) => {
     const maxedAmount = [];
     const chordsToUse = [];
     const { chordScales, tonic } = data
 
     // Get a random scale from the random chord
-    const randScale = chordScales[getRand(0, chordScales.length)]
+    const randScale = !prevScale ? chordScales[getRand(0, chordScales.length)] : prevScale
+    prevScale = randScale
 
     // Get the data for the scale
     const randScaleData = { ...Scale.get(randScale), chords: Scale.scaleChords(randScale) }
+    // console.log("randScaleData:", randScaleData)
 
     // Get a random chord for every note in the scale
     randScaleData.notes.forEach(note => {
@@ -56,7 +60,7 @@ export const processMajor = (data, useProg, amount) => {
         withAmount()
     }
 
-    console.log("randScale:", randScaleData)
+    // console.log("randScale:", randScaleData)
 
     if (useProg) {
         return progOut;
@@ -111,7 +115,7 @@ const generateNoteLen02 = (data) => {
 }
 
 const generateTimeBars02 = (data) => {
-    console.log('data time:', data)
+    // console.log('data time:', data)
     const withTimeBars = [];
     const newTimeBar = []
     let validTimeBar = null;
@@ -169,8 +173,8 @@ const generateTimeBars02 = (data) => {
         }
     })
 
-    console.log('newTimeBar 0202020:', newTimeBar)
-    console.log('withTimeBars:', withTimeBars)
+    // console.log('newTimeBar 0202020:', newTimeBar)
+    // console.log('withTimeBars:', withTimeBars)
 
     return withTimeBars;
 }
@@ -202,19 +206,19 @@ const doMakeBars = (data, amountOfBars) => {
 }
 
 const doMakeLoops = (data, loopCount, maxBars) => {
-    console.log('doMakeLoops data:', data)
+    // console.log('doMakeLoops data:', data)
     const allLoops = [];
     const newLoops = [];
     const oneBarLoop = [];
     const highestMVal = Number(data[data.length - 1].tBar[0])
-    console.log("highest:", highestMVal)
+    // console.log("highest:", highestMVal)
     let barCount = highestMVal;
 
     for (let i = 1; i <= loopCount; i += 1) {
         allLoops.push(...data)
     }
 
-    console.log('data.length:', data.length)
+    // console.log('data.length:', data.length)
 
     allLoops.map((a, i) => {
         const tBar = a.tBar
@@ -244,9 +248,11 @@ const doMakeLoops = (data, loopCount, maxBars) => {
     return maxBars === 1 ? oneBarLoop : newLoops;
 }
 
-export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
+export const buildLoop = (data, unisonCount, maxBars, loopTimes, selectedScale) => {
+    // console.log('loop:', data)
+    // console.log("selected:", selectedScale)
     const {partData, scaleData } = processMajor(data, false, 30);
-    console.log('partData:', partData)
+    // console.log('partData:', partData)
     const withOct = addOct(partData);
     const withNoteLen = generateNoteLen02(withOct);
     const withTimeBars = generateTimeBars02(withNoteLen);
@@ -256,10 +262,10 @@ export const buildLoop = (data, unisonCount, maxBars, loopTimes) => {
     // console.log("trimNotes:", trimNotes)
 
     const makeBars = doMakeBars(trimNotes, maxBars);
-    console.log('makeBars:', makeBars)
+    // console.log('makeBars:', makeBars)
 
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)
-    console.log('looped:', looped)
+    // console.log('looped:', looped)
 
     return {scaleData, partData: looped}
 }
