@@ -24,8 +24,8 @@ function App() {
   }
 
   const currentScaleData = useRef({})
-  const allChords = useRef([])
-  console.log('allChords:', allChords)
+  // const allChords = useRef([])
+  // console.log('allChords:', allChords)
 
   /**
    * buildLoop()
@@ -35,15 +35,17 @@ function App() {
    * @param {number} loopTimes
    * @returns 
    */
-  const handleBuildLoop = async (data, newData) => {
-    console.log("build data:", data)
-    console.log("build currentScale:", currentScaleData.current)
+  const handleBuildLoop = async (data, partData) => {
+    console.log('partData:', partData)
+    console.log('ddddddd:', data)
+    // console.log("build data:", data)
+    // console.log("build currentScale:", currentScaleData.current)
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, 1, 4, 4)
-    console.log('getValues:', getValues(`instrumentArray`))
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4)
+    // console.log('getValues:', getValues(`instrumentArray`))
     // console.log("currentLoop:", currentLoop.partData)
 
-    allChords.current.push(currentLoop.partData)
+    // allChords.current.push(currentLoop.partData)
     // console.log("allChords:", allChords.current)
 
     const rhfData = getValues(`instrumentArray`)
@@ -52,9 +54,9 @@ function App() {
     return currentLoop
   }
 
-  const getKeyData = (tonic, scale) => {
+  const getKeyData = (tonic, scale, partData) => {
     // console.log('instrument:', tonic, scale)
-    return scale === "major" ? handleBuildLoop(Key.majorKey(tonic)) : processMinor(Key.minorKey(tonic))
+    return scale === "major" ? handleBuildLoop(Key.majorKey(tonic), partData) : processMinor(Key.minorKey(tonic))
   }
 
   const playNotes = () => {
@@ -63,7 +65,7 @@ function App() {
     Tone.loaded().then(() => {
       console.log('*** stateChords:', stateChords)
       stateChords.map((c, i) => {
-        console.log('c.slug', c.slug)
+        // console.log('c.slug', c.slug)
         const fff = c.slug
         c.data.partData.map(p => {
           Tone.Transport.schedule((time) => {
@@ -103,22 +105,66 @@ function App() {
     const currentTime = Tone.Transport.now()
     const position = Tone.Transport.position
     // console.log("currentTime:", currentTime)
-    // console.log('propositiongress:', position)
+    console.log('propositiongress:', position)
   }
+
+  const [settingsLocked, setSettingsLocked] = useState(true)
+  const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01" }, { name: "Piano 01", slug: "piano01" }]
 
   const onSubmit = (data) => {
     console.log('onSubmit:', data)
+
+    data.instrumentArray.forEach(async (dd, index) => {
+      const slug = instruments.find(i => i.slug === dd.instrument).slug
+      console.log('slug:', slug)
+
+      const getInstrumentData = () => {
+        switch (slug) {
+          case 'piano01':
+            return piano01
+          case 'synth01':
+            return synth01
+          default:
+            return 'piano01-default'
+        }
+      }
+
+      console.log("instrumentData:", getInstrumentData())
+
+      const newData = Object.keys(currentScaleData.current).length === 0 ?
+        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", dd) :
+        await getKeyData(currentScaleData.current.tonic, "major", dd)
+
+        console.log('newData::::', newData)
+
+      // console.log('slug:', slug)
+      
+
+      setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+      setValue(`instrumentArray.${index}.data`, newData)
+
+      
+    })
+
+    setStateChords(getValues(`instrumentArray`))
+
+
+    setSettingsLocked(false)
+
+
+
+    // setStateChords(getValues)
   }
 
 
 
-  const instruments = [{ name: "" }, { name: "synth", slug: "synth" }, { name: "Piano 01", slug: "piano01" }]
+
   const [selectedInstrument, setSelectedInstrument] = useState('')
 
   const handleSelectedInstrument = async (e, index) => {
-    // console.log("Object.keys(currentScaleData.current).length === 0:", Object.keys(currentScaleData.current).length === 0)
+    const partData = getValues(`instrumentArray.${index}`)
     const newData = Object.keys(currentScaleData.current).length === 0 ?
-      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", index) :
+      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", partData) :
       await getKeyData(currentScaleData.current.tonic, "major", index)
     // console.log("newData:", newData)
     // currentScaleData.current = newData.scaleData
@@ -137,22 +183,26 @@ function App() {
       }
     }
 
-    console.log('ind:', index)
-    setValue(`instrumentArray.${index}.instrument`, e.target.value)
-    setValue(`instrumentArray.${index}.data`, newData)
-    setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+
+
+
+    // setValue(`instrumentArray.${index}.instrument`, e.target.value)
+    // setValue(`instrumentArray.${index}.data`, newData)
+    // setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+
+    // setValue(`instrumentArray.${index}.params`, { unisonCount: getValues(`instruments.${index}.unisonCount`) })
 
   }
 
   return (
     <div className="App">
       <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" />
-      <Button onClick={playNotes} label="Play Notes" />
+      <Button onClick={playNotes} label="Play Notes" disabled={settingsLocked} />
       <Button onClick={logTime} label="Log Time" />
 
 
       <br />
-      <Button onClick={startTransport} label="Start Transport" />
+      <Button onClick={startTransport} label="Start Transport" disabled={settingsLocked} />
       <Button onClick={stopTransport} label="Stop Transport" />
       <Button onClick={pauseTransport} label="Pause Transport" />
 
@@ -164,13 +214,18 @@ function App() {
 
           {fields.map((item, index) => (
             <li key={item.id}>
-              <select {...register(`instruments${index}`)} onChange={(e) => handleSelectedInstrument(e, index)}>
+              <select
+                {...register(`instrumentArray.${index}.instrument`)}
+              // onChange={(e) => handleSelectedInstrument(e, index)}
+              >
                 {instruments.map((i) => (
-                  <option value={i.name} key={i.name} >
+                  <option value={i.slug} key={i.name} >
                     {i.name}
                   </option>
                 ))}
               </select>
+
+              <input defaultValue="1" type="text" {...register(`instrumentArray.${index}.unisonCount`)} />
 
               <button type="button" onClick={() => remove(index)}>Delete</button>
             </li>
@@ -178,11 +233,11 @@ function App() {
         </ul>
         <button
           type="button"
-          onClick={() => append({ instrument: selectedInstrument, data: [] })}
+          onClick={() => { setSettingsLocked(true); append({ instrument: selectedInstrument, data: [] }) }}
         >
           Add Instrument
         </button>
-        <input type="submit" />
+        <input type="submit" disabled={!settingsLocked} />
       </form>
 
       {/*
