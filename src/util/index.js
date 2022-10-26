@@ -1,7 +1,7 @@
 import { Chord, Note, Progression, Scale } from '@tonaljs/tonal';
 import { noteLens } from '../config';
 
-export const allNotes = ["C", "D", "E", "F", "G", "A", "B", "Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb", "C#", "D#", "E#", "F#", "G#", "A#", "B#"]
+
 
 export const getRand = (min, max) => Math.floor(Math.random() * (max - min) + min);
 

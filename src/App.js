@@ -6,7 +6,8 @@ import './App.css';
 import Button from './components/Button';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
-import { allNotes, buildLoop, getRand, processMajor } from './util';
+import { allNotes } from './config';
+import { buildLoop, getRand } from './util';
 
 function App() {
   const { register, handleSubmit, setValue, control, reset, getValues } = useForm();
@@ -139,8 +140,8 @@ function App() {
       // console.log('validNotes:', valid)
 
       const newData = Object.keys(currentScaleData.current).length === 0 ?
-        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", {...dd, notesToUse: validNotes }) :
-        await getKeyData(currentScaleData.current.tonic, "major", {...dd, notesToUse: validNotes})
+        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...dd, notesToUse: validNotes }) :
+        await getKeyData(currentScaleData.current.tonic, "major", { ...dd, notesToUse: validNotes })
 
       // console.log('newData::::', newData)
 
