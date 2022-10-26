@@ -1,4 +1,5 @@
 import { Chord, Note, Progression, Scale } from '@tonaljs/tonal';
+import { noteLens } from '../config';
 
 export const allNotes = ["C", "D", "E", "F", "G", "A", "B", "Cb", "Db", "Eb", "Fb", "Gb", "Ab", "Bb", "C#", "D#", "E#", "F#", "G#", "A#", "B#"]
 
@@ -65,7 +66,7 @@ export const processMajor = (data, useProg, amount) => {
     if (useProg) {
         return progOut;
     } else if (amount) {
-        return {partData: maxedAmount, scaleData: randScaleData};
+        return { partData: maxedAmount, scaleData: randScaleData };
     } else {
         return chordsToUse
     }
@@ -89,24 +90,31 @@ const addOct = (data) => {
     return slimOct;
 }
 
-const noteLens = [
-    // { name: "1m", value: 4, num: 1, mod: 'm' },
-    { name: "1n", value: 1, num: 1, mod: 'n' },
-    { name: "2n", value: 0.5, num: 2, mod: 'n' },
-    { name: "4n", value: 0.25, num: 4, mod: 'n' },
-    // { name: "4n.", value: 0.40, num: 4, mod: 'n' },
-    { name: "8n", value: 0.08, num: 8, mod: 'n' },
-    { name: "8n.", value: 0.10, num: 8, mod: 'n.'}
-]
 
-const generateNoteLen02 = (data) => {
-    // console.log('data:', data)
+
+const generateNoteLen02 = (data, noteLensToUse) => {
+    console.log('data:', data)
+    console.log("generateNoteLen02:", noteLensToUse)
     const withNoteData = [];
+    const customNotes = []
+
+    // const customNoteLens = noteLensToUse.find((n, i) => n === noteLens[i].name)
+    if (noteLensToUse.length > 0) {
+        noteLensToUse?.length > 0 && noteLensToUse.map((n, i) => {
+            noteLens.map(nn => {
+                if (nn.name === n) {
+                    customNotes.push(nn)
+                }
+            })
+        })
+    }
+
+    console.log('customNotes:', customNotes)
 
     data.map((d, i, a) => {
         withNoteData.push({
             ...d,
-            noteData: noteLens[getRand(0, noteLens.length)]
+            noteData: noteLensToUse.length > 0 ? customNotes[getRand(0, customNotes.length)] : noteLens[getRand(0, noteLens.length)]
         })
     })
 
@@ -137,7 +145,7 @@ const generateTimeBars02 = (data) => {
             }
 
             if (prevName === "8n.") {
-                sTime = sTime += 4
+                sTime = sTime += 3
             }
 
             if (prevName === "4n") {
@@ -145,21 +153,25 @@ const generateTimeBars02 = (data) => {
             }
 
             if (prevName === "4n.") {
-                qTime = qTime += 1.2
+                qTime = qTime += 1.5
             }
-            
+
 
             if (prevName === "2n") {
                 qTime = qTime += 2
+            }
+
+            if (prevName === "2n.") {
+                qTime = qTime += 3
             }
 
             if (prevName === "1n") {
                 qTime = qTime += 4
             }
 
-            if (sTime >= 16) {
+            if (sTime >= 4) {
                 qTime = qTime += 1
-                sTime = sTime % 16
+                sTime = sTime % 4
             }
 
             if (qTime >= 4) {
@@ -248,13 +260,15 @@ const doMakeLoops = (data, loopCount, maxBars) => {
     return maxBars === 1 ? oneBarLoop : newLoops;
 }
 
-export const buildLoop = (data, unisonCount, maxBars, loopTimes, selectedScale) => {
+export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse) => {
     // console.log('loop:', data)
     // console.log("selected:", selectedScale)
-    const {partData, scaleData } = processMajor(data, false, 30);
+    console.log('index notesToUse:', noteLensToUse)
+    const { partData, scaleData } = processMajor(data, false, 30);
     // console.log('partData:', partData)
     const withOct = addOct(partData);
-    const withNoteLen = generateNoteLen02(withOct);
+    const withNoteLen = generateNoteLen02(withOct, noteLensToUse);
+    console.log('withNoteLen:', withNoteLen)
     const withTimeBars = generateTimeBars02(withNoteLen);
     // console.log('withTime:', withTimeBars)
 
@@ -267,5 +281,5 @@ export const buildLoop = (data, unisonCount, maxBars, loopTimes, selectedScale) 
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)
     // console.log('looped:', looped)
 
-    return {scaleData, partData: looped}
+    return { scaleData, partData: looped }
 }

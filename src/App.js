@@ -37,11 +37,11 @@ function App() {
    */
   const handleBuildLoop = async (data, partData) => {
     console.log('partData:', partData)
-    console.log('ddddddd:', data)
+    // console.log('ddddddd:', data)
     // console.log("build data:", data)
     // console.log("build currentScale:", currentScaleData.current)
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4)
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 2, partData.notesToUse)
     // console.log('getValues:', getValues(`instrumentArray`))
     // console.log("currentLoop:", currentLoop.partData)
 
@@ -110,13 +110,14 @@ function App() {
 
   const [settingsLocked, setSettingsLocked] = useState(true)
   const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01" }, { name: "Piano 01", slug: "piano01" }]
+  const notesToUse = ['1n', '2n', '4n', '8n']
 
   const onSubmit = (data) => {
     console.log('onSubmit:', data)
 
     data.instrumentArray.forEach(async (dd, index) => {
       const slug = instruments.find(i => i.slug === dd.instrument).slug
-      console.log('slug:', slug)
+      // console.log('slug:', slug)
 
       const getInstrumentData = () => {
         switch (slug) {
@@ -129,21 +130,27 @@ function App() {
         }
       }
 
-      console.log("instrumentData:", getInstrumentData())
+      // console.log("instrumentData:", getInstrumentData())
+
+      // const obj = dd.notesToUse;
+      const validNotes = Object.keys(dd.notesToUse).filter(k => dd.notesToUse[k] === true);
+      console.log('validNotes:', validNotes)
+
+      // console.log('validNotes:', valid)
 
       const newData = Object.keys(currentScaleData.current).length === 0 ?
-        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", dd) :
-        await getKeyData(currentScaleData.current.tonic, "major", dd)
+        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", {...dd, notesToUse: validNotes }) :
+        await getKeyData(currentScaleData.current.tonic, "major", {...dd, notesToUse: validNotes})
 
-        console.log('newData::::', newData)
+      // console.log('newData::::', newData)
 
       // console.log('slug:', slug)
-      
+
 
       setValue(`instrumentArray.${index}.slug`, getInstrumentData())
       setValue(`instrumentArray.${index}.data`, newData)
 
-      
+
     })
 
     setStateChords(getValues(`instrumentArray`))
@@ -161,38 +168,40 @@ function App() {
 
   const [selectedInstrument, setSelectedInstrument] = useState('')
 
-  const handleSelectedInstrument = async (e, index) => {
-    const partData = getValues(`instrumentArray.${index}`)
-    const newData = Object.keys(currentScaleData.current).length === 0 ?
-      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", partData) :
-      await getKeyData(currentScaleData.current.tonic, "major", index)
-    // console.log("newData:", newData)
-    // currentScaleData.current = newData.scaleData
-    setSelectedInstrument(e.target.value)
+  // const handleSelectedInstrument = async (e, index) => {
+  //   const partData = getValues(`instrumentArray.${index}`)
+  //   const newData = Object.keys(currentScaleData.current).length === 0 ?
+  //     await getKeyData(allNotes[getRand(0, allNotes.length)], "major", partData) :
+  //     await getKeyData(currentScaleData.current.tonic, "major", index)
+  //   // console.log("newData:", newData)
+  //   // currentScaleData.current = newData.scaleData
+  //   setSelectedInstrument(e.target.value)
 
-    const getInstrumentData = () => {
-      const slug = instruments.find(i => i.name === e.target.value).slug
+  //   const getInstrumentData = () => {
+  //     const slug = instruments.find(i => i.name === e.target.value).slug
 
-      switch (slug) {
-        case 'piano01':
-          return piano01
-        case 'synth':
-          return synth01
-        default:
-          return 'piano01-default'
-      }
-    }
-
-
+  //     switch (slug) {
+  //       case 'piano01':
+  //         return piano01
+  //       case 'synth':
+  //         return synth01
+  //       default:
+  //         return 'piano01-default'
+  //     }
+  //   }
 
 
-    // setValue(`instrumentArray.${index}.instrument`, e.target.value)
-    // setValue(`instrumentArray.${index}.data`, newData)
-    // setValue(`instrumentArray.${index}.slug`, getInstrumentData())
 
-    // setValue(`instrumentArray.${index}.params`, { unisonCount: getValues(`instruments.${index}.unisonCount`) })
 
-  }
+  //   // setValue(`instrumentArray.${index}.instrument`, e.target.value)
+  //   // setValue(`instrumentArray.${index}.data`, newData)
+  //   // setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+
+  //   // setValue(`instrumentArray.${index}.params`, { unisonCount: getValues(`instruments.${index}.unisonCount`) })
+
+  // }
+
+
 
   return (
     <div className="App">
@@ -228,6 +237,17 @@ function App() {
               <input defaultValue="1" type="text" {...register(`instrumentArray.${index}.unisonCount`)} />
 
               <button type="button" onClick={() => remove(index)}>Delete</button>
+
+              <div>
+                {notesToUse.map(n => (
+                  <span key={n}>
+                    <label htmlFor={n}>{n}</label>
+                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={n} />
+                  </span>
+                ))}
+              </div>
+
+
             </li>
           ))}
         </ul>
