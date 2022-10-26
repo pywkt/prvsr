@@ -11,7 +11,7 @@ import { buildLoop, getRand } from './util';
 
 function App() {
   const { register, handleSubmit, setValue, control, reset, getValues } = useForm();
-  const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
+  const { fields, append, remove, update } = useFieldArray({ control, name: "instrumentArray" })
 
   const [stateChords, setStateChords] = useState([])
   const [scaleData, setScaleData] = useState({})
@@ -51,6 +51,10 @@ function App() {
 
     Tone.loaded().then(() => {
       console.log('*** stateChords:', stateChords)
+
+      Tone.start();
+      Tone.Transport.start()
+
       stateChords.map((c, i) => {
         const fff = c.slug
         c.data.partData.map(p => {
@@ -75,6 +79,8 @@ function App() {
 
   const stopTransport = () => {
     Tone.Transport.stop()
+    // Tone.Transport.clear()
+    Tone.Transport.cancel()
   }
 
   const logTime = () => {
@@ -118,17 +124,72 @@ function App() {
     setSettingsLocked(false)
   }
 
+  const refreshPart = async (index) => {
+    console.log('refresh')
+    let newData;
+
+    const data = getValues()
+    console.log('refresh data:', data.instrumentArray[index])
+    console.log(getValues(`instrumentArray.${index}.data`))
+
+    const instrumentToUpdate = data.instrumentArray[index]
+
+    const validNotes = Object.keys(instrumentToUpdate.notesToUse).filter(k => instrumentToUpdate.notesToUse[k] === true);
+
+    newData = Object.keys(currentScaleData.current).length === 0 ?
+      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...instrumentToUpdate, notesToUse: validNotes }) :
+      await getKeyData(currentScaleData.current.tonic, "major", { ...instrumentToUpdate, notesToUse: validNotes })
+
+      console.log('newData:', newData)
+
+    // data.instrumentArray.forEach(async (dd, index) => {
+    //   const slug = instruments.find(i => i.slug === dd.instrument).slug
+
+    //   const getInstrumentData = () => {
+    //     switch (slug) {
+    //       case 'piano01':
+    //         return piano01
+    //       case 'synth01':
+    //         return synth01
+    //       default:
+    //         return 'piano01-default'
+    //     }
+    //   }
+
+    //   const validNotes = Object.keys(dd.notesToUse).filter(k => dd.notesToUse[k] === true);
+    //   console.log('validNotes:', validNotes)
+
+    //   newData = Object.keys(currentScaleData.current).length === 0 ?
+    //     await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...dd, notesToUse: validNotes }) :
+    //     await getKeyData(currentScaleData.current.tonic, "major", { ...dd, notesToUse: validNotes })
+
+      
+    // })
+
+    setValue(`instrumentArray.${index}.data`, newData)
+    
+
+    // setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+    
+
+    // update(`instrumentArray.data`, "cool")
+
+
+    
+  }
+
   return (
     <div className="App">
-      <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" />
-      <Button onClick={playNotes} label="Play Notes" disabled={settingsLocked} />
+      {/* <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major")} label="buildLoop" /> */}
+      <Button onClick={playNotes} label="Play Notes" />
       <Button onClick={logTime} label="Log Time" />
 
 
       <br />
-      <Button onClick={startTransport} label="Start Transport" disabled={settingsLocked} />
-      <Button onClick={stopTransport} label="Stop Transport" />
-      <Button onClick={pauseTransport} label="Pause Transport" />
+      <Button onClick={startTransport} label="Start" />
+      <Button onClick={stopTransport} label="Stop" />
+      <Button onClick={pauseTransport} label="Pause" />
+      {/* <Button onClick={clearTransport} label="Clear" /> */}
 
       <br />
 
@@ -149,6 +210,7 @@ function App() {
               <input defaultValue="1" type="text" {...register(`instrumentArray.${index}.unisonCount`)} />
 
               <button type="button" onClick={() => remove(index)}>Delete</button>
+              <button type="button" onClick={() => refreshPart(index)}>Refresh</button>
 
               <div>
                 {notesToUse.map(n => (
@@ -162,6 +224,8 @@ function App() {
 
             </li>
           ))}
+
+
         </ul>
         <button
           type="button"
@@ -169,7 +233,7 @@ function App() {
         >
           Add Instrument
         </button>
-        <input type="submit" disabled={!settingsLocked} />
+        <input type="submit" />
       </form>
 
       {/*
