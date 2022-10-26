@@ -61,8 +61,6 @@ export const processMajor = (data, useProg, amount) => {
         withAmount()
     }
 
-    // console.log("randScale:", randScaleData)
-
     if (useProg) {
         return progOut;
     } else if (amount) {
@@ -93,12 +91,9 @@ const addOct = (data) => {
 
 
 const generateNoteLen02 = (data, noteLensToUse) => {
-    console.log('data:', data)
-    console.log("generateNoteLen02:", noteLensToUse)
     const withNoteData = [];
     const customNotes = []
 
-    // const customNoteLens = noteLensToUse.find((n, i) => n === noteLens[i].name)
     if (noteLensToUse.length > 0) {
         noteLensToUse?.length > 0 && noteLensToUse.map((n, i) => {
             noteLens.map(nn => {
@@ -108,8 +103,6 @@ const generateNoteLen02 = (data, noteLensToUse) => {
             })
         })
     }
-
-    console.log('customNotes:', customNotes)
 
     data.map((d, i, a) => {
         withNoteData.push({
@@ -123,9 +116,7 @@ const generateNoteLen02 = (data, noteLensToUse) => {
 }
 
 const generateTimeBars02 = (data) => {
-    // console.log('data time:', data)
     const withTimeBars = [];
-    const newTimeBar = []
     let validTimeBar = null;
     let mTime = 0;
     let qTime = 0;
@@ -185,14 +176,10 @@ const generateTimeBars02 = (data) => {
         }
     })
 
-    // console.log('newTimeBar 0202020:', newTimeBar)
-    // console.log('withTimeBars:', withTimeBars)
-
     return withTimeBars;
 }
 
 const doTrimNotes = (data, unisonCount) => {
-    // console.log('data trim:', data)
     const trimmed = [];
     data.map(d => {
         if (d.notes.length > 1) {
@@ -205,7 +192,6 @@ const doTrimNotes = (data, unisonCount) => {
 }
 
 const doMakeBars = (data, amountOfBars) => {
-    // console.log('data01:', data)
     const bars = [];
 
     data.forEach(d => {
@@ -218,19 +204,15 @@ const doMakeBars = (data, amountOfBars) => {
 }
 
 const doMakeLoops = (data, loopCount, maxBars) => {
-    // console.log('doMakeLoops data:', data)
     const allLoops = [];
     const newLoops = [];
     const oneBarLoop = [];
     const highestMVal = Number(data[data.length - 1].tBar[0])
-    // console.log("highest:", highestMVal)
     let barCount = highestMVal;
 
     for (let i = 1; i <= loopCount; i += 1) {
         allLoops.push(...data)
     }
-
-    // console.log('data.length:', data.length)
 
     allLoops.map((a, i) => {
         const tBar = a.tBar
@@ -261,25 +243,13 @@ const doMakeLoops = (data, loopCount, maxBars) => {
 }
 
 export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse) => {
-    // console.log('loop:', data)
-    // console.log("selected:", selectedScale)
-    console.log('index notesToUse:', noteLensToUse)
     const { partData, scaleData } = processMajor(data, false, 30);
-    // console.log('partData:', partData)
     const withOct = addOct(partData);
     const withNoteLen = generateNoteLen02(withOct, noteLensToUse);
-    console.log('withNoteLen:', withNoteLen)
     const withTimeBars = generateTimeBars02(withNoteLen);
-    // console.log('withTime:', withTimeBars)
-
     const trimNotes = doTrimNotes(withTimeBars, unisonCount);
-    // console.log("trimNotes:", trimNotes)
-
     const makeBars = doMakeBars(trimNotes, maxBars);
-    // console.log('makeBars:', makeBars)
-
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)
-    // console.log('looped:', looped)
 
     return { scaleData, partData: looped }
 }
