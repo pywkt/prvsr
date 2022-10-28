@@ -43,7 +43,7 @@ function App() {
    */
   const handleBuildLoop = async (data, partData) => {
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse)
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, 2)
     const rhfData = getValues(`instrumentArray`)
 
     // setStateChords(rhfData)
@@ -64,95 +64,21 @@ function App() {
   }
 
 
-  // const makeInstrument = (_, index, data) => {
-  //   console.log("makeInstrument:", data)
-  //   return new Tone.Part(((time, value) => {
-  //     const instrument = data.slug
-  //     console.log('value:', value)
-  //     console.log('varName:', varRef.current)
-  //     instrument.triggerAttackRelease(value.note[0], value.noteLen, time, 1);
-  //   }), newArr).start(0)
-  // }
-
-  const newArr = []
-
   const makeInstrument = () => {
     Tone.Transport.bpm.value = 120;
-    // Tone.start()
-    // Tone.Transport.start()
 
     Tone.loaded().then(() => {
       console.log('*** stateChords:', stateChords)
-      let varName = []
 
-      console.log('length:', Object.keys(stateChords).length)
-
-      // for (let x = 0; x < Object.keys(stateChords).length; x += 1) {
       stateChords.map((sc, sci) => {
         return new Tone.Part(((time, value) => {
           const instrument = stateChords[sci].slug
           console.log('instrument:', instrument)
           console.log('value:', value)
-          // the value is an object which contains both the note and the velocity
-          instrument.triggerAttackRelease(value.note, value.noteLen, time, 1);
+
+          instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
         }), sc.partData).start(0)
       })
-      // }
-
-
-
-
-
-
-      // stateChords.forEach((sc, sci) => {
-      //   console.log('sc:', sc)
-
-      //   varRef.current[sci] = new Tone.Part(((time, value) => {
-      //     const instrument = sc.slug
-      //     console.log('value:', value)
-      //     console.log('varName:', varRef.current)
-      //     // the value is an object which contains both the note and the velocity
-      //     instrument.triggerAttackRelease(value.note[0], value.noteLen, time, 1);
-      //   }), newArr).start(0)
-
-      //   // eslint-disable-next-line
-      //   // console.log(varName0)
-
-      //   // part.loop = 4
-      //   // part.loopStart = "0:0:0"
-      //   // part.loopEnd = "7:3:3"
-      // })
-
-
-      // const part = new Tone.Part(((time, value) => {
-      //   const instrument = stateChords[0].slug
-      //   console.log('value:', value)
-      //   // the value is an object which contains both the note and the velocity
-      //   instrument.triggerAttackRelease(value.note[0], value.noteLen, time, 1);
-      // }), newArr).start(0);
-
-      // part.loop = 4
-      // part.loopStart = "0:0:0"
-      // part.loopEnd = "7:3:3"
-
-
-
-
-      // stateChords.map((c, i) => {
-      //   const instrument = c.slug
-      //   c.data.partData.map(p => {
-      //     Tone.Transport.schedule((time) => {
-      //       instrument.triggerAttackRelease(p.notes, p.noteData.name)
-      //     }, p.tBar)
-      //   })
-      // })
-
-      // drumsRef.current.map((k) => {
-      //   Tone.Transport.schedule(time => {
-
-      //     kit8.triggerAttackRelease(k.note, "4n")
-      //   }, k.time)
-      // })
 
     })
   }
@@ -169,8 +95,6 @@ function App() {
 
   const stopTransport = () => {
     Tone.Transport.stop()
-    // Tone.Transport.clear()
-    // Tone.Transport.cancel()
   }
 
   const logTime = () => {
@@ -178,11 +102,9 @@ function App() {
     console.log('position:', position)
   }
 
-  // const [settingsLocked, setSettingsLocked] = useState(true)
   const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01" }, { name: "Piano 01", slug: "piano01" }]
   const drums = [{ name: "kit8", slug: "kit8" }]
   const notesToUse = ['1n', '2n', '4n', '8n']
-  const partArr = [];
 
 
 
@@ -214,14 +136,20 @@ function App() {
       setValue(`instrumentArray.${index}.slug`, getInstrumentData())
       setValue(`instrumentArray.${index}.data`, newData)
 
-
-      const fff = await newData.partData.map(o => o.tBar)
-      const www = await newData.partData.map(o => o.notes)
-      const ppp = await newData.partData.map(o => o.noteData.name)
+      const cleanPartData = {
+        times: await newData.partData.map(o => o.tBar),
+        notes: await newData.partData.map(o => o.notes),
+        noteNames: await newData.partData.map(o => o.noteData.name)
+      }
 
       const newPartData = []
-
-      fff.forEach((f, i) => newPartData.push({ time: fff[i], note: www[i], noteLen: ppp[i] }))
+      // Make an array of objects that will fit nicely in to Tone.Part
+      Object.keys(cleanPartData.times).forEach((f, i) => newPartData.push({
+        time: cleanPartData.times[i],
+        note: cleanPartData.notes[i],
+        noteLen: cleanPartData.noteNames[i],
+        velocity: Number(`0.${getRand(60, 99)}`)
+      }))
 
       setValue(`instrumentArray.${index}.partData`, newPartData)
     })
@@ -385,12 +313,12 @@ function App() {
         <strong>{scaleData?.name}</strong>
       </p>
 
-        <ol style={{ textAlign: 'left' }}>
-          <li>add instruments</li>
-          <li>click submit</li>
-          <li>click Make Instrument to add the part to the timeline</li>
-          <li>use start/stop to start and stop the timeline</li>
-        </ol>
+      <ol style={{ textAlign: 'left' }}>
+        <li>add instruments</li>
+        <li>click submit</li>
+        <li>click Make Instrument to add the part to the timeline</li>
+        <li>use start/stop to start and stop the timeline</li>
+      </ol>
     </div>
   );
 }

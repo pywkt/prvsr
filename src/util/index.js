@@ -70,17 +70,17 @@ export const processMajor = (data, useProg, amount) => {
     }
 }
 
-const addOct = (data) => {
+const addOct = (data, oct) => {
     const slimOct = [];
 
     data.map(d => {
         slimOct.push({
             ...d, notes: d.notes.map(n => {
                 if (/\#\#/.test(n)) {
-                    return n = Note.simplify(n) + 4
+                    return n = Note.simplify(n) + oct || 4
                 }
 
-                return n = n + 3
+                return n = n + oct || 3
             })
         })
     })
@@ -253,9 +253,9 @@ const doMakeLoops = (data, loopCount, maxBars) => {
     return maxBars === 1 ? oneBarLoop : newLoops;
 }
 
-export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse) => {
+export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse, oct) => {
     const { partData, scaleData } = processMajor(data, false, 30);
-    const withOct = addOct(partData);
+    const withOct = addOct(partData, oct);
     const withNoteLen = generateNoteLen02(withOct, noteLensToUse);
     const withTimeBars = generateTimeBars02(withNoteLen);
     const trimNotes = doTrimNotes(withTimeBars, unisonCount);
