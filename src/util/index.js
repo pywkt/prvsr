@@ -193,9 +193,20 @@ const doTrimNotes = (data, unisonCount) => {
 
 const doMakeBars = (data, amountOfBars) => {
     const bars = [];
+    // console.log('doMakeBars amountOfBars:', amountOfBars)
+    // console.log((data[0].tBar.split(':')[0]) < 8)
+    // console.log(Number((data[data.length - 1].tBar).split(':')[0]))
+    // const lastBar = Number((data[data.length - 1].tBar).split(':')[0])
+
+    // if (lastBar < amountOfBars) {
+    //     console.log('needs more')
+    //     const dupeData = [...data, ...data, ...data]
+    //     console.log('dupe:', dupeData)
+    // }
+
 
     data.forEach(d => {
-        if (d.tBar.split(':')[0] < amountOfBars) {
+        if (Number(d.tBar.split(':')[0]) < amountOfBars) {
             bars.push(d)
         }
     })
