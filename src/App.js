@@ -43,7 +43,8 @@ function App() {
    */
   const handleBuildLoop = async (data, partData) => {
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, 2)
+    console.log('build:', partData)
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, partData.octave)
     const rhfData = getValues(`instrumentArray`)
 
     // setStateChords(rhfData)
@@ -168,44 +169,44 @@ function App() {
 
     const slug = instruments.find(i => i.slug === data.instrument).slug
 
-      const getInstrumentData = () => {
-        switch (slug) {
-          case 'piano01':
-            return piano01
-          case 'synth01':
-            return synth01
-          default:
-            return 'piano01-default'
-        }
+    const getInstrumentData = () => {
+      switch (slug) {
+        case 'piano01':
+          return piano01
+        case 'synth01':
+          return synth01
+        default:
+          return 'piano01-default'
       }
+    }
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
 
-      const newData = Object.keys(currentScaleData.current).length === 0 ?
-        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
-        await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
+    const newData = Object.keys(currentScaleData.current).length === 0 ?
+      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
+      await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
 
-      setValue(`instrumentArray.${index}.slug`, getInstrumentData())
-      setValue(`instrumentArray.${index}.data`, newData)
+    setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+    setValue(`instrumentArray.${index}.data`, newData)
 
-      const cleanPartData = {
-        times: await newData.partData.map(o => o.tBar),
-        notes: await newData.partData.map(o => o.notes),
-        noteNames: await newData.partData.map(o => o.noteData.name)
-      }
+    const cleanPartData = {
+      times: await newData.partData.map(o => o.tBar),
+      notes: await newData.partData.map(o => o.notes),
+      noteNames: await newData.partData.map(o => o.noteData.name)
+    }
 
-      const newPartData = []
-      // Make an array of objects that will fit nicely in to Tone.Part
-      Object.keys(cleanPartData.times).forEach((f, i) => newPartData.push({
-        time: cleanPartData.times[i],
-        note: cleanPartData.notes[i],
-        noteLen: cleanPartData.noteNames[i],
-        velocity: Number(`0.${getRand(60, 99)}`)
-      }))
+    const newPartData = []
+    // Make an array of objects that will fit nicely in to Tone.Part
+    Object.keys(cleanPartData.times).forEach((f, i) => newPartData.push({
+      time: cleanPartData.times[i],
+      note: cleanPartData.notes[i],
+      noteLen: cleanPartData.noteNames[i],
+      velocity: Number(`0.${getRand(60, 99)}`)
+    }))
 
-      setValue(`instrumentArray.${index}.partData`, newPartData)
+    setValue(`instrumentArray.${index}.partData`, newPartData)
 
-      return getValues(`instrumentArray.${index}`)
+    return getValues(`instrumentArray.${index}`)
 
     // const rhfValues = getValues(`instrumentArray`)
     // console.log('rhfValues:', rhfValues)
@@ -220,7 +221,7 @@ function App() {
     console.log('refresh')
     let newData;
 
-    const data = getValues()
+    const data = getValues(`instrumentArray.${index}`)
     console.log('refresh data:', data.instrumentArray[index])
     console.log(getValues(`instrumentArray.${index}.data`))
 
@@ -271,7 +272,7 @@ function App() {
 
     await addToTransport(index)
 
-    
+
   }
 
 
@@ -306,11 +307,16 @@ function App() {
                   </option>
                 ))}
               </select>
-
-              <input defaultValue="1" type="text" {...register(`instrumentArray.${index}.unisonCount`)} />
-
-              <button type="button" onClick={() => remove(index)}>Delete</button>
-              <button type="button" onClick={() => refreshPart(index)}>Refresh</button>
+              <br />
+              <label htmlFor='unison-count'>Notes to play at once</label>
+              <br />
+              <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
+              <br />
+              <label htmlFor='octave-input'>octave</label>
+              <br />
+              <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
+              
+              {/* <button type="button" onClick={() => refreshPart(index)}>Refresh</button> */}
 
               <div>
                 {notesToUse.map(n => (
@@ -322,8 +328,9 @@ function App() {
               </div>
 
               <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
+              <button type="button" onClick={() => remove(index)}>Delete</button>
 
-
+<hr style={{ width: 400 }} />
             </li>
           ))}
 
@@ -402,10 +409,13 @@ function App() {
 
       <ol style={{ textAlign: 'left' }}>
         <li>add instruments</li>
-        <li>click submit</li>
-        <li>click Make Instrument to add the part to the timeline</li>
+        <li>click Add to Track</li>
         <li>use start/stop to start and stop the timeline</li>
       </ol>
+      {/* <hr /> */}
+      <ul style={{ textAlign: 'left' }}>
+        <li>stop the transport before updating the instruments</li>
+      </ul>
     </div>
   );
 }
