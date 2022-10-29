@@ -109,12 +109,64 @@ function App() {
 
 
   const onSubmit = async (data) => {
+    // console.log('onSubmit 01:', data)
+    // Tone.Transport.cancel()
+    // Tone.Transport.clear()
+
+    // await data.forEach(async (dd, index) => {
+    //   const slug = instruments.find(i => i.slug === dd.instrument).slug
+
+    //   const getInstrumentData = () => {
+    //     switch (slug) {
+    //       case 'piano01':
+    //         return piano01
+    //       case 'synth01':
+    //         return synth01
+    //       default:
+    //         return 'piano01-default'
+    //     }
+    //   }
+
+    //   const validNotes = Object.keys(dd.notesToUse).filter(k => dd.notesToUse[k] === true);
+
+    //   const newData = Object.keys(currentScaleData.current).length === 0 ?
+    //     await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...dd, notesToUse: validNotes }) :
+    //     await getKeyData(currentScaleData.current.tonic, "major", { ...dd, notesToUse: validNotes })
+
+    //   setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+    //   setValue(`instrumentArray.${index}.data`, newData)
+
+    //   const cleanPartData = {
+    //     times: await newData.partData.map(o => o.tBar),
+    //     notes: await newData.partData.map(o => o.notes),
+    //     noteNames: await newData.partData.map(o => o.noteData.name)
+    //   }
+
+    //   const newPartData = []
+    //   // Make an array of objects that will fit nicely in to Tone.Part
+    //   Object.keys(cleanPartData.times).forEach((f, i) => newPartData.push({
+    //     time: cleanPartData.times[i],
+    //     note: cleanPartData.notes[i],
+    //     noteLen: cleanPartData.noteNames[i],
+    //     velocity: Number(`0.${getRand(60, 99)}`)
+    //   }))
+
+    //   setValue(`instrumentArray.${index}.partData`, newPartData)
+    // })
+
+    // const rhfValues = getValues(`instrumentArray`)
+    // console.log('rhfValues:', rhfValues)
+
+    // setStateChords(getValues(`instrumentArray`))
+  }
+
+
+  const buildIndividualPart = async (data, index) => {
     console.log('onSubmit 01:', data)
     Tone.Transport.cancel()
     Tone.Transport.clear()
 
-    await data.instrumentArray.forEach(async (dd, index) => {
-      const slug = instruments.find(i => i.slug === dd.instrument).slug
+    const slug = instruments.find(i => i.slug === data.instrument).slug
 
       const getInstrumentData = () => {
         switch (slug) {
@@ -127,11 +179,11 @@ function App() {
         }
       }
 
-      const validNotes = Object.keys(dd.notesToUse).filter(k => dd.notesToUse[k] === true);
+    const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
 
       const newData = Object.keys(currentScaleData.current).length === 0 ?
-        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...dd, notesToUse: validNotes }) :
-        await getKeyData(currentScaleData.current.tonic, "major", { ...dd, notesToUse: validNotes })
+        await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
+        await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
 
       setValue(`instrumentArray.${index}.slug`, getInstrumentData())
       setValue(`instrumentArray.${index}.data`, newData)
@@ -152,15 +204,14 @@ function App() {
       }))
 
       setValue(`instrumentArray.${index}.partData`, newPartData)
-    })
 
-    const rhfValues = getValues(`instrumentArray`)
-    console.log('rhfValues:', rhfValues)
+      return getValues(`instrumentArray.${index}`)
 
-    setStateChords(getValues(`instrumentArray`))
+    // const rhfValues = getValues(`instrumentArray`)
+    // console.log('rhfValues:', rhfValues)
+
+    // setStateChords(getValues(`instrumentArray`))
   }
-
-
 
 
 
@@ -186,6 +237,42 @@ function App() {
     setValue(`instrumentArray.${index}.data`, newData)
   }
 
+  const addToTransport = (index) => {
+    Tone.Transport.bpm.value = 120;
+    const data = getValues(`instrumentArray`)
+
+    Tone.loaded().then(() => {
+      // console.log('*** stateChords:', stateChords)
+
+      // Tone.Part.clear()
+      console.log('add:', data)
+
+      data.map((sc, sci) => {
+        return new Tone.Part(((time, value) => {
+          const instrument = sc.slug
+          console.log('instrument:', data.slug)
+          console.log('value:', value)
+
+          instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+        }), sc.partData).start(0)
+      })
+
+    })
+  }
+
+  const commitInstrument = async (index) => {
+    console.log('index:', index)
+    const data = getValues(`instrumentArray.${index}`)
+    console.log('commit:', data)
+    const commited = await buildIndividualPart(data, index)
+    console.log('committed:', commited)
+
+    // setValue(`instrumentArray.${index}`, commited)
+
+    await addToTransport(index)
+
+    
+  }
 
 
   return (
@@ -234,7 +321,7 @@ function App() {
                 ))}
               </div>
 
-              {/* <Button onClick={(e) => makeInstrument(e, index, getValues(`instrumentArray`))} label="Add to Track" /> */}
+              <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
 
 
             </li>
@@ -248,7 +335,7 @@ function App() {
         >
           Add Instrument
         </button>
-        <input type="submit" />
+        {/* <input type="submit" /> */}
       </form>
 
       {/*
