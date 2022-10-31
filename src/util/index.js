@@ -131,6 +131,10 @@ const generateTimeBars02 = (data) => {
             const prev = data[i - 1]
             const prevName = prev.noteData.name
 
+            if (prevName === "16n") {
+                sTime = sTime += 1
+            }
+            
             if (prevName === "8n") {
                 sTime = sTime += 2
             }

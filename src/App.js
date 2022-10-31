@@ -102,7 +102,7 @@ function App() {
 
   const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01" }, { name: "Piano 01", slug: "piano01" }]
   const drums = [{ name: "kit8", slug: "kit8" }]
-  const notesToUse = ['1n', '2n', '4n', '8n']
+  const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
 
 
@@ -362,7 +362,7 @@ function App() {
     //   remove(data.name)
     // }
 
-    
+
     // drumsRef.current = data
     // console.log(typeof data)
     // const dataArr = [data]
