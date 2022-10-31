@@ -259,8 +259,10 @@ function App() {
 
       // Tone.Part.clear()
       console.log('add:', data)
+      console.log('activeParts before:', activeParts.current)
 
       if (activeParts.current[index]) {
+        console.log('*** disposing')
         activeParts.current[index].dispose()
       }
       
@@ -275,10 +277,11 @@ function App() {
           instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
         }), data.partData).start(0)
 
-        if (activeParts.current[index].name !== "Part") {
+      if (activeParts.current[index].name !== "Part") {
           console.log("change")
         }
 
+        console.log('active again:', activeParts.current[index])
         activeParts.current[index].name = index
         console.log("in map:", activeParts.current)
       // })
@@ -350,19 +353,19 @@ function App() {
     // console.log(typeof data)
     // const dataArr = [data]
 
-    Tone.loaded().then(() => {
-      Object.entries(data).map((sc, sci) => {
-        console.log('sc drums:', sc[1])
-        return new Tone.Part(((time, value) => {
-          const instrument = sc.slug
-          console.log('instrument:', data.slug)
-          console.log('value:', value)
+    // Tone.loaded().then(() => {
+    //   Object.entries(data).map((sc, sci) => {
+    //     console.log('sc drums:', sc[1])
+    //     return new Tone.Part(((time, value) => {
+    //       const instrument = sc.slug
+    //       console.log('instrument:', data.slug)
+    //       console.log('value:', value)
 
-          instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
-        }), sc.partData).start(0)
-      })
-    })
-    // addToTransport(`drums`)
+    //       instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+    //     }), sc.partData).start(0)
+    //   })
+    // })
+    await addToTransport(data, 'kick')
 
   }
 

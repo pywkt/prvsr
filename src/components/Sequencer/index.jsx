@@ -30,10 +30,10 @@ const Sequencer = ({ setDrumPart }) => {
 
         let position;
 
-        const drumsToSend = {partData: {...validKicks}, slug: kit8 }
+        const drumsToSend = { partData: [ ...validKicks ], slug: kit8 }
         // console.log("drumsToSend:", drumsToSend)
 
-        
+
         setDrumPart(drumsToSend)
         // Tone.Transport.scheduleRepeat((time, data) => {
         //     // console.log("seq time:", time)
@@ -91,7 +91,7 @@ const Sequencer = ({ setDrumPart }) => {
             // console.log('fff')
             kickRef.current.splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
-            kickRef.current.splice(index, 1, { time: `${bars}:${qNotes}:0`, note: "C4", noteLen: "4n", velocity: 1 })
+            kickRef.current.splice(index, 1, { time: `${bars}:${qNotes}:0`, note: ["C4"], noteLen: "4n", velocity: 1 })
         }
 
         setValue("drums", kickRef.current)
