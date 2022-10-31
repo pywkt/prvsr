@@ -19,7 +19,7 @@ function App() {
   const [scaleData, setScaleData] = useState({})
   const [selectedInstrument, setSelectedInstrument] = useState('')
   const [withDrums, setWithDrums] = useState(false);
-  console.log('stateChords:', stateChords)
+  // console.log('stateChords:', stateChords)
 
   const varRef = useRef({})
 
@@ -43,7 +43,7 @@ function App() {
    */
   const handleBuildLoop = async (data, partData) => {
     currentScaleData.current = data
-    console.log('build:', partData)
+    // console.log('build:', partData)
     const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, partData.octave)
     const rhfData = getValues(`instrumentArray`)
 
@@ -59,10 +59,7 @@ function App() {
   const drumsRef = useRef([])
   // console.log('drumsRef:', drumsRef.current)
 
-  const setDrumPart = (data) => {
-    console.log('setDrumPart:', data)
-    drumsRef.current = data
-  }
+
 
 
   const makeInstrument = () => {
@@ -164,8 +161,8 @@ function App() {
 
   const buildIndividualPart = async (data, index) => {
     console.log('onSubmit 01:', data)
-    Tone.Transport.cancel()
-    Tone.Transport.clear()
+    // Tone.Transport.cancel()
+    // Tone.Transport.clear()
 
     const slug = instruments.find(i => i.slug === data.instrument).slug
 
@@ -217,30 +214,45 @@ function App() {
 
 
 
-  const refreshPart = async (index) => {
-    console.log('refresh')
-    let newData;
+  // const refreshPart = async (index) => {
+  //   console.log('refresh')
+  //   let newData;
 
-    const data = getValues(`instrumentArray.${index}`)
-    console.log('refresh data:', data.instrumentArray[index])
-    console.log(getValues(`instrumentArray.${index}.data`))
+  //   const data = getValues(`instrumentArray.${index}`)
+  //   console.log('refresh data:', data.instrumentArray[index])
+  //   console.log(getValues(`instrumentArray.${index}.data`))
 
-    const instrumentToUpdate = data.instrumentArray[index]
+  //   const instrumentToUpdate = data.instrumentArray[index]
 
-    const validNotes = Object.keys(instrumentToUpdate.notesToUse).filter(k => instrumentToUpdate.notesToUse[k] === true);
+  //   const validNotes = Object.keys(instrumentToUpdate.notesToUse).filter(k => instrumentToUpdate.notesToUse[k] === true);
 
-    newData = Object.keys(currentScaleData.current).length === 0 ?
-      await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...instrumentToUpdate, notesToUse: validNotes }) :
-      await getKeyData(currentScaleData.current.tonic, "major", { ...instrumentToUpdate, notesToUse: validNotes })
+  //   newData = Object.keys(currentScaleData.current).length === 0 ?
+  //     await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...instrumentToUpdate, notesToUse: validNotes }) :
+  //     await getKeyData(currentScaleData.current.tonic, "major", { ...instrumentToUpdate, notesToUse: validNotes })
 
-    console.log('newData:', newData)
+  //   console.log('newData:', newData)
 
-    setValue(`instrumentArray.${index}.data`, newData)
-  }
+  //   setValue(`instrumentArray.${index}.data`, newData)
+  // }
 
-  const addToTransport = (index) => {
+  const activeParts = useRef({})
+
+  const addToTransport = (data, index) => {
     Tone.Transport.bpm.value = 120;
-    const data = getValues(`instrumentArray`)
+    console.log('addToTransport start:', data)
+    // const data = getValues(dataName)
+    // console.log("data.length:", data.length)
+
+    // const numberOfParts = data.length
+    // console.log("numberOfParts:", numberOfParts)
+
+    // if (numberOfParts !== data.length) {
+    //   // console.log("ppp")
+    //   activeParts.current = {...activeParts.current, [numberOfParts + 1]: numberOfParts + 1 }
+    // }
+    
+
+    // console.log("activeParts", activeParts.current)
 
     Tone.loaded().then(() => {
       // console.log('*** stateChords:', stateChords)
@@ -248,7 +260,99 @@ function App() {
       // Tone.Part.clear()
       console.log('add:', data)
 
-      data.map((sc, sci) => {
+      if (activeParts.current[index]) {
+        activeParts.current[index].dispose()
+      }
+      
+
+
+      // data.map((sc, sci) => {
+        activeParts.current[index] = new Tone.Part(((time, value) => {
+          const instrument = data.slug
+          console.log('instrument:', data.slug)
+          // console.log('value:', value)
+
+          instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+        }), data.partData).start(0)
+
+        if (activeParts.current[index].name !== "Part") {
+          console.log("change")
+        }
+
+        activeParts.current[index].name = index
+        console.log("in map:", activeParts.current)
+      // })
+
+
+
+
+      // data.map((sc, sci) => {
+      //   activeParts.current[index] = new Tone.Part(((time, value) => {
+      //     const instrument = sc.slug
+      //     console.log('instrument:', data.slug)
+      //     console.log('value:', value)
+
+      //     instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+      //   }), sc.partData).start(0)
+
+      //   if (activeParts.current[sci].name !== "Part") {
+      //     console.log("change")
+      //   }
+
+      //   activeParts.current[sci].name = index
+      //   console.log("in map:", activeParts.current[index])
+      // })
+
+      console.log("after:", activeParts.current)
+
+      
+
+      // data.map((sc, sci) => {
+      //   return new Tone.Part(((time, value) => {
+      //     const instrument = sc.slug
+      //     console.log('instrument:', data.slug)
+      //     console.log('value:', value)
+
+      //     instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+      //   }), sc.partData).start(0)
+      // })
+
+      // console.log("all transport:", Tone.Transport.cancel())
+
+    })
+  }
+
+  const commitInstrument = async (index) => {
+    // console.log('index:', index)
+    const data = getValues(`instrumentArray.${index}`)
+    // console.log('commit:', data)
+    const commited = await buildIndividualPart(data, index)
+    // console.log('committed:', commited)
+
+    // setValue(`instrumentArray.${index}`, commited)
+
+    // await addToTransport(`instrumentArray`, index)
+    await addToTransport(commited, index)
+
+
+  }
+
+  const deletePart = (index) => {
+    console.log(activeParts.current[index])
+    activeParts.current[index].dispose()
+    delete activeParts.current[index];
+    remove(index)
+  }
+
+  const setDrumPart = async (data) => {
+    console.log('setDrumPart:', data)
+    // drumsRef.current = data
+    // console.log(typeof data)
+    // const dataArr = [data]
+
+    Tone.loaded().then(() => {
+      Object.entries(data).map((sc, sci) => {
+        console.log('sc drums:', sc[1])
         return new Tone.Part(((time, value) => {
           const instrument = sc.slug
           console.log('instrument:', data.slug)
@@ -257,21 +361,8 @@ function App() {
           instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
         }), sc.partData).start(0)
       })
-
     })
-  }
-
-  const commitInstrument = async (index) => {
-    console.log('index:', index)
-    const data = getValues(`instrumentArray.${index}`)
-    console.log('commit:', data)
-    const commited = await buildIndividualPart(data, index)
-    console.log('committed:', commited)
-
-    // setValue(`instrumentArray.${index}`, commited)
-
-    await addToTransport(index)
-
+    // addToTransport(`drums`)
 
   }
 
@@ -315,7 +406,7 @@ function App() {
               <label htmlFor='octave-input'>octave</label>
               <br />
               <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
-              
+
               {/* <button type="button" onClick={() => refreshPart(index)}>Refresh</button> */}
 
               <div>
@@ -328,9 +419,9 @@ function App() {
               </div>
 
               <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
-              <button type="button" onClick={() => remove(index)}>Delete</button>
+              <button type="button" onClick={() => deletePart(index)}>Delete</button>
 
-<hr style={{ width: 400 }} />
+              <hr style={{ width: 400 }} />
             </li>
           ))}
 
