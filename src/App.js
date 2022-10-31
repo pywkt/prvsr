@@ -285,11 +285,14 @@ function App() {
         console.log('active again:', activeParts.current[index])
         activeParts.current[index].name = index
 
-        if (typeof data.name !== 'number') {
+        console.log(data.name)
+
+        if ((typeof data.name) !== 'undefined') {
+          console.log('data.name:', data.name)
           activeParts.current[index].loop = true
           activeParts.current[index].loopStart = "0:0:0"
           activeParts.current[index].loopEnd = "4:0:0"
-          // activeParts.current[index].playbackRate = 2
+          activeParts.current[index].playbackRate = 2
         }
         console.log("in map:", activeParts.current)
       // })
