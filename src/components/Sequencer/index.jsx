@@ -16,6 +16,7 @@ const Sequencer = ({ setDrumPart }) => {
     const kickRef = useRef([]);
     const snareRef = useRef([]);
     const drumRef = useRef([])
+    const newRef = useRef({kick: [], snare: [], hihat: []});
 
     const makeDrums = () => {
         // console.log('drums', getValues(`drums`))
@@ -104,40 +105,52 @@ const Sequencer = ({ setDrumPart }) => {
 
         // console.log('handle - track:', track)
 
-        const setTrack = (track) => {
+        // const setTrack = (track) => {
+        //     switch (track) {
+        //         case 'kick':
+        //             return kickRef
+        //         case 'snare':
+        //             return snareRef
+        //     }
+        // }
+
+        const trackNotes = (track) => {
             switch (track) {
                 case 'kick':
-                    return kickRef
+                    return 'C4';
                 case 'snare':
-                    return snareRef
+                    return 'D4';
+                case 'hihat':
+                    return 'E4'
             }
         }
 
-        const aTrack = setTrack(track)
+        // const aTrack = setTrack(track)
 
-        console.log('ref:', track, aTrack.current)
+        // console.log('ref:', track, aTrack.current)
 
-        if (aTrack.current.length === 0) {
+        if (newRef.current[track].length === 0) {
             console.log('making kick ref')
             for (let i = 0; i < drumSteps; i += 1) {
-                aTrack.current.push({ time: `0:0:0`, note: '' })
+                newRef.current[track].push({ time: `0:0:0`, note: '' })
             }
         }
 
+        console.log('newRef:', newRef.current[track])
         // console.log(`01`, aTrack.current)
         // console.log('kickRef index:', index)
 
-        if (aTrack.current[index].note !== '') {
+        if (newRef.current[track][index].note !== '') {
             // console.log('fff')
-            aTrack.current.splice(index, 1, { time: `0:0:0`, note: '' })
+            newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
             // console.log('www')
-            aTrack.current.splice(index, 1, { time: `${bars}:${qNotes}:0`, note: [track === "kick" ? "C4" : "D4"], noteLen: "4n", velocity: 1 })
+            newRef.current[track].splice(index, 1, { time: `${bars}:${qNotes}:0`, note: [trackNotes(track)], noteLen: "4n", velocity: 1 })
         }
 
         // console.log('kickref.current 02:', aTrack.current)
 
-        setValue(`drums.${track}`, aTrack.current)
+        setValue(`drums.${track}`, newRef.current[track])
 
         // console.log('measure:', String(index / 4).split(".")[0])
         // console.log("kickRef.current:", kickRef.current)
@@ -160,6 +173,8 @@ const Sequencer = ({ setDrumPart }) => {
             {makeTrackBoxes('kick')}
             <br />
             {makeTrackBoxes('snare')}
+            <br />
+            {makeTrackBoxes('hihat')}
             <br />
             <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
             <Button onClick={changeDrumSteps} label="Update" />
