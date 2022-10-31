@@ -283,6 +283,12 @@ function App() {
 
         console.log('active again:', activeParts.current[index])
         activeParts.current[index].name = index
+
+        if (data.name === 'kick') {
+          activeParts.current[index].loop = true
+          activeParts.current[index].loopStart = "0:0:0"
+          activeParts.current[index].loopEnd = "4:0:0"
+        }
         console.log("in map:", activeParts.current)
       // })
 
@@ -349,6 +355,14 @@ function App() {
 
   const setDrumPart = async (data) => {
     console.log('setDrumPart:', data)
+    
+    // if (activeParts.current[data.name]) {
+    //   activeParts.current[data.name].dispose()
+    //   delete activeParts.current[data.name]
+    //   remove(data.name)
+    // }
+
+    
     // drumsRef.current = data
     // console.log(typeof data)
     // const dataArr = [data]
@@ -365,7 +379,7 @@ function App() {
     //     }), sc.partData).start(0)
     //   })
     // })
-    await addToTransport(data, 'kick')
+    await addToTransport(data, data.name, true)
 
   }
 
