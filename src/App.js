@@ -240,6 +240,7 @@ function App() {
   const addToTransport = (data, index) => {
     Tone.Transport.bpm.value = 120;
     console.log('addToTransport start:', data)
+    console.log('add index:', index)
     // const data = getValues(dataName)
     // console.log("data.length:", data.length)
 
@@ -284,10 +285,11 @@ function App() {
         console.log('active again:', activeParts.current[index])
         activeParts.current[index].name = index
 
-        if (data.name === 'kick') {
+        if (typeof data.name !== 'number') {
           activeParts.current[index].loop = true
           activeParts.current[index].loopStart = "0:0:0"
           activeParts.current[index].loopEnd = "4:0:0"
+          // activeParts.current[index].playbackRate = 2
         }
         console.log("in map:", activeParts.current)
       // })
@@ -379,7 +381,15 @@ function App() {
     //     }), sc.partData).start(0)
     //   })
     // })
-    await addToTransport(data, data.name, true)
+
+    for (const [key, value] of Object.entries(data)) {
+      await addToTransport(value, key, true)
+    }
+
+    // Object.entries(data).map(async dp => {
+    //   await addToTransport(dp, dp.name, true)
+    // })
+    
 
   }
 

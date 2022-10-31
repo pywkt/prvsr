@@ -12,30 +12,52 @@ const Sequencer = ({ setDrumPart }) => {
     const drumTracks = { parts: ["kick", "snare", "hihat"], steps: 16 }
     const [drumSteps, setDrumSteps] = useState(16)
 
-    const drumStepsRef = useRef(16)
-    const kickRef = useRef([])
+    const drumStepsRef = useRef(16);
+    const kickRef = useRef([]);
+    const snareRef = useRef([]);
+    const drumRef = useRef([])
 
     const makeDrums = () => {
         // console.log('drums', getValues(`drums`))
         const drumData = getValues(`drums`)
         console.log('drumData:', drumData)
+
+        const drumParts = Object.keys(drumData)
+        console.log('drumParts:', drumParts)
         // const validKicks = kickRef.current.filter(k => k.note !== '')
         // console.log('validKicks:', validKicks)
 
         // console.log("drumData:", drumData)
 
-        const validKicks = kickRef.current.filter(k => k.note !== '')
-        setValue(`drums.kick`, { partData: { ...validKicks }, slug: kit8 })
+        // const validKicks = kickRef.current.filter(k => k.note !== '')
+        // const validHits = drumData.filter(k => k.note !== '')
+        const allDrums = []
+        drumParts.map((d, i) => {
+            allDrums.push(drumData[d].filter(a => a.note !== ''))
+            drumRef.current[d] = { partData: [ ...allDrums[i].map(ad => ad) ], slug: kit8, name: d }
+        })
+        console.log('allDrums:', allDrums)
+        console.log('drumRef.current:', drumRef.current)
+        // console.log('validHits:', validHits)
+        // setValue(`drums.kick`, { partData: { ...validKicks }, slug: kit8 })
+        // setValue(`drums`, { partData: { ...validHits }, slug: kit8 })
         // console.log('validKicks:', validKicks)
         // kickRef.current = validKicks
 
         let position;
 
-        const drumsToSend = { partData: [ ...validKicks ], slug: kit8, name: 'kick' }
+        console.log('values:', getValues('drums'))
+
+        // const rhfDrumData = getValues('drums')
+        // console.log('rhfDrumData:', rhfDrumData)
+        // // const drumsToSend = { partData: [...validHits], slug: kit8, name: 'kick' }
+        // const drumsToSend = rhfDrumData.map((rd, i) => {
+        //     console.log('mapppp:', rd)
+        // })
         // console.log("drumsToSend:", drumsToSend)
 
 
-        setDrumPart(drumsToSend)
+        setDrumPart(drumRef.current)
         // Tone.Transport.scheduleRepeat((time, data) => {
         //     // console.log("seq time:", time)
         //     position = Tone.Transport.position
@@ -75,34 +97,47 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
 
-    const handleKickChange = (index) => {
+    const handleKickChange = (index, track) => {
         console.log('handleKickChange')
         const bars = String(index / 4).split(".")[0]
         const qNotes = index % 4
 
-        console.log('ref:', kickRef.current.length)
+        // console.log('handle - track:', track)
 
-        if (kickRef.current.length === 0) {
-            console.log('making kick ref')
-            for (let i = 0; i < drumSteps; i += 1) {
-                kickRef.current.push({ time: `0:0:0`, note: '' })
+        const setTrack = (track) => {
+            switch (track) {
+                case 'kick':
+                    return kickRef
+                case 'snare':
+                    return snareRef
             }
         }
 
-        console.log("kickref.current 01", kickRef.current)
-        console.log('kickRef index:', index)
+        const aTrack = setTrack(track)
 
-        if (kickRef.current[index].note.includes("C4")) {
-            console.log('fff')
-            kickRef.current.splice(index, 1, { time: `0:0:0`, note: '' })
-        } else {
-            console.log('www')
-            kickRef.current.splice(index, 1, { time: `${bars}:${qNotes}:0`, note: ["C4"], noteLen: "4n", velocity: 1 })
+        console.log('ref:', track, aTrack.current)
+
+        if (aTrack.current.length === 0) {
+            console.log('making kick ref')
+            for (let i = 0; i < drumSteps; i += 1) {
+                aTrack.current.push({ time: `0:0:0`, note: '' })
+            }
         }
 
-        console.log('kickref.current 02:', kickRef.current)
+        // console.log(`01`, aTrack.current)
+        // console.log('kickRef index:', index)
 
-        setValue("drums", kickRef.current)
+        if (aTrack.current[index].note !== '') {
+            // console.log('fff')
+            aTrack.current.splice(index, 1, { time: `0:0:0`, note: '' })
+        } else {
+            // console.log('www')
+            aTrack.current.splice(index, 1, { time: `${bars}:${qNotes}:0`, note: [track === "kick" ? "C4" : "D4"], noteLen: "4n", velocity: 1 })
+        }
+
+        // console.log('kickref.current 02:', aTrack.current)
+
+        setValue(`drums.${track}`, aTrack.current)
 
         // console.log('measure:', String(index / 4).split(".")[0])
         // console.log("kickRef.current:", kickRef.current)
@@ -116,13 +151,15 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const makeTrackBoxes = (track) => {
-        return Array.from(Array(drumSteps)).map((_, i) => <input {...register(`${track}`)} onChange={() => handleKickChange(i)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
+        return Array.from(Array(drumSteps)).map((_, i) => <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
     }
 
 
     return (
         <div>
             {makeTrackBoxes('kick')}
+            <br />
+            {makeTrackBoxes('snare')}
             <br />
             <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
             <Button onClick={changeDrumSteps} label="Update" />
