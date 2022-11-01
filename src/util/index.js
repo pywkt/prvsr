@@ -114,7 +114,7 @@ const generateNoteLen02 = (data, noteLensToUse) => {
 
 }
 
-const generateTimeBars02 = (data) => {
+const generateTimeBars02 = (data, startTime) => {
     const withTimeBars = [];
     let validTimeBar = null;
     let mTime = 0;
@@ -123,7 +123,8 @@ const generateTimeBars02 = (data) => {
 
     data.map((d, i) => {
         if (i === 0) {
-            return withTimeBars.push({ ...d, tBar: "0:0:0" })
+
+            return withTimeBars.push({ ...d, tBar: `0:0:0` })
 
         } else {
             const prev = data[i - 1]
@@ -245,11 +246,11 @@ const doMakeLoops = (data, loopCount, maxBars) => {
     return maxBars === 1 ? oneBarLoop : newLoops;
 }
 
-export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse, oct) => {
+export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse, oct, startTime) => {
     const { partData, scaleData } = processMajor(data, false, 30);
     const withOct = addOct(partData, oct);
     const withNoteLen = generateNoteLen02(withOct, noteLensToUse);
-    const withTimeBars = generateTimeBars02(withNoteLen);
+    const withTimeBars = generateTimeBars02(withNoteLen, startTime);
     const trimNotes = doTrimNotes(withTimeBars, unisonCount);
     const makeBars = doMakeBars(trimNotes, maxBars);
     const looped = doMakeLoops(makeBars, loopTimes, maxBars)

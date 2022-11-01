@@ -20,10 +20,15 @@ const Sequencer = ({ setDrumPart }) => {
         const drumParts = Object.keys(drumData)
         console.log('drumParts:', drumParts)
 
+        const fff = drumParts.filter(d => d !== 'startTime')
+        console.log('fff:', fff)
         const allDrums = []
-        drumParts.map((d, i) => {
+        fff.map((d, i) => {
+            console.log('d:', d)
+
             allDrums.push(drumData[d].filter(a => a.note !== ''))
-            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: kit8, name: d }
+            console.log('allDrums 01:', allDrums)
+            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: kit8, name: d, startTime: drumData.startTime }
         })
         console.log('allDrums:', allDrums)
         console.log('drumRef.current:', drumRef.current)
@@ -85,6 +90,10 @@ const Sequencer = ({ setDrumPart }) => {
             <br />
             {makeTrackBoxes('hihat')}
             <br />
+            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
+            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} />
+            <br />
+
             <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
             <Button onClick={changeDrumSteps} label="Update" />
             <br />

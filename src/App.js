@@ -32,7 +32,7 @@ function App() {
    */
   const handleBuildLoop = async (data, partData) => {
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, partData.octave)
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, partData.octave, partData.startTime)
 
     setScaleData(currentLoop.scaleData)
     return currentLoop
@@ -135,7 +135,7 @@ function App() {
           console.log('instrument:', data.slug)
 
           instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
-        }), data.partData).start(0)
+        }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
       if (activeParts.current[index].name !== "Part") {
           console.log("change")
@@ -216,6 +216,10 @@ function App() {
               <label htmlFor='octave-input'>octave</label>
               <br />
               <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
+              <br />
+              <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }}/>
+                  :
+              <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
 
               <div>
                 {notesToUse.map(n => (
