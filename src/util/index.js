@@ -1,8 +1,6 @@
 import { Chord, Note, Progression, Scale } from '@tonaljs/tonal';
 import { noteLens } from '../config';
 
-
-
 export const getRand = (min, max) => Math.floor(Math.random() * (max - min) + min);
 
 export const getProgression = (tonic) => {
@@ -74,9 +72,9 @@ const addOct = (data, oct) => {
     const slimOct = [];
 
     data.map(d => {
-        slimOct.push({
+        return slimOct.push({
             ...d, notes: d.notes.map(n => {
-                if (/\#\#/.test(n)) {
+                if (/##/.test(n)) {
                     return n = Note.simplify(n) + oct || 4
                 }
 
@@ -96,16 +94,17 @@ const generateNoteLen02 = (data, noteLensToUse) => {
 
     if (noteLensToUse.length > 0) {
         noteLensToUse?.length > 0 && noteLensToUse.map((n, i) => {
-            noteLens.map(nn => {
+            // eslint-disable-next-line
+            return noteLens.map(nn => {
                 if (nn.name === n) {
-                    customNotes.push(nn)
+                    return customNotes.push(nn)
                 }
             })
         })
     }
 
     data.map((d, i, a) => {
-        withNoteData.push({
+        return withNoteData.push({
             ...d,
             noteData: noteLensToUse.length > 0 ? customNotes[getRand(0, customNotes.length)] : noteLens[getRand(0, noteLens.length)]
         })
@@ -124,17 +123,16 @@ const generateTimeBars02 = (data) => {
 
     data.map((d, i) => {
         if (i === 0) {
-            withTimeBars.push({ ...d, tBar: "0:0:0" })
+            return withTimeBars.push({ ...d, tBar: "0:0:0" })
 
         } else {
-            // console.log(data[i - 1])
             const prev = data[i - 1]
             const prevName = prev.noteData.name
 
             if (prevName === "16n") {
                 sTime = sTime += 1
             }
-            
+
             if (prevName === "8n") {
                 sTime = sTime += 2
             }
@@ -176,7 +174,7 @@ const generateTimeBars02 = (data) => {
 
             validTimeBar = `${mTime}:${qTime}:${sTime}`
 
-            withTimeBars.push({ ...d, tBar: validTimeBar })
+            return withTimeBars.push({ ...d, tBar: validTimeBar })
         }
     })
 
@@ -189,7 +187,7 @@ const doTrimNotes = (data, unisonCount) => {
         if (d.notes.length > 1) {
             d.notes = d.notes.slice(0, unisonCount)
         }
-        trimmed.push(d)
+        return trimmed.push(d)
     })
 
     return trimmed
@@ -197,21 +195,10 @@ const doTrimNotes = (data, unisonCount) => {
 
 const doMakeBars = (data, amountOfBars) => {
     const bars = [];
-    // console.log('doMakeBars amountOfBars:', amountOfBars)
-    // console.log((data[0].tBar.split(':')[0]) < 8)
-    // console.log(Number((data[data.length - 1].tBar).split(':')[0]))
-    // const lastBar = Number((data[data.length - 1].tBar).split(':')[0])
-
-    // if (lastBar < amountOfBars) {
-    //     console.log('needs more')
-    //     const dupeData = [...data, ...data, ...data]
-    //     console.log('dupe:', dupeData)
-    // }
-
 
     data.forEach(d => {
         if (Number(d.tBar.split(':')[0]) < amountOfBars) {
-            bars.push(d)
+            return bars.push(d)
         }
     })
 
@@ -252,6 +239,7 @@ const doMakeLoops = (data, loopCount, maxBars) => {
         } else {
             newLoops.push(a)
         }
+        return true
     })
 
     return maxBars === 1 ? oneBarLoop : newLoops;
