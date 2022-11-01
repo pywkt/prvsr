@@ -9,3 +9,5 @@ export const kit8 = new Tone.Sampler({
     release: 10,
     baseUrl: "http://localhost:3000/samples/drums/kit8/",
 }).toDestination();
+
+export const kit8Parts = ["kick", "snare", "hihat"]
