@@ -110,48 +110,38 @@ const Sequencer = ({ setDrumPart }) => {
             <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
     }
 
-    // const autofillSteps = () => {
-    //     console.log('irestn')
-    //     checkAndMakeSteps('kick')
-    // }
-
     const handleSelection = (e) => {
-        console.log('e:', e.target.value)
-        console.log('kit:', allDrumKits[e.target.value])
         setSelectedKit(allDrumKits[e.target.value])
     }
 
 
     return (
         <div>
-            {/* {makeTrackBoxes('kick')}
-            <br />
-            {makeTrackBoxes('snare')}
-            <br />
-            {makeTrackBoxes('hihat')}
-            <br /> */}
 
             <hr />
 
-
             <select onChange={handleSelection}>
                 {allDrumKits.map((item, index) => (
-                    <option value={index} key={item.name}>
-                        {item.name}
-                    </option>
+                    <option value={index} key={`${item.name}-${index}`} label={item.name} />
                 ))}
             </select>
-            
-            <br />
 
-            {selectedKit.parts.map((ad, ind) => (
-                <>
-                    {makeTrackBoxes(ad)}
-                    <br />
-                </>
-            ))}
-            {/* <Button label='basic rock' onClick={autofillSteps} /> */}
+            <br />
+            <div style={{ display: 'flex' }}>
+                <div style={{ margin: '0 auto' }}>
+                    {selectedKit.parts.map((ad, ind) => (
+                        <div key={ad}>
+                            <div style={{ margin: '0 auto', textAlign: 'center' }}>
+                                <div style={{ textAlign: 'left' }}>
+                                    {makeTrackBoxes(ad)} <span style={{ fontSize: 12 }} >{ad}</span>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
             <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
+            <span>:</span>
             <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} />
             <br />
 
