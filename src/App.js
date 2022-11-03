@@ -64,7 +64,7 @@ function App() {
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
   const onSubmit = async (data) => {
-    
+
   }
 
   const buildIndividualPart = async (data, index) => {
@@ -116,12 +116,14 @@ function App() {
 
   const activeParts = useRef({})
 
-  const addToTransport = (data, index) => {
+  const addToTransport = async (data, index) => {
     Tone.Transport.bpm.value = 120;
-    console.log('addToTransport start:', data)
+    // console.log('addToTransport start:', data)
     console.log('add index:', index)
+    console.log('add - data:', data)
+    console.log('add - getValues:', getValues(`instrumentArray.${index}`))
 
-    Tone.loaded().then(() => {
+    Tone.loaded().then(async () => {
       console.log('add:', data)
       console.log('activeParts before:', activeParts.current)
 
@@ -129,33 +131,47 @@ function App() {
         console.log('*** disposing')
         activeParts.current[index].dispose()
       }
-      
-        activeParts.current[index] = new Tone.Part(((time, value) => {
-          const instrument = data.slug
-          console.log('instrument:', data.slug)
 
-          instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
-        }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
+      activeParts.current[index] = await new Tone.Part(((time, value) => {
+        const instrument = data.slug
+        console.log('instrument:', data.slug)
 
-      if (activeParts.current[index].name !== "Part") {
-          console.log("change")
-        }
+        instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+      }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
-        console.log('active again:', activeParts.current[index])
-        activeParts.current[index].name = index
+      if ((data.type) === 'drum') {
+        console.log('data.name:', data.name)
+        activeParts.current[index].loop = true
+        activeParts.current[index].loopStart = "0:0:0"
+        activeParts.current[index].loopEnd = "4:0:0"
+        activeParts.current[index].playbackRate = 2
+      }
 
-        console.log(data.name)
+      setValue(`instrumentArray.${index}.part`, activeParts.current[index])
 
-        if ((typeof data.name) !== 'undefined') {
-          console.log('data.name:', data.name)
-          activeParts.current[index].loop = true
-          activeParts.current[index].loopStart = "0:0:0"
-          activeParts.current[index].loopEnd = "4:0:0"
-          activeParts.current[index].playbackRate = 2
-        }
-        console.log("in map:", activeParts.current)
+      delete activeParts[index]
 
-      console.log("after:", activeParts.current)
+      const fff = getValues(`instrumentArray.${index}`)
+      console.log('fff:', fff)
+      // if (activeParts.current[index].name !== "Part") {
+      //     console.log("change")
+      //   }
+
+      //   console.log('active again:', activeParts.current[index])
+      //   activeParts.current[index].name = index
+
+      //   console.log(data.name)
+
+      // if ((typeof data.name) !== 'undefined') {
+      //   console.log('data.name:', data.name)
+      //   activeParts.current[index].loop = true
+      //   activeParts.current[index].loopStart = "0:0:0"
+      //   activeParts.current[index].loopEnd = "4:0:0"
+      //   activeParts.current[index].playbackRate = 2
+      // }
+      // console.log("in map:", activeParts.current)
+
+      // console.log("after:", activeParts.current)
     })
   }
 
@@ -167,9 +183,9 @@ function App() {
   }
 
   const deletePart = (index) => {
-    console.log(activeParts.current[index])
-    activeParts.current[index].dispose()
-    delete activeParts.current[index];
+    const partToDelete = getValues(`instrumentArray.${index}.part`)
+    partToDelete.dispose()
+    // delete activeParts.current[index];
     remove(index)
   }
 
@@ -217,8 +233,8 @@ function App() {
               <br />
               <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
               <br />
-              <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }}/>
-                  :
+              <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }} />
+              :
               <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
 
               <div>

@@ -12,8 +12,8 @@ const Sequencer = ({ setDrumPart }) => {
     const [drumSteps, setDrumSteps] = useState(16)
 
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
-    console.log('selectedKit:', selectedKit)
-    console.log('allKits:', allDrumKits)
+    // console.log('selectedKit:', selectedKit)
+    // console.log('allKits:', allDrumKits)
 
     const drumStepsRef = useRef(16);
     const drumRef = useRef([])
@@ -21,24 +21,24 @@ const Sequencer = ({ setDrumPart }) => {
 
     const makeDrums = () => {
         const drumData = getValues(`drums`)
-        console.log('drumData:', drumData)
+        // console.log('drumData:', drumData)
 
         const drumParts = Object.keys(drumData)
-        console.log('drumParts:', drumParts)
+        // console.log('drumParts:', drumParts)
 
         const fff = drumParts.filter(d => d !== 'startTime')
-        console.log('fff:', fff)
+        // console.log('fff:', fff)
         const allDrums = []
         fff.map((d, i) => {
             console.log('d:', d)
 
             allDrums.push(drumData[d].filter(a => a.note !== ''))
             console.log('allDrums 01:', allDrums)
-            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument, name: d, startTime: drumData.startTime }
+            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument, name: d, startTime: drumData.startTime, type: 'drum'}
         })
-        console.log('allDrums:', allDrums)
-        console.log('drumRef.current:', drumRef.current)
-        console.log('values:', getValues('drums'))
+        // console.log('allDrums:', allDrums)
+        // console.log('drumRef.current:', drumRef.current)
+        // console.log('values:', getValues('drums'))
 
         setDrumPart(drumRef.current)
     }
@@ -50,7 +50,7 @@ const Sequencer = ({ setDrumPart }) => {
 
     const checkAndMakeSteps = (track) => {
         if (newRef.current[track]?.length === 0) {
-            console.log('making kick ref')
+            // console.log('making kick ref')
             for (let i = 0; i < drumSteps; i += 1) {
                 newRef.current[track].push({ time: `0:0:0`, note: '' })
             }
@@ -59,11 +59,11 @@ const Sequencer = ({ setDrumPart }) => {
 
 
     const handleKickChange = (index, track) => {
-        console.log('handleKickChange')
+        // console.log('handleKickChange')
         const bars = String(index / 4).split(".")[0]
         const qNotes = index % 4
 
-        console.log('track change:', track)
+        // console.log('track change:', track)
 
         const trackNotes = (track) => {
             switch (track) {
@@ -84,7 +84,7 @@ const Sequencer = ({ setDrumPart }) => {
             }
         }
 
-        console.log('tracknotes:', trackNotes(track))
+        // console.log('tracknotes:', trackNotes(track))
 
         checkAndMakeSteps([track])
 
@@ -105,7 +105,7 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const makeTrackBoxes = (track) => {
-        console.log('track:', track)
+        // console.log('track:', track)
         return Array.from(Array(drumSteps)).map((_, i) =>
             <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
     }
