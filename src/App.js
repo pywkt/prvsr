@@ -31,8 +31,9 @@ function App() {
    * @returns 
    */
   const handleBuildLoop = async (data, partData) => {
+    console.log('partData:', partData)
     currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, partData.unisonCount, 4, 4, partData.notesToUse, partData.octave, partData.startTime)
+    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
 
     setScaleData(currentLoop.scaleData)
     return currentLoop
@@ -153,25 +154,6 @@ function App() {
 
       const fff = getValues(`instrumentArray.${index}`)
       console.log('fff:', fff)
-      // if (activeParts.current[index].name !== "Part") {
-      //     console.log("change")
-      //   }
-
-      //   console.log('active again:', activeParts.current[index])
-      //   activeParts.current[index].name = index
-
-      //   console.log(data.name)
-
-      // if ((typeof data.name) !== 'undefined') {
-      //   console.log('data.name:', data.name)
-      //   activeParts.current[index].loop = true
-      //   activeParts.current[index].loopStart = "0:0:0"
-      //   activeParts.current[index].loopEnd = "4:0:0"
-      //   activeParts.current[index].playbackRate = 2
-      // }
-      // console.log("in map:", activeParts.current)
-
-      // console.log("after:", activeParts.current)
     })
   }
 
@@ -236,12 +218,17 @@ function App() {
               <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }} />
               :
               <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
+              <br />
+              <label htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loop Times</label>
+              <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
+              <label htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Number of Bars</label>
+              <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
 
               <div>
                 {notesToUse.map(n => (
                   <span key={n}>
-                    <label htmlFor={n}>{n}</label>
-                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={n} />
+                    <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
+                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
                   </span>
                 ))}
               </div>

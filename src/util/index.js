@@ -195,13 +195,23 @@ const doTrimNotes = (data, unisonCount) => {
 }
 
 const doMakeBars = (data, amountOfBars) => {
+    console.log("amount of bars:", amountOfBars)
+    console.log('bars data:', data)
     const bars = [];
 
-    data.forEach(d => {
-        if (Number(d.tBar.split(':')[0]) < amountOfBars) {
-            return bars.push(d)
+    for (let i = 0; i < data.length - 1; i += 1) {
+        if (Number(data[i].tBar.split(':')[0]) < amountOfBars) {
+            bars.push(data[i])
         }
-    })
+    }
+
+    console.log('bars:', bars)
+
+    // data.forEach(d => {
+    //     if (Number(d.tBar.split(':')[0]) < amountOfBars) {
+    //         return bars.push(d)
+    //     }
+    // })
 
     return bars;
 }
@@ -211,7 +221,12 @@ const doMakeLoops = (data, loopCount, maxBars) => {
     const newLoops = [];
     const oneBarLoop = [];
     const highestMVal = Number(data[data.length - 1].tBar[0])
+    console.log('loop - highest:', highestMVal)
     let barCount = highestMVal;
+
+    console.log('loop - data:', data)
+    console.log('loop - loopCount:', typeof loopCount)
+    console.log('loop - maxBars:', typeof maxBars)
 
     for (let i = 1; i <= loopCount; i += 1) {
         allLoops.push(...data)
@@ -223,6 +238,8 @@ const doMakeLoops = (data, loopCount, maxBars) => {
         const mVal = splitTbar[0]
         const mValNum = Number(mVal)
         const prevMbar = i !== 0 && Number(allLoops[i - 1].tBar.split(":")[0])
+
+        console.log('loop - mValNum:', mValNum)
 
         if (maxBars === 1) {
             if (i !== 0 && i % data.length === 0) {
@@ -243,10 +260,16 @@ const doMakeLoops = (data, loopCount, maxBars) => {
         return true
     })
 
+    console.log('1:', oneBarLoop)
+    console.log('newLoops:', newLoops)
+
+    // return data
+
     return maxBars === 1 ? oneBarLoop : newLoops;
 }
 
 export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse, oct, startTime) => {
+    console.log('util:', data, unisonCount, maxBars, loopTimes, noteLensToUse, oct, startTime)
     const { partData, scaleData } = processMajor(data, false, 30);
     const withOct = addOct(partData, oct);
     const withNoteLen = generateNoteLen02(withOct, noteLensToUse);
