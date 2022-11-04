@@ -5,6 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import './App.css';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
+import Channel from './components/Channel';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { allNotes } from './config';
@@ -78,11 +79,14 @@ function App() {
         case 'piano01':
           return piano01
         case 'synth01':
-          return synth01
+          return synth01(index)
         default:
           return 'piano01-default'
       }
     }
+
+    const inst = getInstrumentData(index)[index]
+    console.log('*** inst:', inst)
 
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
@@ -91,7 +95,8 @@ function App() {
       await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
       await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
 
-    setValue(`instrumentArray.${index}.slug`, getInstrumentData())
+    setValue(`instrumentArray.${index}.slug`, inst.synth)
+    setValue(`instrumentArray.${index}.channel`, inst.channel)
     setValue(`instrumentArray.${index}.data`, newData)
 
     const cleanPartData = {
@@ -168,6 +173,7 @@ function App() {
   const deletePart = (index) => {
     const partToDelete = getValues(`instrumentArray.${index}.part`)
     partToDelete.dispose()
+    synth01(index, remove)
     // delete activeParts.current[index];
     remove(index)
   }
@@ -178,6 +184,25 @@ function App() {
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, true)
     }
+  }
+
+  const handleChannel = (e, index) => {
+    const channelToUse = getValues(`instrumentArray.${index}.channel`)
+    console.log('channelToUse:', channelToUse)
+    channelToUse.volume.value = Number(e.target.value)
+    // channelToUse.set({ volume: Number(e.target.value) })
+  }
+
+  const toggleSolo = (e, index) => {
+    const channelToUse = getValues(`instrumentArray.${index}.channel`)
+    console.log('toggleVolume:', e.target.checked)
+    channelToUse.solo = e.target.checked
+  }
+
+  const toggleMute = (e, index) => {
+    const channelToUse = getValues(`instrumentArray.${index}.channel`)
+    console.log('toggleMute:', e.target.checked)
+    channelToUse.mute = e.target.checked
   }
 
 
@@ -226,7 +251,9 @@ function App() {
               <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
               {/* <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Times</span> */}
               <br />
-              {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id="myRange" /> */}
+              <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id={`volume-${index}`} />
+              <input type="checkbox" defaultChecked={false} id={`solo-${index}`} onChange={(e) => toggleSolo(e, index)} />
+              <input type="checkbox" defaultChecked={false} id={`mute-${index}`} onChange={(e) => toggleMute(e, index)} />
 
               <div>
                 {notesToUse.map(n => (
@@ -239,6 +266,9 @@ function App() {
 
               <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
               <button type="button" onClick={() => deletePart(index)}>Delete</button>
+
+              <br />
+              <Channel instrumentData={getValues(`instrumentArray.${index}`)} />
 
               <hr style={{ width: 400 }} />
             </li>

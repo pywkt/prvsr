@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import * as Tone from 'tone'
 
-const Channel = () => {
+const Channel = ({ instrumentData}) => {
+
+    console.log('channel - instrumentData:', instrumentData)
+    const allChannels = useRef({});
+
     return (
-        <div>Channel Test</div>
+        <div style={{ margin: 10 }}>
+            Channel Test
+        </div>
     )
 }
 
