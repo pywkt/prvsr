@@ -84,6 +84,7 @@ function App() {
       }
     }
 
+
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
 
     const newData = Object.keys(currentScaleData.current).length === 0 ?
@@ -135,7 +136,7 @@ function App() {
 
       activeParts.current[index] = await new Tone.Part(((time, value) => {
         const instrument = data.slug
-        console.log('instrument:', data.slug)
+        console.log('instrument:', instrument)
 
         instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
@@ -219,10 +220,13 @@ function App() {
               :
               <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
               <br />
-              <label htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loop Times</label>
-              <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
-              <label htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Number of Bars</label>
+              <span htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Bars</span>
               <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
+              <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loops</span>
+              <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
+              {/* <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Times</span> */}
+              <br />
+              {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id="myRange" /> */}
 
               <div>
                 {notesToUse.map(n => (

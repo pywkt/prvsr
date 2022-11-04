@@ -197,7 +197,7 @@ const doTrimNotes = (data, unisonCount) => {
 const doMakeBars = (data, amountOfBars) => {
     const bars = [];
 
-    for (let i = 0; i < data.length - 1; i += 1) {
+    for (let i = 0; i < (data.length - 1); i += 1) {
         if (Number(data[i].tBar.split(':')[0]) < amountOfBars) {
             bars.push(data[i])
         }
