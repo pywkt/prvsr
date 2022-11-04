@@ -62,7 +62,8 @@ function App() {
     console.log('position:', position)
   }
 
-  const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01" }, { name: "Piano 01", slug: "piano01" }]
+  // Move to a config file
+  const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01", type: 'synth' }, { name: "Piano 01", slug: "piano01", type: 'piano' }]
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
   const onSubmit = async (data) => {
@@ -72,20 +73,21 @@ function App() {
   const buildIndividualPart = async (data, index) => {
     console.log('onSubmit 01:', data)
 
-    const slug = instruments.find(i => i.slug === data.instrument).slug
+    const slug = instruments.find(i => i.slug === data.instrument)
+    console.log('slug:', slug)
 
     const getInstrumentData = () => {
-      switch (slug) {
-        case 'piano01':
-          return piano01
-        case 'synth01':
+      switch (slug.type) {
+        case 'piano':
+          return piano01(index)
+        case 'synth':
           return synth01(index)
         default:
           return 'piano01-default'
       }
     }
 
-    const inst = getInstrumentData(index)[index]
+    const inst = await getInstrumentData()[`${slug.type}-${index}`]
     console.log('*** inst:', inst)
 
 
@@ -95,7 +97,7 @@ function App() {
       await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
       await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
 
-    setValue(`instrumentArray.${index}.slug`, inst.synth)
+    setValue(`instrumentArray.${index}.slug`, inst[slug.type])
     setValue(`instrumentArray.${index}.channel`, inst.channel)
     setValue(`instrumentArray.${index}.data`, newData)
 
