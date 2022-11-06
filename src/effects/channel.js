@@ -11,8 +11,6 @@ export const makeChannel = (index) => {
             data: new Tone.Channel({ channelCount: 2 }).toDestination()
         }
     }
-
-    // allChannels[`channel-${index}`] = new Tone.Channel({ channelCount: 2 }).toDestination()
-
+    
     return allChannels[`channel-${index}`].data
 }
