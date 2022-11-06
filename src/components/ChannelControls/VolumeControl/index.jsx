@@ -9,7 +9,6 @@ import React from 'react';
  */
 
 const VolumeControl = ({ index, data }) => {
-    console.log("drum data:", data)
     const handleChannel = (e) => {
         if (!data.channel) {
             console.log("no channel")

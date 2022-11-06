@@ -4,7 +4,6 @@ import SoloButton from './SoloButton';
 import MuteButton from './MuteButton';
 
 const ChannelControls = ({ index, data }) => {
-
     return (
         <div style={{ margin: 10 }}>
             <VolumeControl index={index} data={data} />
