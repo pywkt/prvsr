@@ -1,12 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
+import VolumeControl from '../VolumeControl';
 import { allDrumKits } from '../../instruments/drums';
 // import { kit8 } from '../../instruments/drums/kit8';
 // import { sk1, sk1Parts } from '../../instruments/drums/sk1';
 
 const Sequencer = ({ setDrumPart }) => {
-    const { register, setValue, control, getValues } = useForm();
+    const { register, setValue, control, getValues, watch } = useForm();
     useFieldArray({ control, name: "drums" })
 
     const [drumSteps, setDrumSteps] = useState(16)
@@ -21,24 +22,24 @@ const Sequencer = ({ setDrumPart }) => {
 
     const makeDrums = () => {
         const drumData = getValues(`drums`)
-        // console.log('drumData:', drumData)
+        // console.log('drumDatawww:', drumData)
 
         const drumParts = Object.keys(drumData)
-        console.log('drumPartsfff:', drumParts)
+        // console.log('drumPartsfff:', drumParts)
 
         const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
         // console.log('fff:', fff)
         const allDrums = []
         fff.map((d, i) => {
-            console.log('d:', d)
-            console.log('selectedKit:', selectedKit)
+            // console.log('d:', d)
+            // console.log('selectedKit:', selectedKit)
 
             allDrums.push(drumData[d].filter(a => a.note !== ''))
-            console.log('allDrums 01:', allDrums)
-            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum'}
+            // console.log('allDrums 01:', allDrums)
+            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum' }
         })
 
-        console.log('looking:', selectedKit)
+        // console.log('looking:', selectedKit)
         // console.log('allDrums:', allDrums)
         // console.log('drumRef.current:', drumRef.current)
         // console.log('values:', getValues('drums'))
@@ -48,7 +49,7 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const changeDrumSteps = (e) => {
-        console.log('e:', drumStepsRef.current)
+        // console.log('e:', drumStepsRef.current)
         setDrumSteps(Number(drumStepsRef.current))
     }
 
@@ -99,7 +100,7 @@ const Sequencer = ({ setDrumPart }) => {
         //     }
         // }
 
-        console.log('newRef:', newRef.current)
+        // console.log('newRef:', newRef.current)
         if (newRef.current[track][index].note !== '') {
             newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
@@ -119,13 +120,13 @@ const Sequencer = ({ setDrumPart }) => {
         setSelectedKit(allDrumKits[e.target.value])
     }
 
-    const handleChannel = (e) => {
-        // console.log('drum values:', getValues(`drums.channel`))
-        // console.log('channel search:', selectedKit)
-        const channelToUse = getValues(`drums.channel`)
-        // console.log('channelToUse:', channelToUse)
-        channelToUse.volume.value = Number(e.target.value)
-    }
+    // const handleChannel = (e) => {
+    //     // console.log('drum values:', getValues(`drums.channel`))
+    //     // console.log('channel search:', selectedKit)
+    //     const channelToUse = getValues(`drums.channel`)
+    //     // console.log('channelToUse:', channelToUse)
+    //     channelToUse.volume.value = Number(e.target.value)
+    // }
 
 
     return (
@@ -154,9 +155,9 @@ const Sequencer = ({ setDrumPart }) => {
                 </div>
             </div>
             <br />
+            <VolumeControl index={0} data={watch('drums')} />
+            {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e)} id={`drum-volume`} /> */}
 
-            <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e)} id={`drum-volume`} />
-            
             <br />
 
             <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />

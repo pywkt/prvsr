@@ -35,7 +35,7 @@ function App() {
    * @returns 
    */
   const handleBuildLoop = async (data, partData) => {
-    console.log('partData:', partData)
+    // console.log('partData:', partData)
     currentScaleData.current = data
     const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
 
@@ -74,10 +74,10 @@ function App() {
   }
 
   const buildIndividualPart = async (data, index) => {
-    console.log('onSubmit 01:', data)
+    // console.log('onSubmit 01:', data)
 
     const slug = instruments.find(i => i.slug === data.instrument)
-    console.log('slug:', slug)
+    // console.log('slug:', slug)
 
     const getInstrumentData = () => {
       switch (slug.type) {
@@ -91,7 +91,7 @@ function App() {
     }
 
     const inst = await getInstrumentData()[`${slug.type}-${index}`]
-    console.log('*** inst:', inst)
+    // console.log('*** inst:', inst)
 
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
@@ -131,28 +131,28 @@ function App() {
   const addToTransport = async (data, index) => {
     Tone.Transport.bpm.value = 120;
     // console.log('addToTransport start:', data)
-    console.log('add index:', index)
-    console.log('add - data:', data)
-    console.log('add - getValues:', getValues(`instrumentArray.${index}`))
+    // console.log('add index:', index)
+    // console.log('add - data:', data)
+    // console.log('add - getValues:', getValues(`instrumentArray.${index}`))
 
     Tone.loaded().then(async () => {
-      console.log('add:', data)
-      console.log('activeParts before:', activeParts.current)
+      // console.log('add:', data)
+      // console.log('activeParts before:', activeParts.current)
 
       if (activeParts.current[index]) {
-        console.log('*** disposing')
+        // console.log('*** disposing')
         activeParts.current[index].dispose()
       }
 
       activeParts.current[index] = await new Tone.Part(((time, value) => {
         const instrument = data.slug
-        console.log('instrument:', instrument)
+        // console.log('instrument:', instrument)
 
         instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
       if ((data.type) === 'drum') {
-        console.log('data.name:', data.name)
+        // console.log('data.name:', data.name)
         activeParts.current[index].loop = true
         activeParts.current[index].loopStart = "0:0:0"
         activeParts.current[index].loopEnd = "4:0:0"
@@ -184,32 +184,12 @@ function App() {
   }
 
   const setDrumPart = async (data) => {
-    console.log('setDrumPart:', data)
+    // console.log('setDrumPart:', data)
 
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, true)
     }
   }
-
-  // const handleChannel = (e, index) => {
-  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
-  //   console.log('channelToUse:', channelToUse)
-  //   channelToUse.volume.value = Number(e.target.value)
-  //   // channelToUse.set({ volume: Number(e.target.value) })
-  // }
-
-  // const toggleSolo = (e, index) => {
-  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
-  //   console.log('toggleVolume:', e.target.checked)
-  //   channelToUse.solo = e.target.checked
-  // }
-
-  // const toggleMute = (e, index) => {
-  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
-  //   console.log('toggleMute:', e.target.checked)
-  //   channelToUse.mute = e.target.checked
-  // }
-
 
   return (
     <div className="App">
@@ -254,14 +234,11 @@ function App() {
               <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
               <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loops</span>
               <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
-              {/* <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Times</span> */}
+
               <br />
               <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
               <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
               <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
-              {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id={`volume-${index}`} /> */}
-              {/* <input type="checkbox" defaultChecked={false} id={`solo-${index}`} onChange={(e) => toggleSolo(e, index)} /> */}
-              {/* <input type="checkbox" defaultChecked={false} id={`mute-${index}`} onChange={(e) => toggleMute(e, index)} /> */}
 
               <div>
                 {notesToUse.map(n => (

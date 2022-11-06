@@ -1,7 +1,16 @@
 import React from 'react';
 
+/**
+ * 
+ * @param {number} index The index of the part this component controls. For drums this can be any number.
+ * @param {object} data The whole RHF data object for the instrument/part this component controls.
+ * @returns A React component (HTML slider) that controls the volume for the instrument/part 
+ * this component is in.
+ */
+
 const VolumeControl = ({ index, data }) => {
-    const handleChannel = (e, i) => {
+    console.log("drum data:", data)
+    const handleChannel = (e) => {
         if (!data.channel) {
             console.log("no channel")
             return null
@@ -14,10 +23,10 @@ const VolumeControl = ({ index, data }) => {
         <input
             type="range"
             min="-100"
-            max="30"
+            max="50"
             step={0.5}
             defaultValue="-20"
-            onChange={(e) => handleChannel(e, index)}
+            onChange={handleChannel}
             id={`volume-${index}`}
         />
     )
