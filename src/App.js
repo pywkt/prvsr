@@ -5,6 +5,9 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import './App.css';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
+import VolumeControl from './components/VolumeControl';
+import SoloButton from './components/SoloButton';
+import MuteButton from './components/MuteButton';
 import Channel from './components/Channel';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
@@ -188,24 +191,24 @@ function App() {
     }
   }
 
-  const handleChannel = (e, index) => {
-    const channelToUse = getValues(`instrumentArray.${index}.channel`)
-    console.log('channelToUse:', channelToUse)
-    channelToUse.volume.value = Number(e.target.value)
-    // channelToUse.set({ volume: Number(e.target.value) })
-  }
+  // const handleChannel = (e, index) => {
+  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
+  //   console.log('channelToUse:', channelToUse)
+  //   channelToUse.volume.value = Number(e.target.value)
+  //   // channelToUse.set({ volume: Number(e.target.value) })
+  // }
 
-  const toggleSolo = (e, index) => {
-    const channelToUse = getValues(`instrumentArray.${index}.channel`)
-    console.log('toggleVolume:', e.target.checked)
-    channelToUse.solo = e.target.checked
-  }
+  // const toggleSolo = (e, index) => {
+  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
+  //   console.log('toggleVolume:', e.target.checked)
+  //   channelToUse.solo = e.target.checked
+  // }
 
-  const toggleMute = (e, index) => {
-    const channelToUse = getValues(`instrumentArray.${index}.channel`)
-    console.log('toggleMute:', e.target.checked)
-    channelToUse.mute = e.target.checked
-  }
+  // const toggleMute = (e, index) => {
+  //   const channelToUse = getValues(`instrumentArray.${index}.channel`)
+  //   console.log('toggleMute:', e.target.checked)
+  //   channelToUse.mute = e.target.checked
+  // }
 
 
   return (
@@ -253,9 +256,12 @@ function App() {
               <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
               {/* <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Times</span> */}
               <br />
-              <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id={`volume-${index}`} />
-              <input type="checkbox" defaultChecked={false} id={`solo-${index}`} onChange={(e) => toggleSolo(e, index)} />
-              <input type="checkbox" defaultChecked={false} id={`mute-${index}`} onChange={(e) => toggleMute(e, index)} />
+              <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
+              <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
+              <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
+              {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e, index)} id={`volume-${index}`} /> */}
+              {/* <input type="checkbox" defaultChecked={false} id={`solo-${index}`} onChange={(e) => toggleSolo(e, index)} /> */}
+              {/* <input type="checkbox" defaultChecked={false} id={`mute-${index}`} onChange={(e) => toggleMute(e, index)} /> */}
 
               <div>
                 {notesToUse.map(n => (

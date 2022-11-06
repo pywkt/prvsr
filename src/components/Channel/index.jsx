@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 
 const Channel = ({ instrumentData}) => {
 
-    console.log('channel - instrumentData:', instrumentData)
+    // console.log('channel - instrumentData:', instrumentData)
     const allChannels = useRef({});
 
     return (

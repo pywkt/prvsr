@@ -120,8 +120,8 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const handleChannel = (e) => {
-        console.log('drum values:', getValues(`drums.channel`))
-        console.log('channel search:', selectedKit)
+        // console.log('drum values:', getValues(`drums.channel`))
+        // console.log('channel search:', selectedKit)
         const channelToUse = getValues(`drums.channel`)
         // console.log('channelToUse:', channelToUse)
         channelToUse.volume.value = Number(e.target.value)
