@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
-import VolumeControl from '../VolumeControl';
+import ChannelControls from '../ChannelControls';
 import { allDrumKits } from '../../instruments/drums';
 // import { kit8 } from '../../instruments/drums/kit8';
 // import { sk1, sk1Parts } from '../../instruments/drums/sk1';
@@ -120,15 +120,6 @@ const Sequencer = ({ setDrumPart }) => {
         setSelectedKit(allDrumKits[e.target.value])
     }
 
-    // const handleChannel = (e) => {
-    //     // console.log('drum values:', getValues(`drums.channel`))
-    //     // console.log('channel search:', selectedKit)
-    //     const channelToUse = getValues(`drums.channel`)
-    //     // console.log('channelToUse:', channelToUse)
-    //     channelToUse.volume.value = Number(e.target.value)
-    // }
-
-
     return (
         <div>
 
@@ -155,8 +146,8 @@ const Sequencer = ({ setDrumPart }) => {
                 </div>
             </div>
             <br />
-            <VolumeControl index={0} data={watch('drums')} />
-            {/* <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e)} id={`drum-volume`} /> */}
+
+            <ChannelControls index={0} data={watch('drums')} />
 
             <br />
 

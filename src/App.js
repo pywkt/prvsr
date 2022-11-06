@@ -5,10 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import './App.css';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
-import VolumeControl from './components/VolumeControl';
-import SoloButton from './components/SoloButton';
-import MuteButton from './components/MuteButton';
-import Channel from './components/Channel';
+import ChannelControls from './components/ChannelControls';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { allNotes } from './config';
@@ -236,9 +233,8 @@ function App() {
               <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
 
               <br />
-              <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
-              <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
-              <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
+
+              <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
 
               <div>
                 {notesToUse.map(n => (
@@ -253,7 +249,6 @@ function App() {
               <button type="button" onClick={() => deletePart(index)}>Delete</button>
 
               <br />
-              <Channel instrumentData={getValues(`instrumentArray.${index}`)} />
 
               <hr style={{ width: 400 }} />
             </li>
