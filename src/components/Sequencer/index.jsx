@@ -24,22 +24,26 @@ const Sequencer = ({ setDrumPart }) => {
         // console.log('drumData:', drumData)
 
         const drumParts = Object.keys(drumData)
-        // console.log('drumParts:', drumParts)
+        console.log('drumPartsfff:', drumParts)
 
-        const fff = drumParts.filter(d => d !== 'startTime')
+        const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
         // console.log('fff:', fff)
         const allDrums = []
         fff.map((d, i) => {
             console.log('d:', d)
+            console.log('selectedKit:', selectedKit)
 
             allDrums.push(drumData[d].filter(a => a.note !== ''))
             console.log('allDrums 01:', allDrums)
-            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument, name: d, startTime: drumData.startTime, type: 'drum'}
+            return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum'}
         })
+
+        console.log('looking:', selectedKit)
         // console.log('allDrums:', allDrums)
         // console.log('drumRef.current:', drumRef.current)
         // console.log('values:', getValues('drums'))
 
+        setValue(`drums.channel`, selectedKit.instrument.channel)
         setDrumPart(drumRef.current)
     }
 
@@ -95,6 +99,7 @@ const Sequencer = ({ setDrumPart }) => {
         //     }
         // }
 
+        console.log('newRef:', newRef.current)
         if (newRef.current[track][index].note !== '') {
             newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
@@ -112,6 +117,14 @@ const Sequencer = ({ setDrumPart }) => {
 
     const handleSelection = (e) => {
         setSelectedKit(allDrumKits[e.target.value])
+    }
+
+    const handleChannel = (e) => {
+        console.log('drum values:', getValues(`drums.channel`))
+        console.log('channel search:', selectedKit)
+        const channelToUse = getValues(`drums.channel`)
+        // console.log('channelToUse:', channelToUse)
+        channelToUse.volume.value = Number(e.target.value)
     }
 
 
@@ -140,6 +153,12 @@ const Sequencer = ({ setDrumPart }) => {
                     ))}
                 </div>
             </div>
+            <br />
+
+            <input type="range" min="-50" max="50" step={1} defaultValue="0" onChange={(e) => handleChannel(e)} id={`drum-volume`} />
+            
+            <br />
+
             <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
             <span>:</span>
             <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} />
