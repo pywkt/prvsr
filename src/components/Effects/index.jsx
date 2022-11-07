@@ -2,46 +2,32 @@ import React, { useRef, useState } from 'react';
 import Chorus from './Chorus';
 import PingPongDelay from './PingPongDelay';
 import Reverb from './Reverb';
+import StereoWidener from './StereoWidener';
+import Phaser from './Phaser';
 
 export let globalEffects = {}
 
 const Effects = ({ disabled, index, partData, tone }) => {
     const [allEffects, setAllEffects] = useState({})
     const [effectArray, setEffectArray] = useState([])
-    console.log('effect globalEffects:', globalEffects)
-
-    console.log('effects allEffects:', allEffects)
-
     const effectRef = useRef({})
-    console.log('effects effectRef:', effectRef.current)
-
-    const effectRefArr = useRef([])
-    console.log('partData:', partData)
 
     const addEffect = (effectName, effect) => {
-        console.log('effects addEffect:', effectName, effect)
-        console.log('effects addEffect before set ref:', effectRef.current)
-
         if (!effectRef.current[effectName]) {
             effectRef.current[effectName] = effect
             const arrs = Object.values(effectRef.current).map(i => i.effect)
-            console.log('arrs:', arrs)
             setEffectArray(arrs)
             setAllEffects(effectRef.current)
-            console.log('index:', index)
             globalEffects[index] = arrs
-            // effectRefArr.current.push(effect.effect)
-            // setAllEffects(effectRef.current)
-            // setEffectArray(effectRefArr.current)
         }
-
-        console.log('effectRefArr:', index, effectRefArr.current)
-
     }
 
     const removeEffect = (effectName) => {
         delete effectRef.current[effectName]
+        const arrs = Object.values(effectRef.current).map(i => i.effect)
+        setEffectArray(arrs)
         setAllEffects(effectRef.current)
+        globalEffects[index] = arrs
     }
 
     return (
@@ -56,8 +42,9 @@ const Effects = ({ disabled, index, partData, tone }) => {
                 data={partData}
                 disabled={disabled}
                 tone={tone}
+                removeEffect={(effectName) => removeEffect(effectName)}
             />
-            
+
             <Chorus
                 global={globalEffects}
                 effectArray={effectArray}
@@ -75,6 +62,28 @@ const Effects = ({ disabled, index, partData, tone }) => {
                 allEffects={allEffects}
                 addEffect={(effectName, effect) => addEffect(effectName, effect)}
                 effect="reverb"
+                index={index}
+                disabled={disabled}
+                tone={tone}
+            />
+
+            <StereoWidener
+                global={globalEffects}
+                effectArray={effectArray}
+                allEffects={allEffects}
+                addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                effect="stereoWidener"
+                index={index}
+                disabled={disabled}
+                tone={tone}
+            />
+
+            <Phaser
+                global={globalEffects}
+                effectArray={effectArray}
+                allEffects={allEffects}
+                addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                effect="phaser"
                 index={index}
                 disabled={disabled}
                 tone={tone}

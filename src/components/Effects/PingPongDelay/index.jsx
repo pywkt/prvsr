@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
 
-const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
+const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone, removeEffect}) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
 
@@ -12,6 +12,7 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
             effectRef.current[effect].set({
                 wet: 0,
             })
+            removeEffect(effect)
             setEffectOn(false)
         } else {
             setEffectOn(true)
