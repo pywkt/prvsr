@@ -6,13 +6,14 @@ import './App.css';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
+import PingPongDelay from './components/Effects/PingPongDelay';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 
 function App() {
-  const { register, handleSubmit, setValue, control, getValues } = useForm();
+  const { register, handleSubmit, setValue, control, getValues, watch } = useForm();
   const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
   const [scaleData, setScaleData] = useState({})
@@ -188,6 +189,35 @@ function App() {
     }
   }
 
+  // const effectRef = useRef({})
+  // const handleDelay = (e, index, effect) => {
+  //   const part = getValues(`instrumentArray.${index}.slug`);
+  //   console.log("effectRef:", effectRef.current)
+
+  //   if (!effectRef.current[effect]) {
+  //     console.log('effect does not exist, adding to ref')
+  //     effectRef.current[effect] = new Tone.PingPongDelay()
+  //   }
+
+  //   const delay = effectRef.current[effect]
+
+  //   part.chain(delay, Tone.Destination)
+  //   delay.set({
+  //     wet: Number(e.target.value),
+  //     delayTime: "3n"
+  //   })
+
+    
+    // const delay = new Tone.PingPongDelay()
+    // // console.log('effect channel:', part)
+    // part.chain(delay, Tone.Destination)
+    // delay.set({
+    //   wet: Number(e.target.value),
+    //   delayTime: "3n"
+    // })
+    // console.log(Tone.getInstrumentData())
+  // }
+
   return (
     <div className="App">
       <Button onClick={logTime} label="Log Time" />
@@ -235,6 +265,18 @@ function App() {
               <br />
 
               <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
+
+              <PingPongDelay effect="delay" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+
+              {/* <input
+                type="range"
+                min="0"
+                max="1"
+                step={0.1}
+                defaultValue="0"
+                onChange={(e) => handleDelay(e, index, 'delay')}
+                id={`delay-${index}`}
+              /> */}
 
               <div>
                 {notesToUse.map(n => (
