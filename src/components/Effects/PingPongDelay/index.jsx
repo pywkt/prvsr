@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
 
-const PingPongDelay = ({ effect, index, data, disabled, tone }) => {
+const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, data, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
+    // console.log('effectRef:', effectRef)
+
+    console.log('delay global:', global)
+    const effectToUse = global?.[index]?.find(i => i.name === "PingPongDelay")
 
     const toggleEffect = () => {
         if (effectOn) {
@@ -13,37 +17,57 @@ const PingPongDelay = ({ effect, index, data, disabled, tone }) => {
             setEffectOn(false)
         } else {
             setEffectOn(true)
-            const delay = effectRef.current[effect]
-            data.slug.chain(delay, data.channel, tone.Destination)
+
+            if (!allEffects[effect]) {
+                console.log('DELAY IF')
+                effectRef.current[effect] = { name: 'delay', effect: new tone.PingPongDelay({ wet: 0 }) }
+                addEffect('delay', effectRef.current[effect])
+                // addEffect('chorus', effectRef.current[effect])
+            } 
+            
+            // const delay = effectRef.current[effect]
+            // addEffect("delay", delay)
+            // data.slug.chain(delay, data.channel, tone.Destination)
         }
     }
 
     useEffect(() => {
-        if (!effectRef.current[effect]) {
-            effectRef.current[effect] = new tone.PingPongDelay({ wet: 0 })
+        console.log('DELAY USE EFFECT')
+        if (allEffects[effect]) {
+            console.log('DELAY USE EFFECT INSIDE')
+            effectRef.current[effect] = effectArray.find(i => i.name === 'delay')
+            // data.slug.chain(...effectArray, data.channel, tone.Destination)
         }
-    }, [effect, tone.PingPongDelay])
+
+    }, [effectArray, data, allEffects, effect, tone])
+
+    // useEffect(() => {
+    //     if (!effectRef.current[effect]) {
+    //         effectRef.current[effect] = new tone.PingPongDelay({ wet: 0 })
+    //     }
+    // }, [effect, tone.PingPongDelay])
 
     const handleDelayTime = (e, effect) => {
-        effectRef.current[effect].set({
+        effectToUse.set({
             delayTime: `${e.target.value}n`
         })
     }
 
     const handleFeedback = (e, effect) => {
-        effectRef.current[effect].set({
+        effectToUse.set({
             feedback: Number(e.target.value),
         })
     }
 
     const handleMaxDelay = (e, effect) => {
-        effectRef.current[effect].set({
+        effectToUse.set({
             maxDelay: Number(e.target.value),
         })
     }
 
     const handleWet = (e, effect) => {
-        effectRef.current[effect].set({
+        console.log('delay effectToUse:', effectToUse)
+        effectToUse.set({
             wet: Number(e.target.value),
         })
     }

@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import { globalEffects } from '../components/Effects';
 
 const allPianos = {}
 
@@ -44,8 +45,10 @@ export const piano01 = (index, remove) => {
     console.log('*** piano exists. replacing:', allPianos)
     piano.name = `piano-${index}`
     channel.name = `channel-${index}`
-    piano.connect(channel)
-    channel.toDestination()
+
+    console.log('*** making piano global:', globalEffects[index] || null)
+    piano.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
+    // channel.toDestination()
   }
 
   console.log('allPianos:', allPianos)

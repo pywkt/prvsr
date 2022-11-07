@@ -1,4 +1,5 @@
 import * as Tone from 'tone';
+import { globalEffects } from '../components/Effects';
 
 const allSynths = {}
 
@@ -23,8 +24,11 @@ export const synth01 = (index, remove) => {
         // console.log('*** synth exists. replacing:', allSynths)
         synth.name = `synth-${index}`
         channel.name = `channel-${index}`
-        synth.connect(channel)
-        channel.toDestination()
+
+        console.log('*** making synth global:', globalEffects[index] || null)
+        synth.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
+        // synth.connect(channel)
+        // channel.toDestination()
     }
 
     // console.log('allSynths:', allSynths)

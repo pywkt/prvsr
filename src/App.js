@@ -6,7 +6,10 @@ import './App.css';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
+import Effects from './components/Effects';
 import PingPongDelay from './components/Effects/PingPongDelay';
+import Chorus from './components/Effects/Chorus';
+import Reverb from './components/Effects/Reverb';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { allNotes } from './config';
@@ -266,7 +269,11 @@ function App() {
 
               <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
 
-              <PingPongDelay effect="delay" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+              <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+
+              {/* <PingPongDelay effect="delay" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
+              {/* <Chorus effect="chorus" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
+              {/* <Reverb effect="reverb" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
 
               {/* <input
                 type="range"
