@@ -1,43 +1,42 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
 
-const Reverb = ({ effect, index, data, disabled, tone }) => {
+const Reverb = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
-    // console.log('pan ref:', effectRef.current[effect])
+
+    const effectToUse = global?.[index]?.find(i => i.name === "JCReverb")
 
     const toggleEffect = () => {
         if (effectOn) {
-            // effectRef.current[effect].set()
+            effectRef.current[effect].set({
+                wet: 0,
+            })
             setEffectOn(false)
         } else {
             setEffectOn(true)
-            const reverb = effectRef.current[effect]
-            // console.log('else:', panner3d)
-            data.slug.chain(reverb, data.channel, tone.Destination)
+            if (!allEffects[effect]) {
+                effectRef.current[effect] = { name: effect, effect: new tone.JCReverb({ wet: 0 }) }
+                addEffect(effect, effectRef.current[effect])
+            }
         }
     }
 
     useEffect(() => {
-        if (!effectRef.current[effect]) {
-            effectRef.current[effect] = new tone.JCReverb({ wet: 0 })
+        if (allEffects[effect]) {
+            effectRef.current[effect] = effectArray.find(i => i.name === 'JCReverb')
         }
-    }, [effect, tone.Reverb])
 
-    // const setDecay = (e, effect) => {
-    //     effectRef.current[effect].set({
-    //         decay: Number(e.target.value)
-    //     })
-    // }
+    }, [effectArray, allEffects, effect])
 
-    const setRoomSize = (e, effect) => {
-        effectRef.current[effect].set({
+    const setRoomSize = (e) => {
+        effectToUse.set({
             roomSize: Number(e.target.value),
         })
     }
 
-    const setWet = (e, effect) => {
-        effectRef.current[effect].set({
+    const setWet = (e) => {
+        effectToUse.set({
             wet: Number(e.target.value),
         })
     }
@@ -45,20 +44,11 @@ const Reverb = ({ effect, index, data, disabled, tone }) => {
 
     return (
         <div>
-            <input type="checkbox" id={`panner-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`panner-checkbox-${index}`}>panner</label>
+            <input type="checkbox" id={`reverb-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
+            <label htmlFor={`reverb-checkbox-${index}`}>Reverb</label>
             <br />
             {effectOn &&
                 <>
-                    {/* <Slider
-                        label="Decay"
-                        type="decay"
-                        index={index}
-                        onChange={(e) => setDecay(e, 'reverb')}
-                        max={5}
-                        step={0.2}
-                    /> */}
-
                     <Slider
                         label="Room Size"
                         type="roomSize"

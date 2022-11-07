@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
 
-const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, data, disabled, tone }) => {
+const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
-    // console.log('effectRef:', effectRef)
 
-    console.log('delay global:', global)
     const effectToUse = global?.[index]?.find(i => i.name === "PingPongDelay")
 
     const toggleEffect = () => {
@@ -17,35 +15,19 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
             setEffectOn(false)
         } else {
             setEffectOn(true)
-
             if (!allEffects[effect]) {
-                console.log('DELAY IF')
-                effectRef.current[effect] = { name: 'delay', effect: new tone.PingPongDelay({ wet: 0 }) }
-                addEffect('delay', effectRef.current[effect])
-                // addEffect('chorus', effectRef.current[effect])
+                effectRef.current[effect] = { name: effect, effect: new tone.PingPongDelay({ wet: 0 }) }
+                addEffect(effect, effectRef.current[effect])
             } 
-            
-            // const delay = effectRef.current[effect]
-            // addEffect("delay", delay)
-            // data.slug.chain(delay, data.channel, tone.Destination)
         }
     }
 
     useEffect(() => {
-        console.log('DELAY USE EFFECT')
         if (allEffects[effect]) {
-            console.log('DELAY USE EFFECT INSIDE')
-            effectRef.current[effect] = effectArray.find(i => i.name === 'delay')
-            // data.slug.chain(...effectArray, data.channel, tone.Destination)
+            effectRef.current[effect] = effectArray.find(i => i.name === 'PingPongDelay')
         }
 
-    }, [effectArray, data, allEffects, effect, tone])
-
-    // useEffect(() => {
-    //     if (!effectRef.current[effect]) {
-    //         effectRef.current[effect] = new tone.PingPongDelay({ wet: 0 })
-    //     }
-    // }, [effect, tone.PingPongDelay])
+    }, [effectArray, allEffects, effect])
 
     const handleDelayTime = (e, effect) => {
         effectToUse.set({
@@ -66,7 +48,6 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
     }
 
     const handleWet = (e, effect) => {
-        console.log('delay effectToUse:', effectToUse)
         effectToUse.set({
             wet: Number(e.target.value),
         })

@@ -1,18 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
 
-const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, data, disabled, tone }) => {
+const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
-    console.log('chorus effectRef.current', effectRef.current)
-    console.log('chorus allEffects:', allEffects)
-    console.log('chorus effectArray:', effectArray)
-
-    console.log('chorus global:', global)
 
     const effectToUse = global?.[index]?.find(i => i.name === "Chorus")
 
-    const toggleEffect = async () => {
+    const toggleEffect = () => {
         if (effectOn) {
             effectRef.current[effect].set({
                 wet: 0,
@@ -21,53 +16,18 @@ const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, dat
         } else {
             setEffectOn(true)
             if (!allEffects[effect]) {
-                console.log('IF')
-                effectRef.current[effect] = { name: 'chorus', effect: new tone.Chorus({ wet: 0 }) }
-                addEffect('chorus', effectRef.current[effect]) 
-                // addEffect('chorus', effectRef.current[effect])
+                effectRef.current[effect] = { name: effect, effect: new tone.Chorus({ wet: 0 }) }
+                addEffect(effect, effectRef.current[effect]) 
             } 
-            // else {
-            //     console.log('ELSE')
-            //     effectRef.current[effect] = effectArray.find(i => i.name === 'Chorus')
-            //     data.slug.chain(...effectArray, data.channel, tone.Destination)
-            // }
-
-            // const chorus = effectRef.current[effect]
-            // addEffect('chorus', new tone.Chorus({ wet: 0 }))
-            // console.log('chorus effectRef.current 01:', effectRef.current.chorus)
-            // const chorus = effectRef.current.chorus || null
-            // await addEffect('chorus', chorus) 
-            // console.log('check:', effectArray)
-
-            //  else {
-                
-            // }
-
-            // data.slug.chain(...effectArray, data.channel, tone.Destination)
         }
     }
 
     useEffect(() => {
-        console.log('USE EFFECT')
         if (allEffects[effect]) {
-            console.log('USE EFFECT INSIDE')
             effectRef.current[effect] = effectArray.find(i => i.name === 'Chorus')
-            // data.slug.chain(...effectArray, data.channel, tone.Destination)
         }
         
-    }, [effectArray, data, allEffects, effect, tone])
-
-    // useEffect(() => {
-    //     if (!allEffects[effect]) {
-    //         console.log('IF')
-    //         effectRef.current[effect] = { name: 'chorus', effect: new tone.Chorus({ wet: 0 }) }
-    //         // addEffect('chorus', effectRef.current[effect])
-    //     } else {
-    //         console.log('ELSE')
-    //         effectRef.current[effect] = effectArray.find(i => i.name === 'Chorus')
-    //         data.slug.chain(...effectArray, data.channel, tone.Destination)
-    //     }
-    // }, [effect, tone.Chorus, allEffects, effectArray])
+    }, [effectArray, allEffects, effect])
 
     const handleDelayTime = (e, effect) => {
         effectToUse.set({

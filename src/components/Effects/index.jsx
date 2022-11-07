@@ -46,9 +46,39 @@ const Effects = ({ disabled, index, partData, tone }) => {
 
     return (
         <div>
-            <PingPongDelay global={globalEffects} effectArray={effectArray} allEffects={allEffects} addEffect={(effectName, effect) => addEffect(effectName, effect)} effect="delay" index={index} data={partData} disabled={disabled} tone={tone} />
-            <Chorus global={globalEffects} effectArray={effectArray} allEffects={allEffects} addEffect={(effectName, effect) => addEffect(effectName, effect)} effect="chorus" index={index} data={partData} disabled={disabled} tone={tone} />
-            {/* <Reverb allEffects={allEffects} addEffect={addEffect} effect="reverb" index={index} data={partData} disabled={disabled} tone={tone} /> */}
+            <PingPongDelay
+                global={globalEffects}
+                effectArray={effectArray}
+                allEffects={allEffects}
+                addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                effect="delay"
+                index={index}
+                data={partData}
+                disabled={disabled}
+                tone={tone}
+            />
+            
+            <Chorus
+                global={globalEffects}
+                effectArray={effectArray}
+                allEffects={allEffects}
+                addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                effect="chorus"
+                index={index}
+                disabled={disabled}
+                tone={tone}
+            />
+
+            <Reverb
+                global={globalEffects}
+                effectArray={effectArray}
+                allEffects={allEffects}
+                addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                effect="reverb"
+                index={index}
+                disabled={disabled}
+                tone={tone}
+            />
         </div>
     )
 }
