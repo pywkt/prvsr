@@ -12,6 +12,7 @@ import Chorus from './components/Effects/Chorus';
 import Reverb from './components/Effects/Reverb';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
+import { monoSynth } from './instruments/monoSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 
@@ -67,7 +68,12 @@ function App() {
   }
 
   // Move to a config file
-  const instruments = [{ name: "", slug: "" }, { name: "Synth 01", slug: "synth01", type: 'synth' }, { name: "Piano 01", slug: "piano01", type: 'piano' }]
+  const instruments = [
+    { name: "", slug: "" }, 
+    { name: "Synth 01", slug: "synth01", type: 'synth' }, 
+    { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' }, 
+    { name: "Piano 01", slug: "piano01", type: 'piano' }
+  ]
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
   const onSubmit = async (data) => {
@@ -75,10 +81,10 @@ function App() {
   }
 
   const buildIndividualPart = async (data, index) => {
-    // console.log('onSubmit 01:', data)
+    console.log('onSubmit 01:', data)
 
     const slug = instruments.find(i => i.slug === data.instrument)
-    // console.log('slug:', slug)
+    console.log('slug:', slug)
 
     const getInstrumentData = () => {
       switch (slug.type) {
@@ -86,13 +92,15 @@ function App() {
           return piano01(index)
         case 'synth':
           return synth01(index)
+        case 'monoSynth':
+          return monoSynth(index)
         default:
           return 'piano01-default'
       }
     }
 
     const inst = await getInstrumentData()[`${slug.type}-${index}`]
-    // console.log('*** inst:', inst)
+    console.log('*** inst:', inst)
 
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
@@ -147,9 +155,10 @@ function App() {
 
       activeParts.current[index] = await new Tone.Part(((time, value) => {
         const instrument = data.slug
+        const isMono = /monoSynth/.test(instrument.name)
         // console.log('instrument:', instrument)
 
-        instrument.triggerAttackRelease(value.note, value.noteLen, time, value.velocity);
+        instrument.triggerAttackRelease(isMono ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
       if ((data.type) === 'drum') {
@@ -170,6 +179,7 @@ function App() {
   }
 
   const commitInstrument = async (index) => {
+    console.log('gv:', getValues(`instrumentArray.${index}`))
     const data = getValues(`instrumentArray.${index}`)
     const commited = await buildIndividualPart(data, index)
 
