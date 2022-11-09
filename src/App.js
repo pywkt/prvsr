@@ -139,17 +139,10 @@ function App() {
 
   const addToTransport = async (data, index) => {
     Tone.Transport.bpm.value = 120;
-    // console.log('addToTransport start:', data)
-    // console.log('add index:', index)
-    // console.log('add - data:', data)
-    // console.log('add - getValues:', getValues(`instrumentArray.${index}`))
 
     Tone.loaded().then(async () => {
-      // console.log('add:', data)
-      // console.log('activeParts before:', activeParts.current)
 
       if (activeParts.current[index]) {
-        // console.log('*** disposing')
         activeParts.current[index].dispose()
       }
 
