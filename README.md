@@ -1,4 +1,4 @@
 # prvsr
 ---
 
-A music thing That makes songs.
+A music thing that makes music.
