@@ -17,7 +17,15 @@ import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 
 function App() {
-  const { register, handleSubmit, setValue, control, getValues, watch } = useForm();
+  const { register, handleSubmit, setValue, control, getValues, watch } = useForm({
+    defaultValues: {
+      instrumentArray: {
+        songData: {
+          bpm: 120
+        }
+      }
+    }
+  });
   const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
   const [scaleData, setScaleData] = useState({})
@@ -69,9 +77,9 @@ function App() {
 
   // Move to a config file
   const instruments = [
-    { name: "", slug: "" }, 
-    { name: "Synth 01", slug: "synth01", type: 'synth' }, 
-    { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' }, 
+    { name: "", slug: "" },
+    { name: "Synth 01", slug: "synth01", type: 'synth' },
+    { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
@@ -133,12 +141,13 @@ function App() {
     return getValues(`instrumentArray.${index}`)
   }
 
-
+  // console.log('bpm:', watch(`instrumentArray.songData.bpm`))
 
   const activeParts = useRef({})
 
   const addToTransport = async (data, index) => {
-    Tone.Transport.bpm.value = 120;
+    // Tone.Transport.bpm.value = 120
+    // Tone.Transport.bpm.value = watch(`instrumentArray.songData.bpm`);
 
     Tone.loaded().then(async () => {
 
@@ -213,16 +222,20 @@ function App() {
   //     delayTime: "3n"
   //   })
 
-    
-    // const delay = new Tone.PingPongDelay()
-    // // console.log('effect channel:', part)
-    // part.chain(delay, Tone.Destination)
-    // delay.set({
-    //   wet: Number(e.target.value),
-    //   delayTime: "3n"
-    // })
-    // console.log(Tone.getInstrumentData())
+
+  // const delay = new Tone.PingPongDelay()
+  // // console.log('effect channel:', part)
+  // part.chain(delay, Tone.Destination)
+  // delay.set({
+  //   wet: Number(e.target.value),
+  //   delayTime: "3n"
+  // })
+  // console.log(Tone.getInstrumentData())
   // }
+
+  const updateSongSettings = () => {
+    Tone.Transport.bpm.value = getValues(`instrumentArray.songData.bpm`)
+  }
 
   return (
     <div className="App">
@@ -238,6 +251,8 @@ function App() {
       <Sequencer setDrumPart={(data) => setDrumPart(data)} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
+        <input type='number' defaultValue={120} id='song-bpm' {...register(`instrumentArray.songData.bpm`)} />
+        <Button label="Update Song Settings" onClick={updateSongSettings} />
         <ul>
 
 
