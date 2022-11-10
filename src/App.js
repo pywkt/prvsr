@@ -4,9 +4,11 @@ import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import './App.css';
 import Button from './components/Button';
+import Slider from './components/Slider';
 import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
 import Effects from './components/Effects';
+import InstrumentMods from './components/InstrumentMods';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
@@ -215,6 +217,24 @@ function App() {
     Tone.Transport.swing = e.target.value
   }
 
+  // const updateMono = (e, index) => {
+  //   console.log("e:", index, e.target.value)
+  //   const mono = getValues(`instrumentArray.${index}.slug`)
+
+  //   mono.set({
+  //     envelope: {
+  //       release: Number(e.target.value)
+  //     }
+  //   })
+
+  //   // mono.set({
+  //   //   oscillator: {
+  //   //     type: "sine"
+  //   //   }
+  //   // })
+  //   // mono.set({ envelope: { decay: Number(e.target.value) } })
+  // }
+
   return (
     <div className="App">
       <Button onClick={logTime} label="Log Time" />
@@ -268,6 +288,16 @@ function App() {
               <span htmlFor={`probability-${index}`} style={{ fontSize: 12 }}>Probability</span>
               <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.probability`)} />
 
+              {/* <Slider
+                min={0}
+                max={10}
+                step={1}
+                label="Mono"
+                type="test"
+                onChange={(e) => updateMono(e, index)}
+              /> */}
+
+              <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
 
               <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
 

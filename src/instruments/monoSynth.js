@@ -11,8 +11,9 @@ export const monoSynth = (index, remove) => {
                 type: "square"
             },
             envelope: {
-                attack: 0.1
-            }
+                attack: 1.0
+            },
+            volume: -20
         }), channel: new Tone.Channel({ channelCount: 2 })
     }
 
