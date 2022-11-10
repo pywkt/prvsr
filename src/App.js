@@ -161,6 +161,11 @@ function App() {
         instrument.triggerAttackRelease(isMono ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
+      console.log('prob:', data)
+
+      activeParts.current[index].probability = Number(data.probability)
+
+
       if ((data.type) === 'drum') {
         // console.log('data.name:', data.name)
         activeParts.current[index].loop = true
@@ -200,43 +205,6 @@ function App() {
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, true)
     }
-  }
-
-  // const effectRef = useRef({})
-  // const handleDelay = (e, index, effect) => {
-  //   const part = getValues(`instrumentArray.${index}.slug`);
-  //   console.log("effectRef:", effectRef.current)
-
-  //   if (!effectRef.current[effect]) {
-  //     console.log('effect does not exist, adding to ref')
-  //     effectRef.current[effect] = new Tone.PingPongDelay()
-  //   }
-
-  //   const delay = effectRef.current[effect]
-
-  //   part.chain(delay, Tone.Destination)
-  //   delay.set({
-  //     wet: Number(e.target.value),
-  //     delayTime: "3n"
-  //   })
-
-
-  // const delay = new Tone.PingPongDelay()
-  // // console.log('effect channel:', part)
-  // part.chain(delay, Tone.Destination)
-  // delay.set({
-  //   wet: Number(e.target.value),
-  //   delayTime: "3n"
-  // })
-  // console.log(Tone.getInstrumentData())
-  // }
-
-  const updateSongSettings = () => {
-    // const { bpm, swing } = getValues(`instrumentArray.songData`)
-    console.log('gv::', getValues(`instrumentArray.songData.bpm`))
-    console.log('songData:', getValues(`instrumentArray.songData.swing`))
-    // Tone.Transport.bpm.value = getValues(`instrumentArray.songData.bpm`)
-    Tone.Transport.swing = Number(getValues(`instrumentArray.songData.swing`))
   }
 
   const updateBpm = (e) => {
@@ -297,23 +265,13 @@ function App() {
 
               <br />
 
+              <span htmlFor={`probability-${index}`} style={{ fontSize: 12 }}>Probability</span>
+              <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.probability`)} />
+
+
               <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
 
               <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
-
-              {/* <PingPongDelay effect="delay" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
-              {/* <Chorus effect="chorus" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
-              {/* <Reverb effect="reverb" index={index} data={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} /> */}
-
-              {/* <input
-                type="range"
-                min="0"
-                max="1"
-                step={0.1}
-                defaultValue="0"
-                onChange={(e) => handleDelay(e, index, 'delay')}
-                id={`delay-${index}`}
-              /> */}
 
               <div>
                 {notesToUse.map(n => (
