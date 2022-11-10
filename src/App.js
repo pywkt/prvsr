@@ -7,9 +7,6 @@ import Button from './components/Button';
 import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
 import Effects from './components/Effects';
-import PingPongDelay from './components/Effects/PingPongDelay';
-import Chorus from './components/Effects/Chorus';
-import Reverb from './components/Effects/Reverb';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
@@ -21,7 +18,8 @@ function App() {
     defaultValues: {
       instrumentArray: {
         songData: {
-          bpm: 120
+          bpm: 120,
+          swing: 0
         }
       }
     }
@@ -234,7 +232,19 @@ function App() {
   // }
 
   const updateSongSettings = () => {
-    Tone.Transport.bpm.value = getValues(`instrumentArray.songData.bpm`)
+    // const { bpm, swing } = getValues(`instrumentArray.songData`)
+    console.log('gv::', getValues(`instrumentArray.songData.bpm`))
+    console.log('songData:', getValues(`instrumentArray.songData.swing`))
+    // Tone.Transport.bpm.value = getValues(`instrumentArray.songData.bpm`)
+    Tone.Transport.swing = Number(getValues(`instrumentArray.songData.swing`))
+  }
+
+  const updateBpm = (e) => {
+    Tone.Transport.bpm.value = e.target.value
+  }
+
+  const updateSwing = (e) => {
+    Tone.Transport.swing = e.target.value
   }
 
   return (
@@ -251,8 +261,10 @@ function App() {
       <Sequencer setDrumPart={(data) => setDrumPart(data)} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <input type='number' defaultValue={120} id='song-bpm' {...register(`instrumentArray.songData.bpm`)} />
-        <Button label="Update Song Settings" onClick={updateSongSettings} />
+        <label htmlFor='song-bpm'>BPM: </label>
+        <input type='number' style={{ width: 50 }} defaultValue={120} id='song-bpm' onChange={updateBpm} />
+        <label htmlFor='song-swing'>Swing: </label>
+        <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' />
         <ul>
 
 
