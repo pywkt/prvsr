@@ -34,37 +34,6 @@
 
 }
 
-.trackControlButtons {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-
-    & svg {
-        width: 24px;
-        height: 24px;
-        stroke: $secondary;
-        transition: stroke 0.2s;
-        stroke-linecap: square;
-        stroke-linejoin: miter;
-
-        &:hover {
-            stroke: #000;
-            transition: stroke 0.2s;
-        }
-    }
-
-}
-
-.isPlaying {
-    cursor: auto;
-    & svg {
-        stroke: $disabled;
-        &:hover {
-            stroke: darken($disabled, 20%)
-        }
-    }
-}
-
 .timeCounter {
     font-size: 1.5rem;
     font-weight: 400;
