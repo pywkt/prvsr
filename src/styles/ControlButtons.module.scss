@@ -9,13 +9,13 @@
         width: 24px;
         height: 24px;
         stroke: $secondary;
-        transition: stroke 0.2s;
+        transition: 0.2s;
         stroke-linecap: square;
         stroke-linejoin: miter;
 
         &:hover {
-            stroke: #000;
-            transition: stroke 0.2s;
+            stroke: $secondaryDark;
+            transition: 0.2s;
         }
     }
 
@@ -26,9 +26,10 @@
 
     & svg {
         stroke: $disabled;
+        opacity: 0.5;
 
         &:hover {
-            stroke: darken($disabled, 20%)
+            stroke: $disabled
         }
     }
 }

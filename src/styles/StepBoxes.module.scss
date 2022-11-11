@@ -8,28 +8,28 @@
 
 .steps input[type="checkbox"] {
     appearance: none;
-    background-color: $disabled;
+    background-color: $secondary;
     margin: 0.1rem;
     font: inherit;
     color: currentColor;
     width: 2rem;
     height: 2rem;
-    border: 1px solid darken($disabled, 5%);
+    border: 1px solid $secondaryDark;
     border-radius: 2px;
     cursor: pointer;
     transition: 0.15s;
     box-shadow: none;
     &:nth-child(4n - 3) {
-            background-color: darken($disabled, 5%);
+            background-color: $secondaryDark;
         }
     &:hover {
-        border-color: darken($disabled, 20%);
+        border-color: $secondaryDark;
     }
     &:checked {
         background-color: $accent;
         transition: 0.15s;
-        box-shadow: -1px 2px 3px 0px rgba(0, 0, 0, 0.08);
-        border: 1px solid darken($disabled, 25%);
+        // box-shadow: -1px 2px 3px 0px rgba(0, 0, 0, 0.08);
+        // border: 1px solid darken($disabled, 25%);
     }
 }
 

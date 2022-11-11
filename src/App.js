@@ -389,16 +389,6 @@ function App() {
         <p>
           <strong>{scaleData?.name}</strong>
         </p>
-
-        <ol style={{ textAlign: 'left' }}>
-          <li>add instruments</li>
-          <li>click Add to Track</li>
-          <li>use start/stop to start and stop the timeline</li>
-        </ol>
-        {/* <hr /> */}
-        <ul style={{ textAlign: 'left' }}>
-          <li>stop the transport before updating the instruments</li>
-        </ul>
       </div>
     </div>
 

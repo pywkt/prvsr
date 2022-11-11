@@ -1,8 +1,40 @@
 $sp_1: 1rem;
-$disabled: #e7f2f8;
 
-$primary: #2c2c2c;
-$secondary: #ffa384;
-$accent: #74bdcb;
-// $accent2: #e7f2f8;
-$tan: #efe7bc;
+$amount: 15%;
+
+$background: #f4f1de;
+$backgroundLight: lighten($background, $amount);
+$backgroundDark: darken($background, $amount);
+
+$text: #3d405b;
+
+$primary: #3d405b;
+$primaryLight: lighten($primary, $amount);
+$primaryDark: darken($primary, $amount);
+
+$secondary: #81b29a;
+$secondaryLight: lighten($secondary, $amount);
+$secondaryDark: darken($secondary, $amount);
+
+$accent: #e07a5f;
+$accentLight: lighten($accent, $amount);
+$accentDark: darken($accent, $amount);
+$disabled: #e63946;
+
+body {
+    background-color: $background;
+    color: $text;
+}
+
+input[type="text"], input[type="number"] {
+    margin: $sp_1;
+    padding: 0.2rem 0.4rem;
+    border: 1px solid $primary;
+    outline: none;
+    border-radius: 3px;
+
+    &:focus {
+        border: 1px solid darken($disabled, 20%);
+    }
+
+}

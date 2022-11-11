@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
 import StepBoxes from './StepBoxes';
+import KitSelector from './KitSelector';
 import ChannelControls from '../ChannelControls';
 import { allDrumKits } from '../../instruments/drums';
 import styles from '../../styles/Sequencer.module.scss';
@@ -80,55 +81,29 @@ const Sequencer = ({ setDrumPart }) => {
         setValue(`drums.${track}`, newRef.current[track])
     }
 
-    const makeTrackBoxes = (track) => {
-        return Array.from(Array(drumSteps)).map((_, i) =>
-            <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
-    }
+    // const makeTrackBoxes = (track) => {
+    //     return Array.from(Array(drumSteps)).map((_, i) =>
+    //         <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
+    // }
 
-    const handleSelection = (e) => {
-        setSelectedKit(allDrumKits[e.target.value])
-    }
+    // const handleSelection = (e) => {
+    //     setSelectedKit(allDrumKits[e.target.value])
+    // }
 
     return (
         <div>
 
             <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
-
-            {/* <div className={styles.sequencerContainer}>
-                {selectedKit.parts.map((ad, ind) => (
-                    <div key={ad}>
-                        <div style={{ margin: '0 auto', textAlign: 'center' }}>
-                            <div style={{ textAlign: 'left' }}>
-                                {makeTrackBoxes(ad)} <span style={{ fontSize: 12 }} >{ad}</span>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <br />
+            <KitSelector setSelectedKit={setSelectedKit} />
 
 
             <br />
-            <div style={{ display: 'flex' }}>
-                <div style={{ margin: '0 auto' }}>
-                    {selectedKit.parts.map((ad, ind) => (
-                        <div key={ad}>
-                            <div style={{ margin: '0 auto', textAlign: 'center' }}>
-                                <div style={{ textAlign: 'left' }}>
-                                    {makeTrackBoxes(ad)} <span style={{ fontSize: 12 }} >{ad}</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div> */}
-
-
-            <br />
-            <select onChange={handleSelection}>
+            {/* <select onChange={handleSelection}>
                 {allDrumKits.map((item, index) => (
                     <option value={index} key={`${item.name}-${index}`} label={item.name} />
                 ))}
-            </select>
+            </select> */}
             <br />
 
             <ChannelControls index={0} data={watch('drums')} />
