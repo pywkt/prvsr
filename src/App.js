@@ -218,24 +218,6 @@ function App() {
     Tone.Transport.swing = e.target.value
   }
 
-  // const updateMono = (e, index) => {
-  //   console.log("e:", index, e.target.value)
-  //   const mono = getValues(`instrumentArray.${index}.slug`)
-
-  //   mono.set({
-  //     envelope: {
-  //       release: Number(e.target.value)
-  //     }
-  //   })
-
-  //   // mono.set({
-  //   //   oscillator: {
-  //   //     type: "sine"
-  //   //   }
-  //   // })
-  //   // mono.set({ envelope: { decay: Number(e.target.value) } })
-  // }
-
   return (
     <div className="App">
       <Button onClick={logTime} label="Log Time" />

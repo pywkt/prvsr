@@ -2,27 +2,25 @@ import React from 'react';
 import Button from '../Button';
 import Slider from '../Slider';
 
+/**
+ * 
+ * @param {object} instrument The Tonejs instrument that will be modified.
+ * @param {number} index The index of the part that is being modified.
+ * @returns A set of sliders that control various parameters of the instrument.
+ */
+
 const InstrumentMods = ({ instrument, index }) => {
-    console.log('risetn')
-    console.log('instru:', instrument)
-    // console.log('instrument:', Object.keys(instrument))
-
     const canUse = (key) => instrument && Object.keys(instrument).includes(key)
-
-
 
     const envelope = ['attack', 'sustain', 'decay', 'release']
     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth', 'pwm', 'pulse']
 
     const setEnvelope = (e, param) => {
         instrument.set({ envelope: { [param]: Number(e.target.value) } })
-        console.log(instrument.get())
     }
 
     const setFilterEnvelope = (e, param) => {
-
         instrument.set({ filterEnvelope: { [param]: Number(e.target.value) } })
-        console.log(instrument.get())
     }
 
     const changeOscType = (type) => {
