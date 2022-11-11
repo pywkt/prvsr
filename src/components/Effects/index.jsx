@@ -4,7 +4,6 @@ import PingPongDelay from './PingPongDelay';
 import Reverb from './Reverb';
 import StereoWidener from './StereoWidener';
 import Phaser from './Phaser';
-import Slider from '../Slider';
 
 export let globalEffects = {}
 
@@ -30,12 +29,6 @@ const Effects = ({ disabled, index, partData, tone }) => {
         setAllEffects(effectRef.current)
         globalEffects[index] = arrs
     }
-
-    // const changeMono = (e) => {
-    //     console.log('effects partData:', partData)
-    //     partData.slug.set({ envelope: { attack: Number(e.target.value) } })
-    //     // partData.slug.envelope = { ...partData.slug.envelope, attack: e.target.data}
-    // }
 
     return (
         <div>

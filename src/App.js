@@ -11,6 +11,7 @@ import InstrumentMods from './components/InstrumentMods';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
+import { fmSynth } from './instruments/fmSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 
@@ -79,6 +80,7 @@ function App() {
     { name: "", slug: "" },
     { name: "Synth 01", slug: "synth01", type: 'synth' },
     { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
+    { name: "FMSynth", slug: "fmSynth", type: 'fmSynth'},
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
@@ -101,6 +103,8 @@ function App() {
           return synth01(index)
         case 'monoSynth':
           return monoSynth(index)
+        case 'fmSynth':
+          return fmSynth(index)
         default:
           return 'piano01-default'
       }
@@ -157,9 +161,10 @@ function App() {
       activeParts.current[index] = await new Tone.Part(((time, value) => {
         const instrument = data.slug
         const isMono = /monoSynth/.test(instrument.name)
+        const isFM = /fmSynth/.test(instrument.name)
         // console.log('instrument:', instrument)
 
-        instrument.triggerAttackRelease(isMono ? value.note[0] : value.note, value.noteLen, time, value.velocity);
+        instrument.triggerAttackRelease(isMono || isFM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
       console.log('prob:', data)
@@ -290,7 +295,7 @@ function App() {
 
               <br />
 
-              {/monoSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
+              {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
                 <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
               }
 
