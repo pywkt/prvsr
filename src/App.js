@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Key } from '@tonaljs/tonal';
 import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
-import './App.css';
+import Header from './components/Header';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
@@ -56,31 +56,40 @@ function App() {
   const getKeyData = (tonic, scale, partData) =>
     scale === "major" ? handleBuildLoop(Key.majorKey(tonic), partData) : processMinor(Key.minorKey(tonic))
 
-  const startTransport = () => {
-    Tone.start();
-    Tone.Transport.start()
-  }
+  // const logTime = () => {
+  //   const position = Tone.Transport.position
+  //   console.log('position:', position)
+  //   return position
+  // }
 
-  const pauseTransport = () => {
-    const currentTime = Tone.Transport.now()
-    Tone.Transport.pause(currentTime + 0.4)
-  }
+  // const startTransport = () => {
+  //   Tone.start();
+  //   Tone.Transport.start()
 
-  const stopTransport = () => {
-    Tone.Transport.stop()
-  }
+  //   Tone.Transport.scheduleRepeat((time) => {
+  //     logTime()
+  //     setValue(`instrumentData.songData.time`)
+  //   }, "4n")
+    
+  // }
 
-  const logTime = () => {
-    const position = Tone.Transport.position
-    console.log('position:', position)
-  }
+  // const pauseTransport = () => {
+  //   const currentTime = Tone.Transport.now()
+  //   Tone.Transport.pause(currentTime + 0.4)
+  // }
+
+  // const stopTransport = () => {
+  //   Tone.Transport.stop()
+  // }
+
+ 
 
   // Move to a config file
   const instruments = [
     { name: "", slug: "" },
     { name: "Synth 01", slug: "synth01", type: 'synth' },
     { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
-    { name: "FMSynth", slug: "fmSynth", type: 'fmSynth'},
+    { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
   const notesToUse = ['1n', '2n', '4n', '8n', '16n']
@@ -218,99 +227,108 @@ function App() {
     Tone.Transport.swing = e.target.value
   }
 
+
+
   return (
     <div className="App">
-      <Button onClick={logTime} label="Log Time" />
 
-      <br />
-      <Button onClick={startTransport} label="Start" />
-      <Button onClick={stopTransport} label="Stop" />
-      <Button onClick={pauseTransport} label="Pause" />
+      <Header tone={Tone} />
 
-      <br />
-
-      <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
-
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label htmlFor='song-bpm'>BPM: </label>
-        <input type='number' style={{ width: 50 }} defaultValue={120} id='song-bpm' onChange={updateBpm} />
-        <label htmlFor='song-swing'>Swing: </label>
-        <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' />
-        <ul>
+      <div style={{ textAlign: 'center' }}>
 
 
-          {fields.map((item, index) => (
-            <li key={item.id}>
-              <select {...register(`instrumentArray.${index}.instrument`)}>
-                {instruments.map((i) => (
-                  <option value={i.slug} key={i.name} >
-                    {i.name}
-                  </option>
-                ))}
-              </select>
-              <br />
-              <label htmlFor='unison-count'>Notes to play at once</label>
-              <br />
-              <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
-              <br />
-              <label htmlFor='octave-input'>octave</label>
-              <br />
-              <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
-              <br />
-              <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }} />
-              :
-              <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
-              <br />
-              <span htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Bars</span>
-              <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
-              <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loops</span>
-              <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
+        {/* <hr style={{ marginTop: 50 }} />
+        <Button onClick={logTime} label="Log Time" />
 
-              <br />
+        <br />
+        <Button onClick={startTransport} label="Start" />
+        <Button onClick={stopTransport} label="Stop" />
+        <Button onClick={pauseTransport} label="Pause" />
 
-              <span htmlFor={`probability-${index}`} style={{ fontSize: 12 }}>Probability</span>
+        <br /> */}
 
-              <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.probability`)} />
+        <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 
-              <br />
-
-              {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
-                <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
-              }
-
-              <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
-
-              <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
-
-              <div>
-                {notesToUse.map(n => (
-                  <span key={n}>
-                    <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
-                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
-                  </span>
-                ))}
-              </div>
-
-              <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
-              <button type="button" onClick={() => deletePart(index)}>Delete</button>
-
-              <br />
-
-              <hr style={{ width: 400 }} />
-            </li>
-          ))}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <label htmlFor='song-bpm'>BPM: </label>
+          <input type='number' style={{ width: 50 }} defaultValue={120} id='song-bpm' onChange={updateBpm} />
+          <label htmlFor='song-swing'>Swing: </label>
+          <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' />
+          <ul>
 
 
-        </ul>
-        <button
-          type="button"
-          onClick={() => { append({ instrument: 'Synth 01', data: [] }) }}
-        >
-          Add Instrument
-        </button>
-      </form>
+            {fields.map((item, index) => (
+              <li key={item.id}>
+                <select {...register(`instrumentArray.${index}.instrument`)}>
+                  {instruments.map((i) => (
+                    <option value={i.slug} key={i.name} >
+                      {i.name}
+                    </option>
+                  ))}
+                </select>
+                <br />
+                <label htmlFor='unison-count'>Notes to play at once</label>
+                <br />
+                <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
+                <br />
+                <label htmlFor='octave-input'>octave</label>
+                <br />
+                <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
+                <br />
+                <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }} />
+                :
+                <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
+                <br />
+                <span htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Bars</span>
+                <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
+                <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loops</span>
+                <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
 
-      {/*
+                <br />
+
+                <span htmlFor={`probability-${index}`} style={{ fontSize: 12 }}>Probability</span>
+
+                <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.probability`)} />
+
+                <br />
+
+                {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
+                  <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
+                }
+
+                <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
+
+                <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+
+                <div>
+                  {notesToUse.map(n => (
+                    <span key={n}>
+                      <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
+                      <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
+                    </span>
+                  ))}
+                </div>
+
+                <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
+                <button type="button" onClick={() => deletePart(index)}>Delete</button>
+
+                <br />
+
+                <hr style={{ width: 400 }} />
+              </li>
+            ))}
+
+
+          </ul>
+          <button
+            type="button"
+            onClick={() => { append({ instrument: 'Synth 01', data: [] }) }}
+          >
+            Add Instrument
+          </button>
+        </form>
+
+        {/*
       <form onSubmit={handleSubmit(onSubmit)}>
         <ul>
           {fields.map((item, index) => (
@@ -362,26 +380,28 @@ function App() {
         </form> */}
 
 
-      {/* <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <form onSubmit={handleSubmit(onSubmit)}>
         <textarea cols="50" rows="20" defaultValue={stateChords.length ? stateChords : ""} {...register("editedJson")} style={{ fontSize: 10 }} />
         <br />
         <Button type="submit" label="update stateChords" />
       </form> */}
 
-      <p>
-        <strong>{scaleData?.name}</strong>
-      </p>
+        <p>
+          <strong>{scaleData?.name}</strong>
+        </p>
 
-      <ol style={{ textAlign: 'left' }}>
-        <li>add instruments</li>
-        <li>click Add to Track</li>
-        <li>use start/stop to start and stop the timeline</li>
-      </ol>
-      {/* <hr /> */}
-      <ul style={{ textAlign: 'left' }}>
-        <li>stop the transport before updating the instruments</li>
-      </ul>
+        <ol style={{ textAlign: 'left' }}>
+          <li>add instruments</li>
+          <li>click Add to Track</li>
+          <li>use start/stop to start and stop the timeline</li>
+        </ol>
+        {/* <hr /> */}
+        <ul style={{ textAlign: 'left' }}>
+          <li>stop the transport before updating the instruments</li>
+        </ul>
+      </div>
     </div>
+
   );
 }
 

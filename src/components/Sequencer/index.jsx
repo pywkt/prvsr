@@ -125,9 +125,6 @@ const Sequencer = ({ setDrumPart }) => {
 
     return (
         <div>
-
-            <hr />
-
             <select onChange={handleSelection}>
                 {allDrumKits.map((item, index) => (
                     <option value={index} key={`${item.name}-${index}`} label={item.name} />
