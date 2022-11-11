@@ -148,7 +148,7 @@ function App() {
 
   const activeParts = useRef({})
 
-  const addToTransport = async (data, index) => {
+  const addToTransport = async (data, index, steps) => {
     // Tone.Transport.bpm.value = 120
     // Tone.Transport.bpm.value = watch(`instrumentArray.songData.bpm`);
 
@@ -167,16 +167,15 @@ function App() {
         instrument.triggerAttackRelease(isMono || isFM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
-      console.log('prob:', data)
+      // console.log('prob:', data)
 
       activeParts.current[index].probability = Number(data.probability)
 
 
       if ((data.type) === 'drum') {
-        // console.log('data.name:', data.name)
         activeParts.current[index].loop = true
         activeParts.current[index].loopStart = "0:0:0"
-        activeParts.current[index].loopEnd = "4:0:0"
+        activeParts.current[index].loopEnd = `${steps / 4}:0:0`
         activeParts.current[index].playbackRate = 2
       }
 
@@ -190,7 +189,7 @@ function App() {
   }
 
   const commitInstrument = async (index) => {
-    console.log('gv:', getValues(`instrumentArray.${index}`))
+    // console.log('gv:', getValues(`instrumentArray.${index}`))
     const data = getValues(`instrumentArray.${index}`)
     const commited = await buildIndividualPart(data, index)
 
@@ -205,11 +204,9 @@ function App() {
     remove(index)
   }
 
-  const setDrumPart = async (data) => {
-    // console.log('setDrumPart:', data)
-
+  const setDrumPart = async (data, steps) => {
     for (const [key, value] of Object.entries(data)) {
-      await addToTransport(value, key, true)
+      await addToTransport(value, key, steps)
     }
   }
 
@@ -250,7 +247,7 @@ function App() {
 
       <br />
 
-      <Sequencer setDrumPart={(data) => setDrumPart(data)} />
+      <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <label htmlFor='song-bpm'>BPM: </label>

@@ -28,7 +28,7 @@ const Sequencer = ({ setDrumPart }) => {
         // console.log('drumPartsfff:', drumParts)
 
         const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
-        // console.log('fff:', fff)
+        // console.log('fff2:', fff)
         const allDrums = []
         fff.map((d, i) => {
             // console.log('d:', d)
@@ -43,13 +43,16 @@ const Sequencer = ({ setDrumPart }) => {
         // console.log('allDrums:', allDrums)
         // console.log('drumRef.current:', drumRef.current)
         // console.log('values:', getValues('drums'))
+        // console.log("iii:", drumSteps)
+        // drumStepsRef.current.steps = drumSteps
 
         setValue(`drums.channel`, selectedKit.instrument.channel)
-        setDrumPart(drumRef.current)
+        
+        setDrumPart(drumRef.current, drumSteps)
     }
 
     const changeDrumSteps = (e) => {
-        // console.log('e:', drumStepsRef.current)
+        console.log('e:', drumStepsRef.current)
         setDrumSteps(Number(drumStepsRef.current))
     }
 
