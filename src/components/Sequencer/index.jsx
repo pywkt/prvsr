@@ -1,20 +1,17 @@
 import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
+import StepBoxes from './StepBoxes';
 import ChannelControls from '../ChannelControls';
 import { allDrumKits } from '../../instruments/drums';
-// import { kit8 } from '../../instruments/drums/kit8';
-// import { sk1, sk1Parts } from '../../instruments/drums/sk1';
+import styles from '../../styles/Sequencer.module.scss';
 
 const Sequencer = ({ setDrumPart }) => {
     const { register, setValue, control, getValues, watch } = useForm();
     useFieldArray({ control, name: "drums" })
 
     const [drumSteps, setDrumSteps] = useState(16)
-
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
-    // console.log('selectedKit:', selectedKit)
-    // console.log('allKits:', allDrumKits)
 
     const drumStepsRef = useRef(16);
     const drumRef = useRef([])
@@ -22,43 +19,26 @@ const Sequencer = ({ setDrumPart }) => {
 
     const makeDrums = () => {
         const drumData = getValues(`drums`)
-        // console.log('drumDatawww:', drumData)
-
         const drumParts = Object.keys(drumData)
-        // console.log('drumPartsfff:', drumParts)
 
         const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
-        // console.log('fff2:', fff)
         const allDrums = []
         fff.map((d, i) => {
-            // console.log('d:', d)
-            // console.log('selectedKit:', selectedKit)
-
             allDrums.push(drumData[d].filter(a => a.note !== ''))
-            // console.log('allDrums 01:', allDrums)
             return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum' }
         })
 
-        // console.log('looking:', selectedKit)
-        // console.log('allDrums:', allDrums)
-        // console.log('drumRef.current:', drumRef.current)
-        // console.log('values:', getValues('drums'))
-        // console.log("iii:", drumSteps)
-        // drumStepsRef.current.steps = drumSteps
-
         setValue(`drums.channel`, selectedKit.instrument.channel)
-        
+
         setDrumPart(drumRef.current, drumSteps)
     }
 
     const changeDrumSteps = (e) => {
-        console.log('e:', drumStepsRef.current)
         setDrumSteps(Number(drumStepsRef.current))
     }
 
     const checkAndMakeSteps = (track) => {
         if (newRef.current[track]?.length === 0) {
-            // console.log('making kick ref')
             for (let i = 0; i < drumSteps; i += 1) {
                 newRef.current[track].push({ time: `0:0:0`, note: '' })
             }
@@ -67,11 +47,8 @@ const Sequencer = ({ setDrumPart }) => {
 
 
     const handleKickChange = (index, track) => {
-        // console.log('handleKickChange')
         const bars = String(index / 4).split(".")[0]
         const qNotes = index % 4
-
-        // console.log('track change:', track)
 
         const trackNotes = (track) => {
             switch (track) {
@@ -92,18 +69,8 @@ const Sequencer = ({ setDrumPart }) => {
             }
         }
 
-        // console.log('tracknotes:', trackNotes(track))
-
         checkAndMakeSteps([track])
 
-        // if (newRef.current[track].length === 0) {
-        //     console.log('making kick ref')
-        //     for (let i = 0; i < drumSteps; i += 1) {
-        //         newRef.current[track].push({ time: `0:0:0`, note: '' })
-        //     }
-        // }
-
-        // console.log('newRef:', newRef.current)
         if (newRef.current[track][index].note !== '') {
             newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
@@ -114,7 +81,6 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const makeTrackBoxes = (track) => {
-        // console.log('track:', track)
         return Array.from(Array(drumSteps)).map((_, i) =>
             <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
     }
@@ -125,11 +91,21 @@ const Sequencer = ({ setDrumPart }) => {
 
     return (
         <div>
-            <select onChange={handleSelection}>
-                {allDrumKits.map((item, index) => (
-                    <option value={index} key={`${item.name}-${index}`} label={item.name} />
+
+            <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
+
+            {/* <div className={styles.sequencerContainer}>
+                {selectedKit.parts.map((ad, ind) => (
+                    <div key={ad}>
+                        <div style={{ margin: '0 auto', textAlign: 'center' }}>
+                            <div style={{ textAlign: 'left' }}>
+                                {makeTrackBoxes(ad)} <span style={{ fontSize: 12 }} >{ad}</span>
+                            </div>
+                        </div>
+                    </div>
                 ))}
-            </select>
+            </div>
+
 
             <br />
             <div style={{ display: 'flex' }}>
@@ -144,7 +120,15 @@ const Sequencer = ({ setDrumPart }) => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
+
+
+            <br />
+            <select onChange={handleSelection}>
+                {allDrumKits.map((item, index) => (
+                    <option value={index} key={`${item.name}-${index}`} label={item.name} />
+                ))}
+            </select>
             <br />
 
             <ChannelControls index={0} data={watch('drums')} />
