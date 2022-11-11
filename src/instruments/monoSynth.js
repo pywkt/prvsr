@@ -7,12 +7,6 @@ export const monoSynth = (index, remove) => {
 
     const makeNewSynth = () => allSynths[`monoSynth-${index}`] = {
         monoSynth: new Tone.MonoSynth({
-            oscillator: {
-                type: "square"
-            },
-            envelope: {
-                attack: 1.0
-            },
             volume: -20
         }), channel: new Tone.Channel({ channelCount: 2 })
     }
