@@ -93,7 +93,11 @@ const Sequencer = ({ setDrumPart }) => {
     return (
         <div>
 
-            <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
+        <div className={styles.sequencerContainer}>
+                <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
+                <ChannelControls index={0} data={watch('drums')} drums />
+        </div>
+            
             <br />
             <KitSelector setSelectedKit={setSelectedKit} />
 
@@ -106,7 +110,7 @@ const Sequencer = ({ setDrumPart }) => {
             </select> */}
             <br />
 
-            <ChannelControls index={0} data={watch('drums')} />
+            {/* <ChannelControls index={0} data={watch('drums')} orientation="vertical" /> */}
 
             <br />
 

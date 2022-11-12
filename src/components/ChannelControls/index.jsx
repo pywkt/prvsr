@@ -3,12 +3,12 @@ import VolumeControl from './VolumeControl';
 import SoloButton from './SoloButton';
 import MuteButton from './MuteButton';
 
-const ChannelControls = ({ index, data }) => {
+const ChannelControls = ({ index, data, drums }) => {
     return (
-        <div style={{ margin: 10 }}>
-            <VolumeControl index={index} data={data} />
-            <SoloButton index={index} data={data} />
-            <MuteButton index={index} data={data} />
+        <div>
+            <VolumeControl index={index} data={data} drums={drums} />
+            <SoloButton index={index} data={data} drums={drums} />
+            <MuteButton index={index} data={data} drums={drums} />
         </div>
     )
 }

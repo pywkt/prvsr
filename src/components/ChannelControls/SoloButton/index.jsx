@@ -8,16 +8,20 @@ import React from 'react';
  * component is a child of.
  */
 
-const SoloButton = ({ index, data }) => {
+const SoloButton = ({ index, data, drums }) => {
     const toggleSolo = (e) => data.channel.solo = e.target.checked
 
     return (
-        <input
-            type="checkbox"
-            defaultChecked={false}
-            id={`solo-${index}`}
-            onChange={toggleSolo}
-        />
+        <div className='checkboxContainer'>
+            <label htmlFor={drums ? `solo-${index}-drums` : `solo-${index}`}>Solo</label>
+            <input
+                type="checkbox"
+                defaultChecked={false}
+                id={drums ? `solo-${index}-drums` : `solo-${index}`}
+                onChange={toggleSolo}
+            />
+        </div>
+
     )
 }
 

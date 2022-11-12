@@ -8,16 +8,21 @@ import React from 'react';
  * component is a child of.
  */
 
-const MuteButton = ({ index, data }) => {
+const MuteButton = ({ index, data, drums }) => {
     const toggleMute = (e) => data.channel.mute = e.target.checked
 
     return (
-        <input
-            type="checkbox"
-            defaultChecked={false}
-            id={`mute-${index}`}
-            onChange={toggleMute}
-        />
+        <div className='checkboxContainer'>
+            <label htmlFor={drums ? `mute-${index}-drums` : `mute-${index}`}>Mute</label>
+            <input
+                type="checkbox"
+                defaultChecked={false}
+                id={drums ? `mute-${index}-drums` : `mute-${index}`}
+                onChange={toggleMute}
+            />
+        </div>
+
+
     )
 }
 

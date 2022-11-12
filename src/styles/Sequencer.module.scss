@@ -1,9 +1,10 @@
 @import './globals.module.scss';
 
 .sequencerContainer {
-    background-color: 'pink';
-    padding: 100px;
-    & checkbox {
-        border: 0
-    }
+    // background-color: pink;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 3rem;
+    margin-left: 10rem;
 }
