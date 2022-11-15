@@ -40,3 +40,27 @@
     font-style: italic;
     color: $secondaryLight;
 }
+
+.tempoAndSwingContainer {
+    & label {
+        color: $secondary;
+        font-size: 0.75rem;
+        margin: 0 0.3rem;
+    }
+
+    & input {
+        margin: 0 0.3rem;
+        background-color: $primary;
+        color: $secondary;
+        font-size: 1rem;
+        border-bottom: 1px solid $secondary;
+        width: 3.2rem;
+
+        &:focus {
+            border: 1px solid transparent !important;
+            border-bottom: 1px solid $disabled !important;
+            border-radius: none;
+        }
+
+    }
+}

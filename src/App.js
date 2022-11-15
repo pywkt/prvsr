@@ -220,13 +220,13 @@ function App() {
     }
   }
 
-  const updateBpm = (e) => {
-    Tone.Transport.bpm.value = e.target.value
-  }
+  // const updateBpm = (e) => {
+  //   Tone.Transport.bpm.value = e.target.value
+  // }
 
-  const updateSwing = (e) => {
-    Tone.Transport.swing = e.target.value
-  }
+  // const updateSwing = (e) => {
+  //   Tone.Transport.swing = e.target.value
+  // }
 
 
 
@@ -253,10 +253,10 @@ function App() {
         <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          <label htmlFor='song-bpm'>BPM: </label>
+          {/* <label htmlFor='song-bpm'>BPM: </label>
           <input type='number' style={{ width: 50 }} defaultValue={120} id='song-bpm' onChange={updateBpm} />
           <label htmlFor='song-swing'>Swing: </label>
-          <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' />
+          <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' /> */}
           <ul>
 
 
