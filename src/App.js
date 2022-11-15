@@ -14,6 +14,7 @@ import { monoSynth } from './instruments/monoSynth';
 import { fmSynth } from './instruments/fmSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
+import styles from './styles/App.module.scss';
 
 function App() {
   const { register, handleSubmit, setValue, control, getValues, watch } = useForm({
@@ -246,6 +247,8 @@ function App() {
         <Button onClick={pauseTransport} label="Pause" />
 
         <br /> */}
+
+
 
         <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 

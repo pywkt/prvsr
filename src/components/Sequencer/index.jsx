@@ -4,6 +4,11 @@ import Button from '../Button';
 import StepBoxes from './StepBoxes';
 import KitSelector from './KitSelector';
 import ChannelControls from '../ChannelControls';
+import VolumeControl from '../ChannelControls/VolumeControl';
+import MuteButton from '../ChannelControls/MuteButton';
+import SoloButton from '../ChannelControls/SoloButton';
+import StartTime from './StartTime';
+import SequenceLength from './SequenceLength';
 import { allDrumKits } from '../../instruments/drums';
 import styles from '../../styles/Sequencer.module.scss';
 
@@ -18,7 +23,12 @@ const Sequencer = ({ setDrumPart }) => {
     const drumRef = useRef([])
     const newRef = useRef({ kick: [], snare: [], hihat: [], ohihat: [], lowtom: [], hitom: [] });
 
+    const changeDrumSteps = (newSteps) => {
+        setDrumSteps(Number(newSteps))
+    }
+
     const makeDrums = () => {
+
         const drumData = getValues(`drums`)
         const drumParts = Object.keys(drumData)
 
@@ -34,9 +44,7 @@ const Sequencer = ({ setDrumPart }) => {
         setDrumPart(drumRef.current, drumSteps)
     }
 
-    const changeDrumSteps = (e) => {
-        setDrumSteps(Number(drumStepsRef.current))
-    }
+
 
     const checkAndMakeSteps = (track) => {
         if (newRef.current[track]?.length === 0) {
@@ -70,9 +78,12 @@ const Sequencer = ({ setDrumPart }) => {
             }
         }
 
-        checkAndMakeSteps([track])
+        if (newRef.current[track].length === 0) {
+            checkAndMakeSteps([track])
+        }
 
-        if (newRef.current[track][index].note !== '') {
+
+        if (newRef.current[track][index]?.note !== '') {
             newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
             newRef.current[track].splice(index, 1, { time: `${bars}:${qNotes}:0`, note: [trackNotes(track)], noteLen: "4n", velocity: 1 })
@@ -81,25 +92,48 @@ const Sequencer = ({ setDrumPart }) => {
         setValue(`drums.${track}`, newRef.current[track])
     }
 
-    // const makeTrackBoxes = (track) => {
-    //     return Array.from(Array(drumSteps)).map((_, i) =>
-    //         <input {...register(`${track}`)} onChange={() => handleKickChange(i, track)} key={`${track}-${i}`} type="checkbox" id={`${track}-step-${i}`} />)
-    // }
-
-    // const handleSelection = (e) => {
-    //     setSelectedKit(allDrumKits[e.target.value])
-    // }
-
     return (
         <div>
 
-        <div className={styles.sequencerContainer}>
+            <div className={styles.sequencerGrid}>
+                <div className={styles.sequencerGridStepContainer}>
+                    <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
+                </div>
+
+                <div className={styles.sequencerGridControlsContainer}>
+                    <KitSelector setSelectedKit={setSelectedKit} />
+                    <SequenceLength changeDrumSteps={changeDrumSteps} />
+                    <StartTime register={register} />
+                    <VolumeControl index={0} data={watch(`drums`)} drums />
+                    <MuteButton index={0} data={watch(`drums`)} drums />
+                    <SoloButton index={0} data={watch(`drums`)} drums />
+
+                    <Button onClick={makeDrums} label="Make Drums" />
+
+
+                </div>
+
+            </div>
+
+            {/* <div className={styles.sequencerContainer}>
+
                 <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
-                <ChannelControls index={0} data={watch('drums')} drums />
-        </div>
-            
+                <div className={styles.sequencerControls}>
+                    <KitSelector setSelectedKit={setSelectedKit} />
+
+                    <SequenceLength changeDrumSteps={changeDrumSteps} />
+
+                    <StartTime register={register} />
+
+                    <ChannelControls index={0} data={watch('drums')} drums />
+
+                    <Button onClick={makeDrums} label="Make Drums" />
+                </div>
+
+            </div> */}
+
             <br />
-            <KitSelector setSelectedKit={setSelectedKit} />
+
 
 
             <br />
@@ -114,15 +148,15 @@ const Sequencer = ({ setDrumPart }) => {
 
             <br />
 
-            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
+            {/* <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
             <span>:</span>
-            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} />
+            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} /> */}
             <br />
 
-            <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
-            <Button onClick={changeDrumSteps} label="Update" />
+            {/* <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
+            <Button onClick={changeDrumSteps} label="Update" /> */}
             <br />
-            <Button onClick={makeDrums} label="Make Drums" />
+
 
         </div>
     )

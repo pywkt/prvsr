@@ -27,8 +27,7 @@ body {
 }
 
 input[type="text"], input[type="number"] {
-    margin: $sp_1;
-    padding: 0.2rem 0.4rem;
+    padding: 0.3rem 0.4rem;
     border: 1px solid $primary;
     outline: none;
     border-radius: 3px;
@@ -45,8 +44,7 @@ input[type='range'] {
     border: 1px solid $secondary;
     border-radius: 5px;
     -webkit-transform-origin: top left;
-    margin: 1rem;
-    // position:relative;
+    margin: 1rem 0;
 }
 
 input[type='range']::-webkit-slider-thumb {
@@ -87,7 +85,5 @@ input[type="checkbox"] {
     &:checked {
         background-color: $primaryLight;
         transition: 0.15s;
-        // box-shadow: -1px 2px 3px 0px rgba(0, 0, 0, 0.08);
-        // border: 1px solid darken($disabled, 25%);
     }
 }

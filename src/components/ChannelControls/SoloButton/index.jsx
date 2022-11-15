@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../../../styles/ChannelControls.module.scss'
 
 /**
  * 
@@ -12,7 +13,7 @@ const SoloButton = ({ index, data, drums }) => {
     const toggleSolo = (e) => data.channel.solo = e.target.checked
 
     return (
-        <div className='checkboxContainer'>
+        <div>
             <label htmlFor={drums ? `solo-${index}-drums` : `solo-${index}`}>Solo</label>
             <input
                 type="checkbox"

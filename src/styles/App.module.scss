@@ -1,0 +1,13 @@
+@import './globals.module.scss';
+
+.mainGrid {
+    width: 100%;
+    height: 100px;
+    background-color: pink;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: 'sequencer' 'sequencer-controls';
+    
+
+}

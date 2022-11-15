@@ -1,0 +1,24 @@
+@import './globals.module.scss';
+
+.drumStartTimeInput, .numberOfStepsInput {
+    width: 30px;
+    &+span {
+        padding: 0 0.3rem;
+    }
+}
+
+.selectorDropdown {
+        background-color: $backgroundLight;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            border: 1px solid lightgrey;
+        
+            &:hover {
+                background-color: $backgroundLight;
+            }
+}
+
+.drumVolumeSlider {
+    width: 50%;
+}

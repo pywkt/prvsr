@@ -1,10 +1,60 @@
 @import './globals.module.scss';
 
+.sequencerGrid {
+    // width: 100%;
+    // height: 100px;
+    // background-color: pink;
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: auto;
+    grid-template-areas: 'steps controls';
+    padding: 1rem;
+    margin: 1rem;
+
+
+
+
+}
+
+.sequencerGridStepContainer {
+    grid-area: 'steps';
+    // background-color: pink;
+}
+
+.sequencerGridControlsContainer {
+    grid-area: 'controls';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.6rem;
+    border-left: 1px solid lightGrey;
+    padding-left: 2rem;
+
+    & > div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        // background-color: salmon;
+        flex-direction: row;
+        align-items: center;
+        font-size: 0.75rem;
+        // flex-grow: 1;
+        // gap: 1rem;
+    }
+    // background-color: salmon;
+}
+
 .sequencerContainer {
     // background-color: pink;
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 3rem;
-    margin-left: 10rem;
+    // margin-left: 10rem;
+}
+
+.sequencerControls {
+    text-align: left;
+    line-height: 2rem;
 }

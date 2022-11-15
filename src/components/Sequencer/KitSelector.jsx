@@ -1,6 +1,6 @@
 import React from 'react';
 import { allDrumKits } from '../../instruments/drums';
-import styles from '../../styles/KitSelector.module.scss';
+import styles from '../../styles/SequencerControls.module.scss';
 
 const KitSelector = ({ setSelectedKit }) => {
 
@@ -9,11 +9,15 @@ const KitSelector = ({ setSelectedKit }) => {
     }
 
     return (
-            <select onChange={handleSelection} className={styles.selectorDropdown}>
+        <div>
+            <label htmlFor='kit-selector'>Kit</label>
+            <select id="kit-selector" onChange={handleSelection} className={styles.selectorDropdown}>
                 {allDrumKits.map((item, index) => (
                     <option value={index} key={`${item.name}-${index}`} label={item.name} />
                 ))}
             </select>
+        </div>
+
     )
 }
 

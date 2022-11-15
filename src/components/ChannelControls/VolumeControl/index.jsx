@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../styles/VolumeControl.module.scss';
+import styles from '../../../styles/SequencerControls.module.scss';
 
 /**
  * 
@@ -25,12 +25,13 @@ const VolumeControl = ({ index, data, drums }) => {
             <label htmlFor={drums ? `volume-${index}-drums` : `volume-${index}`}>Volume</label>
             <input
                 type="range"
-                min="-100"
-                max="50"
+                min="-150"
+                max="30"
                 step={0.5}
-                defaultValue="-20"
+                defaultValue="-30"
                 onChange={handleChannel}
                 id={drums ? `volume-${index}-drums` : `volume-${index}`}
+                className={styles.drumVolumeSlider}
                 // className={`${styles.volumeSlider} ${orientation === "vertical" && styles.verticalSlider}`}
             />
         </div>

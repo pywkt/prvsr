@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from '../../../styles/ChannelControls.module.scss';
 
 /**
  * 
@@ -12,7 +13,7 @@ const MuteButton = ({ index, data, drums }) => {
     const toggleMute = (e) => data.channel.mute = e.target.checked
 
     return (
-        <div className='checkboxContainer'>
+        <div>
             <label htmlFor={drums ? `mute-${index}-drums` : `mute-${index}`}>Mute</label>
             <input
                 type="checkbox"
