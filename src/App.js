@@ -235,28 +235,11 @@ function App() {
 
       <Header tone={Tone} />
 
-      <div style={{ textAlign: 'center' }}>
-
-
-        {/* <hr style={{ marginTop: 50 }} />
-        <Button onClick={logTime} label="Log Time" />
-
-        <br />
-        <Button onClick={startTransport} label="Start" />
-        <Button onClick={stopTransport} label="Stop" />
-        <Button onClick={pauseTransport} label="Pause" />
-
-        <br /> */}
-
-
+      {/* <div style={{ textAlign: 'center' }}> */}
 
         <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <label htmlFor='song-bpm'>BPM: </label>
-          <input type='number' style={{ width: 50 }} defaultValue={120} id='song-bpm' onChange={updateBpm} />
-          <label htmlFor='song-swing'>Swing: </label>
-          <input type='number' min={0} max={1} step={0.1} style={{ width: 50 }} defaultValue={0} onChange={updateSwing} id='song-swing' /> */}
           <ul>
 
 
@@ -393,7 +376,7 @@ function App() {
           <strong>{scaleData?.name}</strong>
         </p>
       </div>
-    </div>
+    // </div>
 
   );
 }

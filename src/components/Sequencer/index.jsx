@@ -3,7 +3,6 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
 import StepBoxes from './StepBoxes';
 import KitSelector from './KitSelector';
-import ChannelControls from '../ChannelControls';
 import VolumeControl from '../ChannelControls/VolumeControl';
 import MuteButton from '../ChannelControls/MuteButton';
 import SoloButton from '../ChannelControls/SoloButton';
@@ -19,7 +18,6 @@ const Sequencer = ({ setDrumPart }) => {
     const [drumSteps, setDrumSteps] = useState(16)
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
 
-    const drumStepsRef = useRef(16);
     const drumRef = useRef([])
     const newRef = useRef({ kick: [], snare: [], hihat: [], ohihat: [], lowtom: [], hitom: [] });
 
@@ -44,8 +42,6 @@ const Sequencer = ({ setDrumPart }) => {
         setDrumPart(drumRef.current, drumSteps)
     }
 
-
-
     const checkAndMakeSteps = (track) => {
         if (newRef.current[track]?.length === 0) {
             for (let i = 0; i < drumSteps; i += 1) {
@@ -53,7 +49,6 @@ const Sequencer = ({ setDrumPart }) => {
             }
         }
     }
-
 
     const handleKickChange = (index, track) => {
         const bars = String(index / 4).split(".")[0]
@@ -82,7 +77,6 @@ const Sequencer = ({ setDrumPart }) => {
             checkAndMakeSteps([track])
         }
 
-
         if (newRef.current[track][index]?.note !== '') {
             newRef.current[track].splice(index, 1, { time: `0:0:0`, note: '' })
         } else {
@@ -93,71 +87,21 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     return (
-        <div>
-
-            <div className={styles.sequencerGrid}>
-                <div className={styles.sequencerGridStepContainer}>
-                    <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
-                </div>
-
-                <div className={styles.sequencerGridControlsContainer}>
-                    <KitSelector setSelectedKit={setSelectedKit} />
-                    <SequenceLength changeDrumSteps={changeDrumSteps} />
-                    <StartTime register={register} />
-                    <VolumeControl index={0} data={watch(`drums`)} drums />
-                    <MuteButton index={0} data={watch(`drums`)} drums />
-                    <SoloButton index={0} data={watch(`drums`)} drums />
-
-                    <Button onClick={makeDrums} label="Make Drums" />
-
-
-                </div>
-
+        <div className={styles.sequencerGrid}>
+            <div className={styles.sequencerGridStepContainer}>
+                <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
             </div>
 
-            {/* <div className={styles.sequencerContainer}>
+            <div className={styles.sequencerGridControlsContainer}>
+                <KitSelector setSelectedKit={setSelectedKit} />
+                <SequenceLength changeDrumSteps={changeDrumSteps} />
+                <StartTime register={register} />
+                <VolumeControl index={0} data={watch(`drums`)} drums />
+                <MuteButton index={0} data={watch(`drums`)} drums />
+                <SoloButton index={0} data={watch(`drums`)} drums />
 
-                <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
-                <div className={styles.sequencerControls}>
-                    <KitSelector setSelectedKit={setSelectedKit} />
-
-                    <SequenceLength changeDrumSteps={changeDrumSteps} />
-
-                    <StartTime register={register} />
-
-                    <ChannelControls index={0} data={watch('drums')} drums />
-
-                    <Button onClick={makeDrums} label="Make Drums" />
-                </div>
-
-            </div> */}
-
-            <br />
-
-
-
-            <br />
-            {/* <select onChange={handleSelection}>
-                {allDrumKits.map((item, index) => (
-                    <option value={index} key={`${item.name}-${index}`} label={item.name} />
-                ))}
-            </select> */}
-            <br />
-
-            {/* <ChannelControls index={0} data={watch('drums')} orientation="vertical" /> */}
-
-            <br />
-
-            {/* <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.bar`)} style={{ width: 30, margin: 5 }} />
-            <span>:</span>
-            <input defaultValue={0} type="text" id="start-time-bar-drums" {...register(`drums.startTime.beat`)} style={{ width: 30, margin: 5 }} /> */}
-            <br />
-
-            {/* <input type="text" onChange={(e) => drumStepsRef.current = e.target.value} defaultValue={16} />
-            <Button onClick={changeDrumSteps} label="Update" /> */}
-            <br />
-
-
+                <Button onClick={makeDrums} label="Make Drums" />
+            </div>
         </div>
     )
 }
