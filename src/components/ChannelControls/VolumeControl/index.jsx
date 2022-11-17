@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../../../styles/SequencerControls.module.scss';
+// import styles from '../../../styles/SequencerControls.module.scss';
 
 /**
  * 
@@ -31,7 +31,7 @@ const VolumeControl = ({ index, data, drums }) => {
                 defaultValue="-30"
                 onChange={handleChannel}
                 id={drums ? `volume-${index}-drums` : `volume-${index}`}
-                className={styles.drumVolumeSlider}
+                // className={styles.drumVolumeSlider}
                 // className={`${styles.volumeSlider} ${orientation === "vertical" && styles.verticalSlider}`}
             />
         </div>

@@ -19,7 +19,10 @@ $secondaryDark: darken($secondary, $amount);
 $accent: #fca311;
 $accentLight: lighten($accent, $amount);
 $accentDark: darken($accent, $amount);
+
 $disabled: #e63946;
+
+$buttonBorder: lightgrey;
 
 body {
     background-color: $background;

@@ -8,12 +8,24 @@ import Sequencer from './components/Sequencer';
 import ChannelControls from './components/ChannelControls';
 import Effects from './components/Effects';
 import InstrumentMods from './components/InstrumentMods';
+import VolumeControl from './components/ChannelControls/VolumeControl';
+import MuteButton from './components/ChannelControls/MuteButton';
+import SoloButton from './components/ChannelControls/SoloButton';
+import UnisonCount from './components/UnisonCount';
+import Octave from './components/Octave';
+import StartTime from './components/StartTime';
+import NumberOfBars from './components/NumberOfBars';
+import NumberOfLoops from './components/NumberOfLoops';
+import ProbabilityAmount from './components/ProbabilityAmount';
+import InstrumentPart from './components/InstrumentPart';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
 import { fmSynth } from './instruments/fmSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
+import { ReactComponent as Plus } from './icons/plus.svg';
+import { ReactComponent as Trash } from './icons/trash.svg';
 import styles from './styles/App.module.scss';
 
 function App() {
@@ -57,33 +69,6 @@ function App() {
   const getKeyData = (tonic, scale, partData) =>
     scale === "major" ? handleBuildLoop(Key.majorKey(tonic), partData) : processMinor(Key.minorKey(tonic))
 
-  // const logTime = () => {
-  //   const position = Tone.Transport.position
-  //   console.log('position:', position)
-  //   return position
-  // }
-
-  // const startTransport = () => {
-  //   Tone.start();
-  //   Tone.Transport.start()
-
-  //   Tone.Transport.scheduleRepeat((time) => {
-  //     logTime()
-  //     setValue(`instrumentData.songData.time`)
-  //   }, "4n")
-    
-  // }
-
-  // const pauseTransport = () => {
-  //   const currentTime = Tone.Transport.now()
-  //   Tone.Transport.pause(currentTime + 0.4)
-  // }
-
-  // const stopTransport = () => {
-  //   Tone.Transport.stop()
-  // }
-
- 
 
   // Move to a config file
   const instruments = [
@@ -199,8 +184,9 @@ function App() {
   }
 
   const commitInstrument = async (index) => {
-    // console.log('gv:', getValues(`instrumentArray.${index}`))
+    // console.log('commit:', index)
     const data = getValues(`instrumentArray.${index}`)
+    // console.log('data:', data)
     const commited = await buildIndividualPart(data, index)
 
     await addToTransport(commited, index)
@@ -210,7 +196,6 @@ function App() {
     const partToDelete = getValues(`instrumentArray.${index}.part`)
     partToDelete.dispose()
     synth01(index, remove)
-    // delete activeParts.current[index];
     remove(index)
   }
 
@@ -220,162 +205,156 @@ function App() {
     }
   }
 
-  // const updateBpm = (e) => {
-  //   Tone.Transport.bpm.value = e.target.value
-  // }
-
-  // const updateSwing = (e) => {
-  //   Tone.Transport.swing = e.target.value
-  // }
-
-
+  // console.log(getValues(`instrumentArray`))
 
   return (
     <div className="App">
 
       <Header tone={Tone} />
-
-      {/* <div style={{ textAlign: 'center' }}> */}
-
-        <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
-
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <ul>
+      <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
 
 
-            {fields.map((item, index) => (
-              <li key={item.id}>
-                <select {...register(`instrumentArray.${index}.instrument`)}>
-                  {instruments.map((i) => (
-                    <option value={i.slug} key={i.name} >
-                      {i.name}
-                    </option>
-                  ))}
-                </select>
-                <br />
-                <label htmlFor='unison-count'>Notes to play at once</label>
-                <br />
-                <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
-                <br />
-                <label htmlFor='octave-input'>octave</label>
-                <br />
-                <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
-                <br />
-                <input defaultValue={0} type="text" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 30, margin: 5 }} />
-                :
-                <input defaultValue={0} type="text" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 30, margin: 5 }} />
-                <br />
-                <span htmlFor={`number-of-bars-${index}`} style={{ fontSize: 12 }}>Bars</span>
-                <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.maxBars`)} />
-                <span htmlFor={`number-of-loops-${index}`} style={{ fontSize: 12 }}>Loops</span>
-                <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
-
-                <br />
-
-                <span htmlFor={`probability-${index}`} style={{ fontSize: 12 }}>Probability</span>
-
-                <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 30, margin: 10 }} {...register(`instrumentArray.${index}.probability`)} />
-
-                <br />
-
-                {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
-                  <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
-                }
-
-                <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} />
-
-                <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
-
-                <div>
-                  {notesToUse.map(n => (
-                    <span key={n}>
-                      <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
-                      <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
-                    </span>
-                  ))}
-                </div>
-
-                <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
-                <button type="button" onClick={() => deletePart(index)}>Delete</button>
-
-                <br />
-
-                <hr style={{ width: 400 }} />
-              </li>
-            ))}
 
 
-          </ul>
-          <button
-            type="button"
-            onClick={() => { append({ instrument: 'Synth 01', data: [] }) }}
-          >
-            Add Instrument
-          </button>
-        </form>
 
-        {/*
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ul>
-          {fields.map((item, index) => (
-            <li key={item.id}>
+        {fields.map((item, index) => (
+          // <InstrumentPart item={item} index={index} instruments={instruments} commitInstrument={() => commitInstrument(index)} deletePart={deletePart} tone={Tone} />
+          <div key={item.id} className={styles.instrumentGrid}>
 
-              <label htmlFor="instrument-selector">Instrument:</label>
-              {/* <select name="instrument-selector" id="instrument-selector" {...register(`instrument.${index}.value`)}>
-                {instruments.map((item, index) => (
-                  <option value={item.name} key={item.name}>
-                    {item.name}
+            {/* Instrument Selector */}
+            <div className={styles.instrumentSelectorGrid}>
+              <select {...register(`instrumentArray.${index}.instrument`)}>
+                {instruments.map((i, ind) => (
+                  <option value={i.slug} key={i.name}>
+                    {i.name}
                   </option>
                 ))}
               </select>
+              {/* <br /> */}
+              {/* <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} /> */}
+              {/* <br /> */}
 
-              <Controller
-                render={({ field }) => {
-                  console.log("item:", item)
-                  console.log('field:', field)
-                  return <select name="instrument-selector" id="instrument-selector" >
-                    {instruments.map((i) => (
-                      <option value={i.name} key={i.name}  {...field}>
-                        {i.name}
-                      </option>
-                    ))}
-                  </select>
-                }
-                }
-                name={`instrument.${index}`}
-                control={control}
-                defaultValue="synth"
-              />
+              <div className={styles.channelControls}>
+                <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
+                <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
+                <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
+              </div>
 
-              <Button onClick={() => getKeyData(allNotes[getRand(0, allNotes.length)], "major", item.instrument, index)} label="buildLoop" />
-              <button type="button" onClick={() => remove(index)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+              
+              <div className={styles.notesToUseContainer}>
+                <div>Notes to include:</div>
+                {notesToUse.map(n => (
+                  <div key={n} className={styles.notesToUseCheckboxes}>
+                    <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
+                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
+                  </div>
+                ))}
+              </div>
 
-        <button type="button" onClick={() => append(
-          {
-            instrument: 'synth',
-            part: []
-          }
-        )}
+              <div className={styles.partSettings}>
+                <UnisonCount index={index} register={register} />
+                <Octave index={index} register={register} />
+                <StartTime index={index} register={register} />
+                <NumberOfBars index={index} register={register} />
+                <NumberOfLoops index={index} register={register} />
+                <ProbabilityAmount index={index} register={register} />
+              </div>
+              
+
+              {/* <div className={styles.unisonContainer}>
+                <label htmlFor='unison-count'>Notes to play in unison</label>
+                <input defaultValue="1" type="number" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
+              </div> */}
+
+              {/* <br /> */}
+
+
+
+              <div className={styles.addDeleteContainer}>
+                <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
+                <button className={styles.trashIcon} type="button" onClick={() => deletePart(index)}><Trash /></button>
+              </div>
+
+            </div>
+
+
+
+            {/* Instrument Settings */}
+            <div className={styles.instrumentControlsGrid}>
+              {/* <div className={styles.instrumentControlContainer}>
+                <label htmlFor='unison-count'>Notes to play at once</label>
+                <input defaultValue="1" type="number" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
+              </div> */}
+
+              {/* <div className={styles.instrumentControlContainer}>
+                <label htmlFor='octave-input'>Octave</label>
+                <input defaultValue={3} type="number" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
+              </div> */}
+
+              {/* <label htmlFor='unison-count'>Notes to play at once</label>
+              <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
+              <label htmlFor='octave-input'>octave</label>
+              <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
+              <br /> */}
+              {/* <div className={styles.instrumentControlContainer}>
+                <label htmlFor='start-time-bar-input'>Start Time</label>
+                <div>
+                  <input defaultValue={0} type="number" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 40 }} />
+                  <span>:</span>
+                  <input defaultValue={0} type="number" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 40 }} />
+                </div>
+              </div> */}
+
+              {/* <div className={styles.instrumentControlContainer}>
+                <span htmlFor={`number-of-bars-${index}`}>Bars</span>
+                <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.maxBars`)} />
+              </div> */}
+
+              {/* <div className={styles.instrumentControlContainer}>
+                <span htmlFor={`number-of-loops-${index}`}>Loops</span>
+                <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
+              </div> */}
+
+              {/* <div className={styles.instrumentControlContainer}>
+                <label htmlFor={`probability-${index}`}>Probability</label>
+                <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.probability`)} />
+              </div> */}
+
+
+              <br />
+
+              {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
+                <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
+              }
+            </div>
+
+            {/* Instrument Effects */}
+            <div className={styles.instrumentEffectsGrid}>
+              <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+            </div>
+
+          </div>
+
+
+        ))}
+      </form>
+
+      <div style={{ marginLeft: '2rem' }}>
+        <button
+          type="button"
+          onClick={() => { append({ instrument: 'Synth 01', data: [] }) }}
+          className={styles.addInstrumentButton}
         >
-          Append
+          <Plus />
         </button>
-        <input type="submit" />
-        </form> */}
-
-
-        {/* <form onSubmit={handleSubmit(onSubmit)}>
-        <textarea cols="50" rows="20" defaultValue={stateChords.length ? stateChords : ""} {...register("editedJson")} style={{ fontSize: 10 }} />
-        <br />
-        <Button type="submit" label="update stateChords" />
-      </form> */}
-
-        <p>
-          <strong>{scaleData?.name}</strong>
-        </p>
       </div>
+
+
+      <p>
+        <strong>{scaleData?.name}</strong>
+      </p>
+    </div>
     // </div>
 
   );

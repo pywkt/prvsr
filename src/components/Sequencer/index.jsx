@@ -26,7 +26,6 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const makeDrums = () => {
-
         const drumData = getValues(`drums`)
         const drumParts = Object.keys(drumData)
 
@@ -38,7 +37,6 @@ const Sequencer = ({ setDrumPart }) => {
         })
 
         setValue(`drums.channel`, selectedKit.instrument.channel)
-
         setDrumPart(drumRef.current, drumSteps)
     }
 
