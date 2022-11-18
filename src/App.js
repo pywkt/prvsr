@@ -5,7 +5,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
-import ChannelControls from './components/ChannelControls';
+// import ChannelControls from './components/ChannelControls';
 import Effects from './components/Effects';
 import InstrumentMods from './components/InstrumentMods';
 import VolumeControl from './components/ChannelControls/VolumeControl';
@@ -18,10 +18,11 @@ import NumberOfBars from './components/NumberOfBars';
 import NumberOfLoops from './components/NumberOfLoops';
 import ProbabilityAmount from './components/ProbabilityAmount';
 import NotesToUse from './components/NotesToUse';
-import InstrumentPart from './components/InstrumentPart';
+// import InstrumentPart from './components/InstrumentPart';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
+import { amSynth } from './instruments/amSynth';
 import { fmSynth } from './instruments/fmSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
@@ -76,6 +77,7 @@ function App() {
     { name: "", slug: "" },
     { name: "Synth 01", slug: "synth01", type: 'synth' },
     { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
+    { name: "AMSynth", slug: "amSynth", type: 'amSynth' },
     { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
@@ -99,6 +101,8 @@ function App() {
           return synth01(index)
         case 'monoSynth':
           return monoSynth(index)
+        case 'amSynth':
+          return amSynth(index)
         case 'fmSynth':
           return fmSynth(index)
         default:
@@ -158,9 +162,10 @@ function App() {
         const instrument = data.slug
         const isMono = /monoSynth/.test(instrument.name)
         const isFM = /fmSynth/.test(instrument.name)
+        const isAM = /amSynth/.test(instrument.name)
         // console.log('instrument:', instrument)
 
-        instrument.triggerAttackRelease(isMono || isFM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
+        instrument.triggerAttackRelease(isMono || isFM || isAM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
       // console.log('prob:', data)
@@ -206,6 +211,7 @@ function App() {
     }
   }
 
+  // console.log('ft:', watch(`instrumentArray`))
 
   return (
     <div className="App">
@@ -216,56 +222,61 @@ function App() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (
           // <InstrumentPart item={item} index={index} instruments={instruments} commitInstrument={() => commitInstrument(index)} deletePart={deletePart} tone={Tone} />
-          <div key={item.id} className={styles.instrumentGrid}>
+          <React.Fragment key={item.id}>
+            <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${getValues(`instrumentArray.${index}.instrument`)}` || ""}</h4>
+            <hr className={styles.instrumentGridHr} />
+            <div key={item.id} className={styles.instrumentGrid}>
 
-            {/* Instrument Selector */}
-            <div className={styles.instrumentSelectorGrid}>
-              <select {...register(`instrumentArray.${index}.instrument`)}>
-                {instruments.map((i, ind) => (
-                  <option value={i.slug} key={i.name}>
-                    {i.name}
-                  </option>
-                ))}
-              </select>
 
-              <div className={styles.channelControls}>
-                <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
-                <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
-                <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
+              {/* Instrument Selector */}
+              <div className={styles.instrumentSelectorGrid}>
+                <select {...register(`instrumentArray.${index}.instrument`)}>
+                  {instruments.map((i, ind) => (
+                    <option value={i.slug} key={i.name}>
+                      {i.name}
+                    </option>
+                  ))}
+                </select>
+
+                <div className={styles.channelControls}>
+                  <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
+                  <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
+                  <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
+                </div>
+
+                <NotesToUse index={index} register={register} />
+
+                <div className={styles.partSettings}>
+                  <UnisonCount index={index} register={register} />
+                  <Octave index={index} register={register} />
+                  <StartTime index={index} register={register} />
+                  <NumberOfBars index={index} register={register} />
+                  <NumberOfLoops index={index} register={register} />
+                  <ProbabilityAmount index={index} register={register} />
+                </div>
+
+                <div className={styles.addDeleteContainer}>
+                  <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
+                  <button className={styles.trashIcon} type="button" onClick={() => deletePart(index)}><Trash /></button>
+                </div>
+
               </div>
 
-              <NotesToUse index={index} register={register} />
+              {/* Instrument Settings */}
 
-              <div className={styles.partSettings}>
-                <UnisonCount index={index} register={register} />
-                <Octave index={index} register={register} />
-                <StartTime index={index} register={register} />
-                <NumberOfBars index={index} register={register} />
-                <NumberOfLoops index={index} register={register} />
-                <ProbabilityAmount index={index} register={register} />
+              <div className={styles.instrumentControlsGrid}>
+                {/monoSynth|fmSynth|amSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
+                  <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
+                }
               </div>
 
-              <div className={styles.addDeleteContainer}>
-                <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
-                <button className={styles.trashIcon} type="button" onClick={() => deletePart(index)}><Trash /></button>
-              </div>
 
-            </div>
-
-            {/* Instrument Settings */}
-
-            <div className={styles.instrumentControlsGrid}>
-              {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
-                <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
-              }
-            </div>
-
-
-            {/* Instrument Effects */}
+              {/* Instrument Effects */}
               <div className={styles.instrumentEffectsGrid}>
                 <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
               </div>
-          </div>
+            </div>
+          </React.Fragment>
 
 
         ))}

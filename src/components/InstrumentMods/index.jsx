@@ -14,7 +14,7 @@ export let globalMods = {}
 
 
 const InstrumentMods = ({ instrument, index }) => {
-    console.log(globalMods)
+    console.log('mods:', instrument)
     const canUse = (key) => instrument && Object.keys(instrument).includes(key)
     const [selectedOsc, setSelectedOsc] = useState('')
 
@@ -22,22 +22,24 @@ const InstrumentMods = ({ instrument, index }) => {
     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth', 'pwm', 'pulse']
 
     const setEnvelope = (e, param) => {
+        globalMods.envelope = { ...globalMods.envelope, [param]: Number(e.target.value) }
         instrument.set({ envelope: { [param]: Number(e.target.value) } })
     }
 
     const setFilterEnvelope = (e, param) => {
+        globalMods.filterEnvelope = { ...globalMods.filterEnvelope, [param]: Number(e.target.value) }
         instrument.set({ filterEnvelope: { [param]: Number(e.target.value) } })
     }
 
     const changeOscType = (type) => {
         setSelectedOsc(type)
-        globalMods.oscillator = { type }
+        globalMods.oscillator = { ...globalMods.oscillator, type }
         instrument.set({ oscillator: { type } })
     }
 
-    const setPortamento = (e) => {
-        instrument.set({ portamento: Number(e.target.value) })
-    }
+    // const setPortamento = (e) => {
+    //     instrument.set({ portamento: Number(e.target.value) })
+    // }
 
     return (
         <>
