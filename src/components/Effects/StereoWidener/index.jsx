@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
+import styles from '../../../styles/Effects.module.scss';
 
 const StereoWidener = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
@@ -45,9 +46,10 @@ const StereoWidener = ({ global, effectArray, addEffect, allEffects, effect, ind
 
     return (
         <div>
-            <input type="checkbox" id={`${effect}-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`${effect}-checkbox-${index}`}>Stereo Widener</label>
-            <br />
+            <div className={styles.effectToggleContainer}>
+                <input type="checkbox" id={`${effect}-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
+                <label htmlFor={`${effect}-checkbox-${index}`}>Stereo Widener</label>
+            </div>
             {effectOn &&
                 <>
                     <Slider

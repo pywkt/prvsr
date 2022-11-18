@@ -2,7 +2,7 @@ import React from 'react';
 
 const Slider = ({ defaultValue, id, index, type, onChange, min, max, label, ...rest }) => {
     return (
-        <>
+        <div>
             <label htmlFor={`effect-${type}-${index}`}>{label}</label>
             <input
                 type="range"
@@ -14,7 +14,7 @@ const Slider = ({ defaultValue, id, index, type, onChange, min, max, label, ...r
                 id={`effect-${type}-${index}`}
                 {...rest}
             />
-        </>
+        </div>
     )
 }
 

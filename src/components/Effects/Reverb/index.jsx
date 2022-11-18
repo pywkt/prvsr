@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
+import styles from '../../../styles/Effects.module.scss';
 
 const Reverb = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
@@ -44,9 +45,11 @@ const Reverb = ({ global, effectArray, addEffect, allEffects, effect, index, dis
 
     return (
         <div>
+            <div className={styles.effectToggleContainer}>
             <input type="checkbox" id={`reverb-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
             <label htmlFor={`reverb-checkbox-${index}`}>Reverb</label>
-            <br />
+            </div>
+        
             {effectOn &&
                 <>
                     <Slider

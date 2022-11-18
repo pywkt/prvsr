@@ -1,0 +1,20 @@
+.effectParams > div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    &>div {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        flex-basis: 40%;
+    }
+}
+
+.effectToggleContainer {
+    justify-content: flex-start !important;
+    align-items: center;
+    flex-direction: row !important;
+    flex-basis: 100% !important;
+}

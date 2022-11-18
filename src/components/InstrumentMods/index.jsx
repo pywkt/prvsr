@@ -76,8 +76,8 @@ const InstrumentMods = ({ instrument, index }) => {
             {instrument && canUse('filterEnvelope') &&
                 <div className={styles.envelopeParams}>
                     {envelope.map(param => (
-                        <div key={param}>
                             <Slider
+                                key={param}
                                 label={param}
                                 type={param}
                                 index={index}
@@ -86,7 +86,6 @@ const InstrumentMods = ({ instrument, index }) => {
                                 max={param === 'sustain' ? 1 : 30}
                                 step={param === 'sustain' ? 0.1 : 1}
                             />
-                        </div>
                     ))}
                 </div>
             }
@@ -102,8 +101,8 @@ const InstrumentMods = ({ instrument, index }) => {
                 <div className={styles.envelopeParams}>
 
                     {envelope.map(param => (
-                        <div key={param}>
                             <Slider
+                                key={param}
                                 label={param}
                                 type={param}
                                 index={index}
@@ -112,7 +111,6 @@ const InstrumentMods = ({ instrument, index }) => {
                                 max={param === 'sustain' ? 1 : 30}
                                 step={param === 'sustain' ? 0.1 : 1}
                             />
-                        </div>
                     ))}
 
                 </div>

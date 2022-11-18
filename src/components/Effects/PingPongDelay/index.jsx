@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
+import styles from '../../../styles/Effects.module.scss';
 
-const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone, removeEffect}) => {
+const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone, removeEffect }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
 
@@ -19,7 +20,7 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
             if (!allEffects[effect]) {
                 effectRef.current[effect] = { name: effect, effect: new tone.PingPongDelay({ wet: 0 }) }
                 addEffect(effect, effectRef.current[effect])
-            } 
+            }
         }
     }
 
@@ -56,9 +57,12 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
 
     return (
         <div>
-            <input type="checkbox" id={`delay-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`delay-checkbox-${index}`} disabled={!disabled}>Ping-Pong Delay</label>
-            <br />
+            <div className={styles.effectToggleContainer}>
+                <input type="checkbox" id={`delay-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
+                <label htmlFor={`delay-checkbox-${index}`} disabled={!disabled}>Ping-Pong Delay</label>
+            </div>
+
+            {/* <br /> */}
             {effectOn &&
                 <>
                     <Slider
@@ -87,12 +91,14 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
                         defaultValue={3}
                     />
 
+
                     <Slider
                         label="Wet"
                         type="wet"
                         index={index}
                         onChange={(e) => handleWet(e, 'delay')}
                     />
+
                 </>
             }
         </div>

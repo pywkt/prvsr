@@ -12,14 +12,12 @@
     flex-wrap: wrap;
     gap: 1rem;
 
-
     &>div {
         display: flex;
         flex-direction: column;
         flex-wrap: wrap;
-        flex-basis: 40%;
+        flex-basis: 48%;
     }
-
 }
 
 .oscTypeSelected {

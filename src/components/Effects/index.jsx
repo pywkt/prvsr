@@ -4,6 +4,7 @@ import PingPongDelay from './PingPongDelay';
 import Reverb from './Reverb';
 import StereoWidener from './StereoWidener';
 import Phaser from './Phaser';
+import styles from '../../styles/Effects.module.scss';
 
 export let globalEffects = {}
 
@@ -33,7 +34,7 @@ const Effects = ({ disabled, index, partData, tone }) => {
 
     return (
         partData?.slug && (
-            <div>
+            <div className={styles.effectParams}>
                 <PingPongDelay
                     global={globalEffects}
                     effectArray={effectArray}

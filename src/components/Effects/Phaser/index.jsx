@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
+import styles from '../../../styles/Effects.module.scss';
 
 const Phaser = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
@@ -62,9 +63,10 @@ const Phaser = ({ global, effectArray, addEffect, allEffects, effect, index, dis
 
     return (
         <div>
-            <input type="checkbox" id={`${effect}-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`${effect}-checkbox-${index}`}>Phaser</label>
-            <br />
+            <div className={styles.effectToggleContainer}>
+                <input type="checkbox" id={`${effect}-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
+                <label htmlFor={`${effect}-checkbox-${index}`}>Phaser</label>
+            </div>
             {effectOn &&
                 <>
                     <Slider

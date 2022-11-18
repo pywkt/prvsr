@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Slider from '../../Slider';
+import styles from '../../../styles/Effects.module.scss';
 
 const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone }) => {
     const [effectOn, setEffectOn] = useState(false);
@@ -17,8 +18,8 @@ const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, dis
             setEffectOn(true)
             if (!allEffects[effect]) {
                 effectRef.current[effect] = { name: effect, effect: new tone.Chorus({ wet: 0 }) }
-                addEffect(effect, effectRef.current[effect]) 
-            } 
+                addEffect(effect, effectRef.current[effect])
+            }
         }
     }
 
@@ -26,7 +27,7 @@ const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, dis
         if (allEffects[effect]) {
             effectRef.current[effect] = effectArray.find(i => i.name === 'Chorus')
         }
-        
+
     }, [effectArray, allEffects, effect])
 
     const handleDelayTime = (e, effect) => {
@@ -70,9 +71,10 @@ const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, dis
 
     return (
         <div>
-            <input type="checkbox" id={`chorus-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`chorus-checkbox-${index}`}>Chorus</label>
-            <br />
+            <div className={styles.effectToggleContainer}>
+                <input type="checkbox" id={`chorus-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
+                <label htmlFor={`chorus-checkbox-${index}`}>Chorus</label>
+            </div>
             {effectOn &&
                 <>
                     <Slider
