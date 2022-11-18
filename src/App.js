@@ -17,6 +17,7 @@ import StartTime from './components/StartTime';
 import NumberOfBars from './components/NumberOfBars';
 import NumberOfLoops from './components/NumberOfLoops';
 import ProbabilityAmount from './components/ProbabilityAmount';
+import NotesToUse from './components/NotesToUse';
 import InstrumentPart from './components/InstrumentPart';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
@@ -78,7 +79,7 @@ function App() {
     { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
-  const notesToUse = ['1n', '2n', '4n', '8n', '16n']
+  // const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
   const onSubmit = async (data) => {
 
@@ -205,17 +206,12 @@ function App() {
     }
   }
 
-  // console.log(getValues(`instrumentArray`))
 
   return (
     <div className="App">
 
       <Header tone={Tone} />
       <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
-
-
-
-
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (
@@ -231,9 +227,6 @@ function App() {
                   </option>
                 ))}
               </select>
-              {/* <br /> */}
-              {/* <ChannelControls index={index} data={getValues(`instrumentArray.${index}`)} /> */}
-              {/* <br /> */}
 
               <div className={styles.channelControls}>
                 <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
@@ -241,16 +234,7 @@ function App() {
                 <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
               </div>
 
-              
-              <div className={styles.notesToUseContainer}>
-                <div>Notes to include:</div>
-                {notesToUse.map(n => (
-                  <div key={n} className={styles.notesToUseCheckboxes}>
-                    <label htmlFor={`notes-to-use-${n}-${index}`}>{n}</label>
-                    <input name={n} type="checkbox" {...register(`instrumentArray.${index}.notesToUse.${n}`)} id={`notes-to-use-${n}-${index}`} />
-                  </div>
-                ))}
-              </div>
+              <NotesToUse index={index} register={register} />
 
               <div className={styles.partSettings}>
                 <UnisonCount index={index} register={register} />
@@ -260,16 +244,6 @@ function App() {
                 <NumberOfLoops index={index} register={register} />
                 <ProbabilityAmount index={index} register={register} />
               </div>
-              
-
-              {/* <div className={styles.unisonContainer}>
-                <label htmlFor='unison-count'>Notes to play in unison</label>
-                <input defaultValue="1" type="number" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
-              </div> */}
-
-              {/* <br /> */}
-
-
 
               <div className={styles.addDeleteContainer}>
                 <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
@@ -278,62 +252,19 @@ function App() {
 
             </div>
 
-
-
             {/* Instrument Settings */}
+
             <div className={styles.instrumentControlsGrid}>
-              {/* <div className={styles.instrumentControlContainer}>
-                <label htmlFor='unison-count'>Notes to play at once</label>
-                <input defaultValue="1" type="number" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
-              </div> */}
-
-              {/* <div className={styles.instrumentControlContainer}>
-                <label htmlFor='octave-input'>Octave</label>
-                <input defaultValue={3} type="number" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
-              </div> */}
-
-              {/* <label htmlFor='unison-count'>Notes to play at once</label>
-              <input defaultValue="1" type="text" id='unison-count' {...register(`instrumentArray.${index}.unisonCount`)} />
-              <label htmlFor='octave-input'>octave</label>
-              <input defaultValue={3} type="text" id="octave-input" {...register(`instrumentArray.${index}.octave`)} />
-              <br /> */}
-              {/* <div className={styles.instrumentControlContainer}>
-                <label htmlFor='start-time-bar-input'>Start Time</label>
-                <div>
-                  <input defaultValue={0} type="number" id="start-time-bar-input" {...register(`instrumentArray.${index}.startTime.bar`)} style={{ width: 40 }} />
-                  <span>:</span>
-                  <input defaultValue={0} type="number" id="start-time-beat-input" {...register(`instrumentArray.${index}.startTime.beat`)} style={{ width: 40 }} />
-                </div>
-              </div> */}
-
-              {/* <div className={styles.instrumentControlContainer}>
-                <span htmlFor={`number-of-bars-${index}`}>Bars</span>
-                <input defaultValue={4} type="text" id={`number-of-bars-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.maxBars`)} />
-              </div> */}
-
-              {/* <div className={styles.instrumentControlContainer}>
-                <span htmlFor={`number-of-loops-${index}`}>Loops</span>
-                <input defaultValue={4} type="text" id={`number-of-loops-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.numberOfLoops`)} />
-              </div> */}
-
-              {/* <div className={styles.instrumentControlContainer}>
-                <label htmlFor={`probability-${index}`}>Probability</label>
-                <input defaultValue={1} type="number" min={0} max={1} step={0.1} id={`probability-${index}`} style={{ width: 40 }} {...register(`instrumentArray.${index}.probability`)} />
-              </div> */}
-
-
-              <br />
-
               {/monoSynth|fmSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
                 <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
               }
             </div>
 
-            {/* Instrument Effects */}
-            <div className={styles.instrumentEffectsGrid}>
-              <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
-            </div>
 
+            {/* Instrument Effects */}
+              <div className={styles.instrumentEffectsGrid}>
+                <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
+              </div>
           </div>
 
 
@@ -355,7 +286,6 @@ function App() {
         <strong>{scaleData?.name}</strong>
       </p>
     </div>
-    // </div>
 
   );
 }

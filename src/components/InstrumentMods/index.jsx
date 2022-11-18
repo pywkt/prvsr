@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../Button';
 import Slider from '../Slider';
+import styles from '../../styles/InstrumentMods.module.scss';
 
 /**
  * 
@@ -9,8 +10,13 @@ import Slider from '../Slider';
  * @returns A set of sliders that control various parameters of the instrument.
  */
 
+export let globalMods = {}
+
+
 const InstrumentMods = ({ instrument, index }) => {
+    console.log(globalMods)
     const canUse = (key) => instrument && Object.keys(instrument).includes(key)
+    const [selectedOsc, setSelectedOsc] = useState('')
 
     const envelope = ['attack', 'sustain', 'decay', 'release']
     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth', 'pwm', 'pulse']
@@ -24,6 +30,8 @@ const InstrumentMods = ({ instrument, index }) => {
     }
 
     const changeOscType = (type) => {
+        setSelectedOsc(type)
+        globalMods.oscillator = { type }
         instrument.set({ oscillator: { type } })
     }
 
@@ -33,7 +41,7 @@ const InstrumentMods = ({ instrument, index }) => {
 
     return (
         <>
-            {canUse('portamento') &&
+            {/* {canUse('portamento') &&
                 <div>
                     <span>Instrument Mods:</span>
                     <br />
@@ -49,61 +57,64 @@ const InstrumentMods = ({ instrument, index }) => {
                 </div>
             }
 
-            <br />
+            <br /> */}
 
-            <span>Filter Mods:</span>
-            <br />
+            <div className={styles.oscTypes}>
+                {instrument && canUse('oscillator') &&
+                    <div>
+                        {oscTypes.map(type => (
+                            <Button customClass={selectedOsc === type ? styles.oscTypeSelected : ''} key={type} label={type} onClick={() => changeOscType(type)} />
+                        ))}
+                    </div>
+                }
+            </div>
 
-            {instrument && canUse('oscillator') &&
-                <div>
-                    {oscTypes.map(type => (
-                        <Button key={type} label={type} onClick={() => changeOscType(type)} />
-                    ))}
-                </div>
-            }
 
-
-            <br />
+            <h4>Oscillator Mods:</h4>
+            {/* <br /> */}
 
             {instrument && canUse('filterEnvelope') &&
-                <div>
+                <div className={styles.envelopeParams}>
                     {envelope.map(param => (
-                        <Slider
-                            key={param}
-                            label={param}
-                            type={param}
-                            index={index}
-                            onChange={(e) => setFilterEnvelope(e, param)}
-                            min={0}
-                            max={param === 'sustain' ? 1 : 30}
-                            step={param === 'sustain' ? 0.1 : 1}
-                        />
+                        <div key={param}>
+                            <Slider
+                                label={param}
+                                type={param}
+                                index={index}
+                                onChange={(e) => setFilterEnvelope(e, param)}
+                                min={0}
+                                max={param === 'sustain' ? 1 : 30}
+                                step={param === 'sustain' ? 0.1 : 1}
+                            />
+                        </div>
                     ))}
                 </div>
             }
 
 
-
+            {/* <hr /> */}
 
             <br />
 
-
+            <h4>Envelope Mods:</h4>
+            {/* <br /> */}
             {instrument && canUse('envelope') &&
-                <div>
-                    <span>Envelope Mods:</span>
-                    <br />
+                <div className={styles.envelopeParams}>
+
                     {envelope.map(param => (
-                        <Slider
-                            key={param}
-                            label={param}
-                            type={param}
-                            index={index}
-                            onChange={(e) => setEnvelope(e, param)}
-                            min={0}
-                            max={param === 'sustain' ? 1 : 30}
-                            step={param === 'sustain' ? 0.1 : 1}
-                        />
+                        <div key={param}>
+                            <Slider
+                                label={param}
+                                type={param}
+                                index={index}
+                                onChange={(e) => setEnvelope(e, param)}
+                                min={0}
+                                max={param === 'sustain' ? 1 : 30}
+                                step={param === 'sustain' ? 0.1 : 1}
+                            />
+                        </div>
                     ))}
+
                 </div>
             }
 

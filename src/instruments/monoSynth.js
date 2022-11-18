@@ -1,5 +1,6 @@
 import * as Tone from 'tone';
 import { globalEffects } from '../components/Effects';
+import { globalMods } from '../components/InstrumentMods';
 
 const allSynths = {}
 
@@ -7,6 +8,7 @@ export const monoSynth = (index, remove) => {
 
     const makeNewSynth = () => allSynths[`monoSynth-${index}`] = {
         monoSynth: new Tone.MonoSynth({
+            ...globalMods,
             volume: -20
         }), channel: new Tone.Channel({ channelCount: 2 })
     }

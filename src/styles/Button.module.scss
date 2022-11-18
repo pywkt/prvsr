@@ -11,6 +11,10 @@
     // margin: 0.1rem;
     transition: 0.15s;
 
+    & .oscTypeSelected {
+        background-color: salmon;
+    }
+
     &:hover {
         color: $primaryDark;
         border: 1px solid darken($buttonBorder, 10%);

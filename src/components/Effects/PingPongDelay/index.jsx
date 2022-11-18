@@ -57,7 +57,7 @@ const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, ind
     return (
         <div>
             <input type="checkbox" id={`delay-checkbox-${index}`} disabled={!disabled} defaultValue={false} checked={effectOn} onChange={toggleEffect} />
-            <label htmlFor={`delay-checkbox-${index}`}>Ping-Pong Delay</label>
+            <label htmlFor={`delay-checkbox-${index}`} disabled={!disabled}>Ping-Pong Delay</label>
             <br />
             {effectOn &&
                 <>
