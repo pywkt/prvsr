@@ -5,6 +5,7 @@ import { globalMods } from '../components/InstrumentMods';
 const allSynths = {}
 
 export const fmSynth = (index, remove) => {
+    console.log('gmods:', globalMods)
 
     const makeNewSynth = () => allSynths[`fmSynth-${index}`] = {
         fmSynth: new Tone.FMSynth({
@@ -14,6 +15,7 @@ export const fmSynth = (index, remove) => {
     }
 
     if (!allSynths[index]) {
+        console.log('irsentirsentirsentirsent')
         allSynths[`fmSynth-${index}`] = makeNewSynth()
     }
 

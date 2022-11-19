@@ -36,7 +36,8 @@ function App() {
       instrumentArray: {
         songData: {
           bpm: 120,
-          swing: 0
+          swing: 0,
+          // drumPlaybackRate: 2
         }
       }
     }
@@ -163,21 +164,20 @@ function App() {
         const isMono = /monoSynth/.test(instrument.name)
         const isFM = /fmSynth/.test(instrument.name)
         const isAM = /amSynth/.test(instrument.name)
-        // console.log('instrument:', instrument)
 
         instrument.triggerAttackRelease(isMono || isFM || isAM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
-      // console.log('prob:', data)
 
       activeParts.current[index].probability = Number(data.probability)
 
 
       if ((data.type) === 'drum') {
+        console.log(getValues(`instrumentArray`))
         activeParts.current[index].loop = true
         activeParts.current[index].loopStart = "0:0:0"
         activeParts.current[index].loopEnd = `${steps / 4}:0:0`
-        activeParts.current[index].playbackRate = 2
+        activeParts.current[index].playbackRate = Number(getValues(`instrumentArray.songData.drumPlaybackRate`))
       }
 
       setValue(`instrumentArray.${index}.part`, activeParts.current[index])
@@ -190,9 +190,7 @@ function App() {
   }
 
   const commitInstrument = async (index) => {
-    // console.log('commit:', index)
     const data = getValues(`instrumentArray.${index}`)
-    // console.log('data:', data)
     const commited = await buildIndividualPart(data, index)
 
     await addToTransport(commited, index)
@@ -205,19 +203,19 @@ function App() {
     remove(index)
   }
 
-  const setDrumPart = async (data, steps) => {
+  const setDrumPart = async (data, steps, drumRate) => {
+    console.log('drumData:', drumRate)
+    setValue(`instrumentArray.songData.drumPlaybackRate`, drumRate)
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, steps)
     }
   }
 
-  // console.log('ft:', watch(`instrumentArray`))
-
   return (
     <div className="App">
 
       <Header tone={Tone} />
-      <Sequencer setDrumPart={(data, steps) => setDrumPart(data, steps)} />
+      <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (

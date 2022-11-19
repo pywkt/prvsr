@@ -8,6 +8,7 @@ import MuteButton from '../ChannelControls/MuteButton';
 import SoloButton from '../ChannelControls/SoloButton';
 import StartTime from './StartTime';
 import SequenceLength from './SequenceLength';
+import DrumPlaybackRate from './DrumPlaybackRate';
 import { allDrumKits } from '../../instruments/drums';
 import styles from '../../styles/Sequencer.module.scss';
 
@@ -19,14 +20,20 @@ const Sequencer = ({ setDrumPart }) => {
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
 
     const drumRef = useRef([])
+    const drumRateRef = useRef(2)
     const newRef = useRef({ kick: [], snare: [], hihat: [], ohihat: [], lowtom: [], hitom: [] });
 
     const changeDrumSteps = (newSteps) => {
         setDrumSteps(Number(newSteps))
     }
 
+    const changeDrumRate = (rate) => {
+        drumRateRef.current = rate
+    }
+
     const makeDrums = () => {
         const drumData = getValues(`drums`)
+        console.log(drumData)
         const drumParts = Object.keys(drumData)
 
         const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
@@ -37,7 +44,7 @@ const Sequencer = ({ setDrumPart }) => {
         })
 
         setValue(`drums.channel`, selectedKit.instrument.channel)
-        setDrumPart(drumRef.current, drumSteps)
+        setDrumPart(drumRef.current, drumSteps, drumRateRef.current)
     }
 
     const checkAndMakeSteps = (track) => {
@@ -84,6 +91,8 @@ const Sequencer = ({ setDrumPart }) => {
         setValue(`drums.${track}`, newRef.current[track])
     }
 
+
+
     return (
         <div className={styles.sequencerGrid}>
             <div className={styles.sequencerGridStepContainer}>
@@ -94,6 +103,7 @@ const Sequencer = ({ setDrumPart }) => {
                 <KitSelector setSelectedKit={setSelectedKit} />
                 <SequenceLength changeDrumSteps={changeDrumSteps} />
                 <StartTime register={register} />
+                <DrumPlaybackRate rateCallback={(rate) => changeDrumRate(rate)} />
                 <VolumeControl index={0} data={watch(`drums`)} drums />
                 <MuteButton index={0} data={watch(`drums`)} drums />
                 <SoloButton index={0} data={watch(`drums`)} drums />

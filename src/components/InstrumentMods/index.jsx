@@ -20,6 +20,14 @@ const InstrumentMods = ({ instrument, index }) => {
 
     const envelope = ['attack', 'sustain', 'decay', 'release']
     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth', 'pwm', 'pulse']
+    const oscOptions = [
+        { name: 'detune', min: -500, max: 500, step: 1 },
+        { name: 'frequency', min: 1, max: 4, step: 1 },
+        { name: 'harmonicity', min: 0, max: 500, step: 1 },
+        { name: 'phase', min: -360, max: 360, step: 1 },
+        { name: 'partialsCount', min: 0, max: 30, step: 1 }]
+
+    const notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     const setEnvelope = (e, param) => {
         globalMods.envelope = { ...globalMods.envelope, [param]: Number(e.target.value) }
@@ -31,11 +39,34 @@ const InstrumentMods = ({ instrument, index }) => {
         instrument.set({ filterEnvelope: { [param]: Number(e.target.value) } })
     }
 
+    const setModIndex = (e, param) => {
+        globalMods.modulationIndex = Number(e.target.value)
+        instrument.set({ modulationIndex: Number(e.target.value) })
+    }
+
     const changeOscType = (type) => {
         setSelectedOsc(type)
         globalMods.oscillator = { ...globalMods.oscillator, type }
         instrument.set({ oscillator: { type } })
     }
+
+    const changeHarmonicity = (value) => {
+        globalMods.harmonicity = Number(value)
+        instrument.set({ harmonicity: Number(value) })
+    }
+
+    // const changeModulation = (e, param) => {
+    //     instrument.filter.frequency.override = false
+    //     console.log(notes[e.target.value]+e.target.value)
+    //     globalMods.filter = { ...globalMods.filter, frequency: {value: notes[e.target.value] + e.target.value, override: false}}
+    //     instrument.filter.set({ frequency: notes[e.target.value] + e.target.value })
+
+    // }
+
+    // const changeFrequency = (value) => {
+    //     globalMods.frequency = value
+    //     instrument.frequency.value = value
+    // }
 
     // const setPortamento = (e) => {
     //     instrument.set({ portamento: Number(e.target.value) })
@@ -72,37 +103,12 @@ const InstrumentMods = ({ instrument, index }) => {
             </div>
 
 
-            <h4>Oscillator Mods:</h4>
-            {/* <br /> */}
-
-            {instrument && canUse('filterEnvelope') &&
-                <div className={styles.envelopeParams}>
-                    {envelope.map(param => (
-                            <Slider
-                                key={param}
-                                label={param}
-                                type={param}
-                                index={index}
-                                onChange={(e) => setFilterEnvelope(e, param)}
-                                min={0}
-                                max={param === 'sustain' ? 1 : 30}
-                                step={param === 'sustain' ? 0.1 : 1}
-                            />
-                    ))}
-                </div>
-            }
-
-
-            {/* <hr /> */}
-
-            <br />
-
-            <h4>Envelope Mods:</h4>
-            {/* <br /> */}
             {instrument && canUse('envelope') &&
-                <div className={styles.envelopeParams}>
+                <>
+                    <h4>Envelope:</h4>
+                    <div className={styles.envelopeParams}>
 
-                    {envelope.map(param => (
+                        {envelope.map(param => (
                             <Slider
                                 key={param}
                                 label={param}
@@ -113,10 +119,109 @@ const InstrumentMods = ({ instrument, index }) => {
                                 max={param === 'sustain' ? 1 : 30}
                                 step={param === 'sustain' ? 0.1 : 1}
                             />
-                    ))}
+                        ))}
 
-                </div>
+                    </div>
+                </>
             }
+
+
+            {instrument && canUse('filterEnvelope') &&
+                <>
+                    <h4>Filter Envelope:</h4>
+                    <div className={styles.envelopeParams}>
+                        {envelope.map(param => (
+                            <Slider
+                                key={param}
+                                label={param}
+                                type={param}
+                                index={index}
+                                onChange={(e) => setFilterEnvelope(e, param)}
+                                min={0}
+                                max={param === 'sustain' ? 1 : 30}
+                                step={param === 'sustain' ? 0.1 : 1}
+                            />
+                        ))}
+                    </div>
+                </>
+            }
+
+
+            {instrument && canUse('modulationIndex') &&
+                <>
+                    <h4>Modulation:</h4>
+                    <div className={styles.envelopeParams}>
+                        <Slider
+                            label="Index"
+                            type="modulation"
+                            index={index}
+                            onChange={(e) => setModIndex(e)}
+                            min={0}
+                            max={30}
+                            step={1}
+                        />
+                    </div>
+                </>
+            }
+
+            {instrument && canUse('harmonicity') &&
+                <>
+                    <h4>Harmonicity:</h4>
+                    <div className={styles.envelopeParams}>
+                        <Slider
+                            label="Harmonicity"
+                            type="harmonicity"
+                            index={index}
+                            onChange={(e) => changeHarmonicity(e.target.value)}
+                            min={0}
+                            max={30}
+                            step={1}
+                        />
+                    </div>
+                </>
+            }
+
+            {/* {instrument && canUse('frequency') &&
+                <>
+                    <div className={styles.envelopeParams}>
+                        <Slider
+                            label="Frequency"
+                            type="frequency"
+                            index={index}
+                            onChange={(e) => changeFrequency(e.target.value)}
+                            min={0}
+                            max={30}
+                            step={1}
+                        />
+
+                    </div>
+                </>
+            } */}
+{/* 
+            {instrument && canUse('filter') &&
+                <>
+                    <div className={styles.envelopeParams}>
+
+                        {oscOptions.map(param => (
+                            <Slider
+                                key={param.name}
+                                label={param.name}
+                                type={param.name}
+                                index={index}
+                                onChange={(e) => changeModulation(e, param.name)}
+                                min={param.min}
+                                max={param.max}
+                                step={param.step}
+                            />
+                        ))}
+
+                    </div>
+                </>
+            } */}
+
+
+
+
 
         </>
 
