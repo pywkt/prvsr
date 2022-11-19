@@ -4,6 +4,9 @@ import PingPongDelay from './PingPongDelay';
 import Reverb from './Reverb';
 import StereoWidener from './StereoWidener';
 import Phaser from './Phaser';
+import CombFilter from './CombFilter';
+import LowpassCombFilter from './LowpassCombFilter';
+// import { LowpassCombFilter } from 'tone';
 import styles from '../../styles/Effects.module.scss';
 
 export let globalEffects = {}
@@ -35,6 +38,31 @@ const Effects = ({ disabled, index, partData, tone }) => {
     return (
         partData?.slug && (
             <div className={styles.effectParams}>
+                <LowpassCombFilter
+                    global={globalEffects}
+                    effectArray={effectArray}
+                    allEffects={allEffects}
+                    addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                    effect="lowpassCombFilter"
+                    index={index}
+                    data={partData}
+                    disabled={disabled}
+                    tone={tone}
+
+                />
+
+                <CombFilter 
+                    global={globalEffects}
+                    effectArray={effectArray}
+                    allEffects={allEffects}
+                    addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                    effect="feedbackCombFilter"
+                    index={index}
+                    data={partData}
+                    disabled={disabled}
+                    tone={tone}
+                
+                />
                 <PingPongDelay
                     global={globalEffects}
                     effectArray={effectArray}
