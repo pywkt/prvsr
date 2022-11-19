@@ -15,7 +15,12 @@ const Effects = ({ disabled, index, partData, tone }) => {
     const [allEffects, setAllEffects] = useState({})
     const [effectArray, setEffectArray] = useState([])
     const effectRef = useRef({})
-    console.log(partData)
+    // console.log("partData:", partData)
+
+
+    if (index === "drums") {
+
+    }
 
     const addEffect = (effectName, effect) => {
         if (!effectRef.current[effectName]) {
@@ -35,8 +40,9 @@ const Effects = ({ disabled, index, partData, tone }) => {
         globalEffects[index] = arrs
     }
 
+
     return (
-        partData?.slug && (
+        (partData?.slug || index === "drums") && (
             <div className={styles.effectParams}>
                 <LowpassCombFilter
                     global={globalEffects}

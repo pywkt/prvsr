@@ -150,6 +150,7 @@ function App() {
   const activeParts = useRef({})
 
   const addToTransport = async (data, index, steps) => {
+    // console.log("data:", data)
     // Tone.Transport.bpm.value = 120
     // Tone.Transport.bpm.value = watch(`instrumentArray.songData.bpm`);
 
@@ -173,7 +174,8 @@ function App() {
 
 
       if ((data.type) === 'drum') {
-        console.log(getValues(`instrumentArray`))
+        // console.log("instrumentArray:", getValues(`instrumentArray`))
+        // console.log("activeParts:", activeParts.current)
         activeParts.current[index].loop = true
         activeParts.current[index].loopStart = "0:0:0"
         activeParts.current[index].loopEnd = `${steps / 4}:0:0`
@@ -204,7 +206,7 @@ function App() {
   }
 
   const setDrumPart = async (data, steps, drumRate) => {
-    console.log('drumData:', drumRate)
+    // console.log('drumData:', data)
     setValue(`instrumentArray.songData.drumPlaybackRate`, drumRate)
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, steps)
@@ -215,7 +217,7 @@ function App() {
     <div className="App">
 
       <Header tone={Tone} />
-      <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} />
+      <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone}/>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (

@@ -9,10 +9,11 @@ import SoloButton from '../ChannelControls/SoloButton';
 import StartTime from './StartTime';
 import SequenceLength from './SequenceLength';
 import DrumPlaybackRate from './DrumPlaybackRate';
-import { allDrumKits } from '../../instruments/drums';
+import Effects from '../Effects';
+import { allDrumKits, makeNewDrums } from '../../instruments/drums';
 import styles from '../../styles/Sequencer.module.scss';
 
-const Sequencer = ({ setDrumPart }) => {
+const Sequencer = ({ setDrumPart, tone }) => {
     const { register, setValue, control, getValues, watch } = useForm();
     useFieldArray({ control, name: "drums" })
 
@@ -32,8 +33,11 @@ const Sequencer = ({ setDrumPart }) => {
     }
 
     const makeDrums = () => {
+        console.log("sss:", selectedKit)
+        setSelectedKit(makeNewDrums(selectedKit.name))
+        console.log("sss02:", selectedKit)
+
         const drumData = getValues(`drums`)
-        console.log(drumData)
         const drumParts = Object.keys(drumData)
 
         const fff = drumParts.filter(d => d !== 'startTime' && d !== 'channel')
@@ -42,6 +46,8 @@ const Sequencer = ({ setDrumPart }) => {
             allDrums.push(drumData[d].filter(a => a.note !== ''))
             return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum' }
         })
+
+        console.log("drumRef.current:", drumRef.current)
 
         setValue(`drums.channel`, selectedKit.instrument.channel)
         setDrumPart(drumRef.current, drumSteps, drumRateRef.current)
@@ -91,6 +97,8 @@ const Sequencer = ({ setDrumPart }) => {
         setValue(`drums.${track}`, newRef.current[track])
     }
 
+    // console.log("gv:", getValues())
+
 
 
     return (
@@ -107,6 +115,12 @@ const Sequencer = ({ setDrumPart }) => {
                 <VolumeControl index={0} data={watch(`drums`)} drums />
                 <MuteButton index={0} data={watch(`drums`)} drums />
                 <SoloButton index={0} data={watch(`drums`)} drums />
+
+                <hr />
+
+                <div className={styles.instrumentEffectsGrid}>
+                    <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
+                </div>
 
                 <Button onClick={makeDrums} label="Make Drums" />
             </div>

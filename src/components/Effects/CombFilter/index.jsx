@@ -6,14 +6,14 @@ const CombFilter = ({ global, effectArray, addEffect, allEffects, effect, index,
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
 
-    console.log('effect:', effect)
-    console.log('allEffects:', allEffects)
+    // console.log('effect:', effect)
+    // console.log('allEffects:', allEffects)
 
     const effectToUse = global?.[index]?.find(i => i.name === "FeedbackCombFilter")
-    console.log('effectToUse:', effectToUse)
+    // console.log('effectToUse:', effectToUse)
 
     const toggleEffect = () => {
-        console.log('effectRef:', effectRef.current)
+        // console.log('effectRef:', effectRef.current)
         if (effectOn) {
             effectRef.current[effect].set({
                 resonance: 0,

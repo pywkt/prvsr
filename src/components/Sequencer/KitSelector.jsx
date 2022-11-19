@@ -1,11 +1,12 @@
 import React from 'react';
-import { allDrumKits } from '../../instruments/drums';
+import { allDrumKits, makeNewDrums } from '../../instruments/drums';
 import styles from '../../styles/SequencerControls.module.scss';
 
 const KitSelector = ({ setSelectedKit }) => {
 
     const handleSelection = (e) => {
-        setSelectedKit(allDrumKits[e.target.value])
+        console.log("e:", e.target.value)
+        setSelectedKit(makeNewDrums(e.target.value))
     }
 
     return (
