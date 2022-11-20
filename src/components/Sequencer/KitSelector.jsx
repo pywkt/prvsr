@@ -5,7 +5,6 @@ import styles from '../../styles/SequencerControls.module.scss';
 const KitSelector = ({ setSelectedKit }) => {
 
     const handleSelection = (e) => {
-        console.log("e:", e.target.value)
         setSelectedKit(makeNewDrums(e.target.value))
     }
 

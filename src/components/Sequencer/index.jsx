@@ -118,11 +118,15 @@ const Sequencer = ({ setDrumPart, tone }) => {
 
                 <hr />
 
-                <div className={styles.instrumentEffectsGrid}>
-                    <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
+
+                <div className={styles.makeDrumsButton}>
+                    <Button onClick={makeDrums} label="Make Drums" />
                 </div>
 
-                <Button onClick={makeDrums} label="Make Drums" />
+            </div>
+
+            <div className={styles.sequencerEffectsGrid}>
+                <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
             </div>
         </div>
     )

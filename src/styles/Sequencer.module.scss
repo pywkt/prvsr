@@ -2,26 +2,31 @@
 
 .sequencerGrid {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: auto;
-    grid-template-areas: 'steps controls';
+    grid-template-areas:
+        "steps steps"
+        "controls seqEffects";
     padding: 1rem;
     margin: 1rem;
+    gap: 0 3rem;
 }
 
-@media screen and (max-width: 900px) {
-    .sequencerGrid {
-        grid-template-columns: 1fr;
-        grid-template-areas: "steps" "controls";
-    }
-        .sequencerGridStepContainer {
-            overflow-x: auto;
-        }
-}
+// @media screen and (max-width: 900px) {
+//     .sequencerGrid {
+//         grid-template-columns: 1fr;
+//         grid-template-areas: "steps" "controls";
+//     }
+
+//     .sequencerGridStepContainer {
+//         overflow-x: auto;
+//     }
+// }
 
 .sequencerGridStepContainer {
     grid-area: steps;
     text-align: center;
+    margin-bottom: 2rem;
 }
 
 .sequencerGridControlsContainer {
@@ -31,10 +36,10 @@
     align-items: center;
     flex-direction: column;
     gap: 0.6rem;
-    border-left: 1px solid lightGrey;
-    padding-left: 2rem;
+    // border-left: 1px solid lightGrey;
+    // padding-left: 2rem;
 
-    & > div {
+    &>div {
         width: 100%;
         display: flex;
         justify-content: space-between;
@@ -42,6 +47,10 @@
         align-items: center;
         font-size: 0.75rem;
     }
+}
+
+.makeDrumsButton {
+    margin: 0;
 }
 
 .sequencerContainer {
@@ -54,4 +63,8 @@
 .sequencerControls {
     text-align: left;
     line-height: 2rem;
+}
+
+.sequencerEffectsGrid {
+    grid-area: seqEffects;
 }
