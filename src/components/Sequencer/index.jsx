@@ -11,6 +11,7 @@ import SequenceLength from './SequenceLength';
 import DrumPlaybackRate from './DrumPlaybackRate';
 import Effects from '../Effects';
 import { allDrumKits, makeNewDrums } from '../../instruments/drums';
+import Accordion from '../Accordion';
 import styles from '../../styles/Sequencer.module.scss';
 
 const Sequencer = ({ setDrumPart, tone }) => {
@@ -107,27 +108,33 @@ const Sequencer = ({ setDrumPart, tone }) => {
                 <StepBoxes drumSteps={drumSteps} selectedKit={selectedKit} handleKickChange={handleKickChange} register={register} />
             </div>
 
-            <div className={styles.sequencerGridControlsContainer}>
-                <KitSelector setSelectedKit={setSelectedKit} />
-                <SequenceLength changeDrumSteps={changeDrumSteps} />
-                <StartTime register={register} />
-                <DrumPlaybackRate rateCallback={(rate) => changeDrumRate(rate)} />
-                <VolumeControl index={0} data={watch(`drums`)} drums />
-                <MuteButton index={0} data={watch(`drums`)} drums />
-                <SoloButton index={0} data={watch(`drums`)} drums />
+            <div className={styles.makeDrumsButton}>
+                <Button onClick={makeDrums} label="Make Drums" />
+            </div>
 
-                <hr />
+            <Accordion label="Drum Controls" labelAlign="right">
+                <div className={styles.sequencerGridControlsContainer}>
+                    <KitSelector setSelectedKit={setSelectedKit} />
+                    <SequenceLength changeDrumSteps={changeDrumSteps} />
+                    <StartTime register={register} />
+                    <DrumPlaybackRate rateCallback={(rate) => changeDrumRate(rate)} />
+                    <VolumeControl index={0} data={watch(`drums`)} drums />
+                    <MuteButton index={0} data={watch(`drums`)} drums />
+                    <SoloButton index={0} data={watch(`drums`)} drums />
 
+                    {/* <div className={styles.makeDrumsButton}>
+                        <Button onClick={makeDrums} label="Make Drums" />
+                    </div> */}
 
-                <div className={styles.makeDrumsButton}>
-                    <Button onClick={makeDrums} label="Make Drums" />
                 </div>
+            </Accordion>
 
-            </div>
+            <Accordion label="Drum Effects">
+                <div className={styles.sequencerEffectsGrid}>
+                    <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
+                </div>
+            </Accordion>
 
-            <div className={styles.sequencerEffectsGrid}>
-                <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
-            </div>
         </div>
     )
 }

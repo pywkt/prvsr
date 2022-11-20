@@ -1,0 +1,15 @@
+.accordionLabel {
+    // border-bottom: 1px solid lightgrey;
+    padding: 0.3rem 0 0.6rem 0;
+    cursor: pointer;
+    // margin-bottom: 1rem;
+
+    & span {
+        padding: 0.3rem;
+        border-bottom: 1px solid lightgrey;
+    }
+}
+
+.accordionInnerContent {
+    padding: 0.3rem;
+}

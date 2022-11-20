@@ -6,6 +6,7 @@
     grid-template-rows: auto;
     grid-template-areas:
         "steps steps"
+        "seqButton seqButton"
         "controls seqEffects";
     padding: 1rem;
     margin: 1rem;
@@ -33,14 +34,14 @@
     grid-area: controls;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-end;
     flex-direction: column;
     gap: 0.6rem;
     // border-left: 1px solid lightGrey;
     // padding-left: 2rem;
 
     &>div {
-        width: 100%;
+        width: 50%;
         display: flex;
         justify-content: space-between;
         flex-direction: row;
@@ -50,21 +51,25 @@
 }
 
 .makeDrumsButton {
+    grid-area: seqButton;
     margin: 0;
-}
-
-.sequencerContainer {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 3rem;
-}
-
-.sequencerControls {
-    text-align: left;
-    line-height: 2rem;
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 .sequencerEffectsGrid {
     grid-area: seqEffects;
 }
+
+// .sequencerContainer {
+//     display: flex;
+//     justify-content: center;
+//     align-items: flex-start;
+//     gap: 3rem;
+// }
+
+// .sequencerControls {
+//     text-align: left;
+//     line-height: 2rem;
+// }
+
