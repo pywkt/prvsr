@@ -5,7 +5,6 @@ import styles from '../../../styles/Effects.module.scss';
 const PingPongDelay = ({ global, effectArray, addEffect, allEffects, effect, index, disabled, tone, removeEffect }) => {
     const [effectOn, setEffectOn] = useState(false);
     const effectRef = useRef({});
-    console.log("index:", index)
 
     const effectToUse = global?.[index]?.find(i => i.name === "PingPongDelay")
 

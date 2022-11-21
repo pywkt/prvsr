@@ -217,11 +217,10 @@ function App() {
     <div className="App">
 
       <Header tone={Tone} />
-      <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone}/>
+      <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone} />
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (
-          // <InstrumentPart item={item} index={index} instruments={instruments} commitInstrument={() => commitInstrument(index)} deletePart={deletePart} tone={Tone} />
           <React.Fragment key={item.id}>
             <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${getValues(`instrumentArray.${index}.instrument`)}` || ""}</h4>
             <hr className={styles.instrumentGridHr} />
@@ -282,13 +281,14 @@ function App() {
         ))}
       </form>
 
+      <hr className={styles.instrumentGridHr} />
       <div style={{ marginLeft: '2rem' }}>
         <button
           type="button"
           onClick={() => { append({ instrument: 'Synth 01', data: [] }) }}
           className={styles.addInstrumentButton}
         >
-          <Plus />
+          Add <Plus />
         </button>
       </div>
 

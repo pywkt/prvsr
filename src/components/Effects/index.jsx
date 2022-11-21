@@ -6,7 +6,6 @@ import StereoWidener from './StereoWidener';
 import Phaser from './Phaser';
 import CombFilter from './CombFilter';
 import LowpassCombFilter from './LowpassCombFilter';
-// import { LowpassCombFilter } from 'tone';
 import styles from '../../styles/Effects.module.scss';
 
 export let globalEffects = {}
@@ -15,12 +14,6 @@ const Effects = ({ disabled, index, partData, tone }) => {
     const [allEffects, setAllEffects] = useState({})
     const [effectArray, setEffectArray] = useState([])
     const effectRef = useRef({})
-    // console.log("partData:", partData)
-
-
-    if (index === "drums") {
-
-    }
 
     const addEffect = (effectName, effect) => {
         if (!effectRef.current[effectName]) {

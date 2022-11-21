@@ -2,21 +2,26 @@ import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
 import StepBoxes from './StepBoxes';
-import KitSelector from './KitSelector';
-import VolumeControl from '../ChannelControls/VolumeControl';
-import MuteButton from '../ChannelControls/MuteButton';
-import SoloButton from '../ChannelControls/SoloButton';
-import StartTime from './StartTime';
-import SequenceLength from './SequenceLength';
-import DrumPlaybackRate from './DrumPlaybackRate';
-import Effects from '../Effects';
+// import KitSelector from './KitSelector';
+// import VolumeControl from '../ChannelControls/VolumeControl';
+// import MuteButton from '../ChannelControls/MuteButton';
+// import SoloButton from '../ChannelControls/SoloButton';
+// import StartTime from './StartTime';
+// import SequenceLength from './SequenceLength';
+// import DrumPlaybackRate from './DrumPlaybackRate';
+// import Effects from '../Effects';
 import { allDrumKits, makeNewDrums } from '../../instruments/drums';
-import Accordion from '../Accordion';
+// import Accordion from '../Accordion';
+import DrumControls from './DrumControls';
+import DrumEffects from './DrumEffects';
 import styles from '../../styles/Sequencer.module.scss';
+// import useCollapse from 'react-collapsed'
 
 const Sequencer = ({ setDrumPart, tone }) => {
     const { register, setValue, control, getValues, watch } = useForm();
     useFieldArray({ control, name: "drums" })
+
+    // const { getCollapseProps, getToggleProps } = useCollapse();
 
     const [drumSteps, setDrumSteps] = useState(16)
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
@@ -100,6 +105,10 @@ const Sequencer = ({ setDrumPart, tone }) => {
 
     // console.log("gv:", getValues())
 
+    // const [controlOpen, setControlOpen] = useState(false)
+    // const [effectsOpen, setEffectsOpen] = useState(false)
+    // // const handleControlOpen = () => setControlOpen(prev => !prev)
+    // const handleEffectsOpen = () => setEffectsOpen(prev => !prev)
 
 
     return (
@@ -112,28 +121,29 @@ const Sequencer = ({ setDrumPart, tone }) => {
                 <Button onClick={makeDrums} label="Make Drums" />
             </div>
 
-            <Accordion label="Drum Controls" labelAlign="right">
-                <div className={styles.sequencerGridControlsContainer}>
-                    <KitSelector setSelectedKit={setSelectedKit} />
-                    <SequenceLength changeDrumSteps={changeDrumSteps} />
-                    <StartTime register={register} />
-                    <DrumPlaybackRate rateCallback={(rate) => changeDrumRate(rate)} />
-                    <VolumeControl index={0} data={watch(`drums`)} drums />
-                    <MuteButton index={0} data={watch(`drums`)} drums />
-                    <SoloButton index={0} data={watch(`drums`)} drums />
+            <div className={styles.control}>
+                <DrumControls
+                    changeDrumRate={(rate) => changeDrumRate(rate)}
+                    changeDrumSteps={changeDrumSteps}
+                    data={watch(`drums`)}
+                    index={0}
+                    // rate={rate}
+                    register={register}
+                    setSelectedKit={setSelectedKit}
+                />
+            </div>
 
-                    {/* <div className={styles.makeDrumsButton}>
-                        <Button onClick={makeDrums} label="Make Drums" />
-                    </div> */}
+            <div className={styles.effects}>
+                <DrumEffects
+                    disabled
+                    index="drums"
+                    partData={drumRef.current}
+                    tone={tone}
+                />
+            </div>
 
-                </div>
-            </Accordion>
 
-            <Accordion label="Drum Effects">
-                <div className={styles.sequencerEffectsGrid}>
-                    <Effects index="drums" partData={drumRef.current} disabled tone={tone} />
-                </div>
-            </Accordion>
+
 
         </div>
     )
