@@ -279,7 +279,9 @@ function App() {
         ))}
       </form>
 
-      <hr className={styles.instrumentGridHr} />
+      {getValues(`instrumentArray`).length > 0 &&
+        <hr className={styles.instrumentGridHr} />
+      }
       <div style={{ marginLeft: '2rem' }}>
         <button
           type="button"

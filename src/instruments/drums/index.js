@@ -23,7 +23,7 @@ const makeDrumKit = (kitData) => {
     // kit.connect(channel)
     // channel.toDestination()
 
-    console.log("drum global:", globalEffects.drums)
+    // console.log("drum global:", globalEffects.drums)
 
     kit.chain(channel, ...globalEffects?.drums || [], Tone.Destination)
 

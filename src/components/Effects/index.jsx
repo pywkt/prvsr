@@ -6,6 +6,7 @@ import StereoWidener from './StereoWidener';
 import Phaser from './Phaser';
 import CombFilter from './CombFilter';
 import LowpassCombFilter from './LowpassCombFilter';
+import Bitcrusher from './Bitcrusher';
 import styles from '../../styles/Effects.module.scss';
 
 export let globalEffects = {}
@@ -37,6 +38,20 @@ const Effects = ({ disabled, index, partData, tone }) => {
     return (
         (partData?.slug || index === "drums") && (
             <div className={styles.effectParams}>
+                <Bitcrusher
+                    global={globalEffects}
+                    effectArray={effectArray}
+                    allEffects={allEffects}
+                    addEffect={(effectName, effect) => addEffect(effectName, effect)}
+                    effect="bitcrusher"
+                    index={index}
+                    data={partData}
+                    disabled={disabled}
+                    tone={tone}
+
+                />
+
+
                 <LowpassCombFilter
                     global={globalEffects}
                     effectArray={effectArray}
