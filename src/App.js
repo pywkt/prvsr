@@ -5,7 +5,6 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Button from './components/Button';
 import Sequencer from './components/Sequencer';
-// import ChannelControls from './components/ChannelControls';
 import Effects from './components/Effects';
 import InstrumentMods from './components/InstrumentMods';
 import VolumeControl from './components/ChannelControls/VolumeControl';
@@ -18,7 +17,6 @@ import NumberOfBars from './components/NumberOfBars';
 import NumberOfLoops from './components/NumberOfLoops';
 import ProbabilityAmount from './components/ProbabilityAmount';
 import NotesToUse from './components/NotesToUse';
-// import InstrumentPart from './components/InstrumentPart';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';

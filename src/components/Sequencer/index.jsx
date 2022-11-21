@@ -2,26 +2,14 @@ import React, { useState, useRef } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Button from '../Button';
 import StepBoxes from './StepBoxes';
-// import KitSelector from './KitSelector';
-// import VolumeControl from '../ChannelControls/VolumeControl';
-// import MuteButton from '../ChannelControls/MuteButton';
-// import SoloButton from '../ChannelControls/SoloButton';
-// import StartTime from './StartTime';
-// import SequenceLength from './SequenceLength';
-// import DrumPlaybackRate from './DrumPlaybackRate';
-// import Effects from '../Effects';
 import { allDrumKits, makeNewDrums } from '../../instruments/drums';
-// import Accordion from '../Accordion';
 import DrumControls from './DrumControls';
 import DrumEffects from './DrumEffects';
 import styles from '../../styles/Sequencer.module.scss';
-// import useCollapse from 'react-collapsed'
 
 const Sequencer = ({ setDrumPart, tone }) => {
     const { register, setValue, control, getValues, watch } = useForm();
     useFieldArray({ control, name: "drums" })
-
-    // const { getCollapseProps, getToggleProps } = useCollapse();
 
     const [drumSteps, setDrumSteps] = useState(16)
     const [selectedKit, setSelectedKit] = useState(allDrumKits[0])
@@ -103,14 +91,6 @@ const Sequencer = ({ setDrumPart, tone }) => {
         setValue(`drums.${track}`, newRef.current[track])
     }
 
-    // console.log("gv:", getValues())
-
-    // const [controlOpen, setControlOpen] = useState(false)
-    // const [effectsOpen, setEffectsOpen] = useState(false)
-    // // const handleControlOpen = () => setControlOpen(prev => !prev)
-    // const handleEffectsOpen = () => setEffectsOpen(prev => !prev)
-
-
     return (
         <div className={styles.sequencerGrid}>
             <div className={styles.sequencerGridStepContainer}>
@@ -127,7 +107,6 @@ const Sequencer = ({ setDrumPart, tone }) => {
                     changeDrumSteps={changeDrumSteps}
                     data={watch(`drums`)}
                     index={0}
-                    // rate={rate}
                     register={register}
                     setSelectedKit={setSelectedKit}
                 />
@@ -141,10 +120,6 @@ const Sequencer = ({ setDrumPart, tone }) => {
                     tone={tone}
                 />
             </div>
-
-
-
-
         </div>
     )
 }
