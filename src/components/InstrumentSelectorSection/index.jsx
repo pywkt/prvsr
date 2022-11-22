@@ -13,7 +13,7 @@ import NotesToUse from '../NotesToUse';
 import { ReactComponent as Trash } from '../../icons/trash.svg';
 import styles from '../../styles/App.module.scss';
 
-const InstrumentSelector = ({ instruments, register, index, data, commitInstrument, deletePart}) => {
+const InstrumentSelectorSection = ({ instruments, register, index, data, commitInstrument, deletePart}) => {
 
     return (
         <>
@@ -51,4 +51,4 @@ const InstrumentSelector = ({ instruments, register, index, data, commitInstrume
     )
 }
 
-export default InstrumentSelector;
+export default InstrumentSelectorSection;

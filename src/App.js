@@ -3,20 +3,9 @@ import { Key } from '@tonaljs/tonal';
 import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
-// import Button from './components/Button';
 import Sequencer from './components/Sequencer';
-import Effects from './components/Effects';
-import InstrumentMods from './components/InstrumentMods';
-// import VolumeControl from './components/ChannelControls/VolumeControl';
-// import MuteButton from './components/ChannelControls/MuteButton';
-// import SoloButton from './components/ChannelControls/SoloButton';
-// import UnisonCount from './components/UnisonCount';
-// import Octave from './components/Octave';
-// import StartTime from './components/StartTime';
-// import NumberOfBars from './components/NumberOfBars';
-// import NumberOfLoops from './components/NumberOfLoops';
-// import ProbabilityAmount from './components/ProbabilityAmount';
-// import NotesToUse from './components/NotesToUse';
+// import Effects from './components/Effects';
+// import InstrumentMods from './components/InstrumentMods';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
@@ -26,8 +15,8 @@ import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 import { ReactComponent as Plus } from './icons/plus.svg';
-// import { ReactComponent as Trash } from './icons/trash.svg';
-import InstrumentSelector from './components/InstrumentSelector';
+// import InstrumentSelectorSection from './components/InstrumentSelectorSection';
+import InstrumentPartRow from './components/InstrumentPartRow';
 import styles from './styles/App.module.scss';
 
 function App() {
@@ -226,12 +215,30 @@ function App() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (
           <React.Fragment key={item.id}>
-            <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${getValues(`instrumentArray.${index}.instrument`)}` || ""}</h4>
+
+            <InstrumentPartRow
+              commitInstrument={(i) => commitInstrument(i)}
+              data={getValues(`instrumentArray.${index}`)}
+              deletePart={(i) => deletePart(i)}
+              disabled={watch(`instrumentArray.${index}.slug`)}
+              index={index}
+              instrument={getValues(`instrumentArray.${index}.slug`)}
+              instruments={instruments}
+              partData={getValues(`instrumentArray.${index}`)}
+              register={register}
+              tone={Tone}
+
+            />
+
+
+            {/* <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${getValues(`instrumentArray.${index}.instrument`)}` || ""}</h4>
             <hr className={styles.instrumentGridHr} />
             <div key={item.id} className={styles.instrumentGrid}>
 
+
+
               <div className={styles.instrumentSelectorGrid}>
-                <InstrumentSelector
+                <InstrumentSelectorSection
                   index={index}
                   instruments={instruments}
                   register={register}
@@ -241,42 +248,6 @@ function App() {
                 />
               </div>
 
-              {/* Instrument Selector */}
-              {/* <div className={styles.instrumentSelectorGrid}>
-                <select {...register(`instrumentArray.${index}.instrument`)}>
-                  {instruments.map((i, ind) => (
-                    <option value={i.slug} key={i.name}>
-                      {i.name}
-                    </option>
-                  ))}
-                </select>
-
-                <div className={styles.channelControls}>
-                  <VolumeControl index={index} data={getValues(`instrumentArray.${index}`)} />
-                  <SoloButton index={index} data={getValues(`instrumentArray.${index}`)} />
-                  <MuteButton index={index} data={getValues(`instrumentArray.${index}`)} />
-                </div>
-
-                <NotesToUse index={index} register={register} />
-
-                <div className={styles.partSettings}>
-                  <UnisonCount index={index} register={register} />
-                  <Octave index={index} register={register} />
-                  <StartTime index={index} register={register} />
-                  <NumberOfBars index={index} register={register} />
-                  <NumberOfLoops index={index} register={register} />
-                  <ProbabilityAmount index={index} register={register} />
-                </div>
-
-                <div className={styles.addDeleteContainer}>
-                  <Button onClick={() => commitInstrument(index)} type='button' label="Add to Track" />
-                  <button className={styles.trashIcon} type="button" onClick={() => deletePart(index)}><Trash /></button>
-                </div>
-
-              </div> */}
-
-              {/* Instrument Settings */}
-
               <div className={styles.instrumentControlsGrid}>
                 {/monoSynth|fmSynth|amSynth|pluckSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
                   <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
@@ -284,11 +255,10 @@ function App() {
               </div>
 
 
-              {/* Instrument Effects */}
               <div className={styles.instrumentEffectsGrid}>
                 <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
               </div>
-            </div>
+            </div> */}
           </React.Fragment>
 
 
