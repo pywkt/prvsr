@@ -4,8 +4,6 @@ import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Sequencer from './components/Sequencer';
-// import Effects from './components/Effects';
-// import InstrumentMods from './components/InstrumentMods';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
@@ -15,7 +13,6 @@ import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 import { ReactComponent as Plus } from './icons/plus.svg';
-// import InstrumentSelectorSection from './components/InstrumentSelectorSection';
 import InstrumentPartRow from './components/InstrumentPartRow';
 import styles from './styles/App.module.scss';
 
@@ -26,7 +23,6 @@ function App() {
         songData: {
           bpm: 120,
           swing: 0,
-          // drumPlaybackRate: 2
         }
       }
     }
@@ -215,7 +211,6 @@ function App() {
       <form onSubmit={handleSubmit(onSubmit)}>
         {fields.map((item, index) => (
           <React.Fragment key={item.id}>
-
             <InstrumentPartRow
               commitInstrument={(i) => commitInstrument(i)}
               data={getValues(`instrumentArray.${index}`)}
@@ -224,44 +219,10 @@ function App() {
               index={index}
               instrument={getValues(`instrumentArray.${index}.slug`)}
               instruments={instruments}
-              partData={getValues(`instrumentArray.${index}`)}
               register={register}
               tone={Tone}
-
             />
-
-
-            {/* <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${getValues(`instrumentArray.${index}.instrument`)}` || ""}</h4>
-            <hr className={styles.instrumentGridHr} />
-            <div key={item.id} className={styles.instrumentGrid}>
-
-
-
-              <div className={styles.instrumentSelectorGrid}>
-                <InstrumentSelectorSection
-                  index={index}
-                  instruments={instruments}
-                  register={register}
-                  data={getValues(`instrumentArray.${index}`)}
-                  commitInstrument={(i) => commitInstrument(i)}
-                  deletePart={(i) => deletePart(i)}
-                />
-              </div>
-
-              <div className={styles.instrumentControlsGrid}>
-                {/monoSynth|fmSynth|amSynth|pluckSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
-                  <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
-                }
-              </div>
-
-
-              <div className={styles.instrumentEffectsGrid}>
-                <Effects index={index} partData={getValues(`instrumentArray.${index}`)} disabled={watch(`instrumentArray.${index}.slug`)} tone={Tone} />
-              </div>
-            </div> */}
           </React.Fragment>
-
-
         ))}
       </form>
 

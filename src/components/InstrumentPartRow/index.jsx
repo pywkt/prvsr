@@ -4,7 +4,7 @@ import InstrumentMods from '../InstrumentMods';
 import Effects from '../Effects';
 import styles from '../../styles/App.module.scss';
 
-const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index, instrument, instruments, partData, register, tone}) => {
+const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index, instrument, instruments, register, tone}) => {
 
     return (
         <>
@@ -34,7 +34,7 @@ const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index
 
                 {/* Instrument Effects */}
                 <div className={styles.instrumentEffectsGrid}>
-                    <Effects index={index} partData={partData} disabled={disabled} tone={tone} />
+                    <Effects index={index} partData={data} disabled={disabled} tone={tone} />
                 </div>
             </div>
         </>
