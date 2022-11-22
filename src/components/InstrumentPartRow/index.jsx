@@ -4,8 +4,7 @@ import InstrumentSelectorSection from '../InstrumentSelectorSection';
 import InstrumentMods from '../InstrumentMods';
 import Effects from '../Effects';
 import { ReactComponent as Chevron } from '../../icons/chevron-up.svg';
-import styles from '../../styles/App.module.scss';
-import rowStyles from '../../styles/InstrumentPartRow.module.scss'
+import styles from '../../styles/InstrumentPartRow.module.scss'
 
 const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index, instrument, instruments, register, tone }) => {
     const { getCollapseProps, getToggleProps } = useCollapse({ defaultExpanded: true });
@@ -17,13 +16,13 @@ const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index
         <>
             <div
                 {...getToggleProps({ onClick: handleInstrumentOpen })}
-                className={rowStyles.sequencerAccordionLabel}
+                className={styles.sequencerAccordionLabel}
             >
-                <div className={rowStyles.instrumentPartLabel}>
+                <div className={styles.instrumentPartLabel}>
                     <span>
-                        <h4 className={rowStyles.instrumentGridTitle}>{`${index + 1}: ${data.instrument}` || ""}</h4>
+                        <h4 className={styles.instrumentGridTitle}>{`${index + 1}: ${data.instrument}` || ""}</h4>
                     </span>
-                    <span className={instrumentOpen ? rowStyles.rotatedChevron : rowStyles.notRotatedChevron}>
+                    <span className={instrumentOpen ? styles.rotatedChevron : styles.notRotatedChevron}>
                         <Chevron />
                     </span>
 

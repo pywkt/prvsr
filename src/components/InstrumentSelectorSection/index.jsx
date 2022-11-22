@@ -11,7 +11,7 @@ import NumberOfLoops from '../NumberOfLoops';
 import ProbabilityAmount from '../ProbabilityAmount';
 import NotesToUse from '../NotesToUse';
 import { ReactComponent as Trash } from '../../icons/trash.svg';
-import styles from '../../styles/App.module.scss';
+import styles from '../../styles/InstrumentPartRow.module.scss';
 
 const InstrumentSelectorSection = ({ instruments, register, index, data, commitInstrument, deletePart}) => {
 
