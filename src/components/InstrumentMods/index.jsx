@@ -14,20 +14,19 @@ export let globalMods = {}
 
 
 const InstrumentMods = ({ instrument, index }) => {
-    console.log('mods:', instrument)
     const canUse = (key) => instrument && Object.keys(instrument).includes(key)
     const [selectedOsc, setSelectedOsc] = useState('')
 
     const envelope = ['attack', 'sustain', 'decay', 'release']
     const oscTypes = ['sine', 'square', 'triangle', 'sawtooth', 'pwm', 'pulse']
-    const oscOptions = [
-        { name: 'detune', min: -500, max: 500, step: 1 },
-        { name: 'frequency', min: 1, max: 4, step: 1 },
-        { name: 'harmonicity', min: 0, max: 500, step: 1 },
-        { name: 'phase', min: -360, max: 360, step: 1 },
-        { name: 'partialsCount', min: 0, max: 30, step: 1 }]
+    // const oscOptions = [
+    //     { name: 'detune', min: -500, max: 500, step: 1 },
+    //     { name: 'frequency', min: 1, max: 4, step: 1 },
+    //     { name: 'harmonicity', min: 0, max: 500, step: 1 },
+    //     { name: 'phase', min: -360, max: 360, step: 1 },
+    //     { name: 'partialsCount', min: 0, max: 30, step: 1 }]
 
-    const notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
+    // const notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 
     const setEnvelope = (e, param) => {
         globalMods.envelope = { ...globalMods.envelope, [param]: Number(e.target.value) }

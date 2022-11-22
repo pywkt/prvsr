@@ -208,7 +208,7 @@ function App() {
       <Header tone={Tone} />
       <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone} />
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.instrumentForm}>
         {fields.map((item, index) => (
           <React.Fragment key={item.id}>
             <InstrumentPartRow
@@ -226,9 +226,6 @@ function App() {
         ))}
       </form>
 
-      {getValues(`instrumentArray`).length > 0 &&
-        <hr className={styles.instrumentGridHr} />
-      }
       <div style={{ marginLeft: '2rem' }}>
         <button
           type="button"

@@ -1,0 +1,47 @@
+.sequencerAccordionLabel {
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding-bottom: 0.3rem;
+
+    & .effectsLabel {
+        display: flex;
+        align-items: center;
+    }
+
+    & svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 1px;
+        margin: 0 0.3rem;
+    }
+
+
+}
+
+.instrumentPartLabel {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0.3rem 0;
+}
+
+.rotatedChevron {
+    transform: rotate(180deg);
+    transition: 0.15s;
+}
+
+.notRotatedChevron {
+    transition: 0.15s;
+}
+
+.instrumentGridTitle {
+    // margin: 0 0 0 1.6rem;
+    margin: 0;
+}
+
+.instrumentGridHr {
+    margin: 0 1.6rem;
+    border: none;
+    // border-bottom: 1px solid lightgrey;
+}
