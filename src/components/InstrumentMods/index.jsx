@@ -55,6 +55,22 @@ const InstrumentMods = ({ instrument, index }) => {
         instrument.set({ harmonicity: Number(value) })
     }
 
+    const changeAttackNoise = (value) => {
+        globalMods.attackNoise = Number(value)
+        instrument.set({ attackNoise: Number(value) })
+    }
+
+    const changeDampening = (value) => {
+        globalMods.resonance = Number(value)
+        instrument.set({ resonance: Number(value) })
+    }
+
+    const changeRelease = (value) => {
+        globalMods.release = value
+        instrument.set({ release: value})
+        console.log(instrument.get())
+    }
+
     // const changeModulation = (e, param) => {
     //     instrument.filter.frequency.override = false
     //     console.log(notes[e.target.value]+e.target.value)
@@ -178,6 +194,47 @@ const InstrumentMods = ({ instrument, index }) => {
                             step={1}
                         />
                     </div>
+                </>
+            }
+
+            {instrument && /pluckSynth/.test(instrument.name) &&
+                <>
+                    {/* <h4>Attack Noise:</h4> */}
+                    <div className={styles.envelopeParams}>
+                        <Slider
+                            label="Attack Noise"
+                            type="attackNoise"
+                            index={index}
+                            onChange={(e) => changeAttackNoise(e.target.value)}
+                            min={0}
+                            max={30}
+                            step={1}
+                        />
+                    </div>
+
+                <div className={styles.envelopeParams}>
+                    <Slider
+                        label="Resonance"
+                        type="resonance"
+                        index={index}
+                        onChange={(e) => changeDampening(e.target.value)}
+                        min={0}
+                        max={0.999}
+                        step={0.05}
+                    />
+                </div>
+
+                <div className={styles.envelopeParams}>
+                    <Slider
+                        label="Release"
+                        type="release"
+                        index={index}
+                        onChange={(e) => changeRelease(e.target.value)}
+                        min={1}
+                        max={16}
+                        step={1}
+                    />
+                </div>
                 </>
             }
 

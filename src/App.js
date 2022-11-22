@@ -22,6 +22,7 @@ import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
 import { amSynth } from './instruments/amSynth';
 import { fmSynth } from './instruments/fmSynth';
+import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 import { ReactComponent as Plus } from './icons/plus.svg';
@@ -78,6 +79,7 @@ function App() {
     { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
     { name: "AMSynth", slug: "amSynth", type: 'amSynth' },
     { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
+    { name: "PluckSynth", slug: "pluckSynth", type: 'pluckSynth' },
     { name: "Piano 01", slug: "piano01", type: 'piano' }
   ]
   // const notesToUse = ['1n', '2n', '4n', '8n', '16n']
@@ -104,6 +106,8 @@ function App() {
           return amSynth(index)
         case 'fmSynth':
           return fmSynth(index)
+        case 'pluckSynth':
+          return pluckSynth(index)
         default:
           return 'piano01-default'
       }
@@ -163,8 +167,9 @@ function App() {
         const isMono = /monoSynth/.test(instrument.name)
         const isFM = /fmSynth/.test(instrument.name)
         const isAM = /amSynth/.test(instrument.name)
+        const isPluck = /pluckSynth/.test(instrument.name)
 
-        instrument.triggerAttackRelease(isMono || isFM || isAM ? value.note[0] : value.note, value.noteLen, time, value.velocity);
+        instrument.triggerAttackRelease(isMono || isFM || isAM || isPluck ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
 
 
@@ -262,7 +267,7 @@ function App() {
               {/* Instrument Settings */}
 
               <div className={styles.instrumentControlsGrid}>
-                {/monoSynth|fmSynth|amSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
+                {/monoSynth|fmSynth|amSynth|pluckSynth/.test(getValues(`instrumentArray.${index}.instrument`)) &&
                   <InstrumentMods instrument={getValues(`instrumentArray.${index}.slug`)} index={index} />
                 }
               </div>
