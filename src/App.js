@@ -3,20 +3,20 @@ import { Key } from '@tonaljs/tonal';
 import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
-import Button from './components/Button';
+// import Button from './components/Button';
 import Sequencer from './components/Sequencer';
 import Effects from './components/Effects';
 import InstrumentMods from './components/InstrumentMods';
-import VolumeControl from './components/ChannelControls/VolumeControl';
-import MuteButton from './components/ChannelControls/MuteButton';
-import SoloButton from './components/ChannelControls/SoloButton';
-import UnisonCount from './components/UnisonCount';
-import Octave from './components/Octave';
-import StartTime from './components/StartTime';
-import NumberOfBars from './components/NumberOfBars';
-import NumberOfLoops from './components/NumberOfLoops';
-import ProbabilityAmount from './components/ProbabilityAmount';
-import NotesToUse from './components/NotesToUse';
+// import VolumeControl from './components/ChannelControls/VolumeControl';
+// import MuteButton from './components/ChannelControls/MuteButton';
+// import SoloButton from './components/ChannelControls/SoloButton';
+// import UnisonCount from './components/UnisonCount';
+// import Octave from './components/Octave';
+// import StartTime from './components/StartTime';
+// import NumberOfBars from './components/NumberOfBars';
+// import NumberOfLoops from './components/NumberOfLoops';
+// import ProbabilityAmount from './components/ProbabilityAmount';
+// import NotesToUse from './components/NotesToUse';
 import { piano01 } from './instruments/piano01'
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
@@ -26,7 +26,8 @@ import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 import { ReactComponent as Plus } from './icons/plus.svg';
-import { ReactComponent as Trash } from './icons/trash.svg';
+// import { ReactComponent as Trash } from './icons/trash.svg';
+import InstrumentSelector from './components/InstrumentSelector';
 import styles from './styles/App.module.scss';
 
 function App() {
@@ -229,9 +230,19 @@ function App() {
             <hr className={styles.instrumentGridHr} />
             <div key={item.id} className={styles.instrumentGrid}>
 
+              <div className={styles.instrumentSelectorGrid}>
+                <InstrumentSelector
+                  index={index}
+                  instruments={instruments}
+                  register={register}
+                  data={getValues(`instrumentArray.${index}`)}
+                  commitInstrument={(i) => commitInstrument(i)}
+                  deletePart={(i) => deletePart(i)}
+                />
+              </div>
 
               {/* Instrument Selector */}
-              <div className={styles.instrumentSelectorGrid}>
+              {/* <div className={styles.instrumentSelectorGrid}>
                 <select {...register(`instrumentArray.${index}.instrument`)}>
                   {instruments.map((i, ind) => (
                     <option value={i.slug} key={i.name}>
@@ -262,7 +273,7 @@ function App() {
                   <button className={styles.trashIcon} type="button" onClick={() => deletePart(index)}><Trash /></button>
                 </div>
 
-              </div>
+              </div> */}
 
               {/* Instrument Settings */}
 
