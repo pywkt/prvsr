@@ -143,3 +143,24 @@
         height: 24px;
     }
 }
+
+.titleAndButtonContainer {
+    display: flex;
+    align-items: center;
+}
+
+.selectPartButton {
+    border: 1px solid $border;
+    border-radius: 6px;
+    background-color: $background;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    margin-left: 1rem;
+    cursor: pointer;
+    transition: $transitionTime;
+
+    &:hover {
+        background-color: $backgroundDark;
+        transition: $transitionTime;
+    }
+}

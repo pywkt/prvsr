@@ -140,13 +140,18 @@ function App() {
   const activeParts = useRef({})
 
   const [selectedPart, setSelectedPart] = useState(0)
+  // console.log(selectedPart)
   // const [currentNote, setCurrentNote] = useState('')
 
-  const noteRef = useRef('')
+  // const noteRef = useRef('')
 
-  const setCurrentNote = (value) => {
-    setValue(`instrumentArray.songData.currentNote`, value)
-  }
+  // const setCurrentNote = (value, index) => {
+  //   console.log('value, index, selectedPart:', value, index, selectedPart)
+  //   console.log('songData:', getValues(`instrumentArray.songData`))
+  //   if (selectedPart === index) {
+  //     setValue(`instrumentArray.songData.${selectedPart}.currentNote`, value)
+  //   }
+  // }
 
   const addToTransport = async (data, index, steps) => {
     // console.log("data:", data)
@@ -168,9 +173,11 @@ function App() {
 
         // console.log(value.note)
 
-        if (selectedPart === index) {
-          setCurrentNote(value.note)
-        }
+        // if (selectedPart === index) {
+        // setCurrentNote(value.note, index)
+        // }
+
+        setValue(`instrumentArray.songData.${index}.currentNote`, value.note)
 
 
         instrument.triggerAttackRelease(isMono || isFM || isAM || isPluck ? value.note[0] : value.note, value.noteLen, time, value.velocity);
@@ -226,6 +233,10 @@ function App() {
       <Header tone={Tone} />
       <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone} />
 
+      <div className={styles.partDetailsContainer}>
+        <SelectedPartDetails currentNote={watch(`instrumentArray.songData.${selectedPart}.currentNote`)} instrumentName={watch(`instrumentArray.songData.${selectedPart}.name`)} />
+      </div>
+
       <form onSubmit={handleSubmit(onSubmit)} className={styles.instrumentForm}>
         {fields.map((item, index) => (
           <React.Fragment key={item.id}>
@@ -238,6 +249,8 @@ function App() {
               instrument={getValues(`instrumentArray.${index}.slug`)}
               instruments={instruments}
               register={register}
+              setSelectedPart={setSelectedPart}
+              setInstrumentName={(name) => setValue(`instrumentArray.songData.${index}.name`, name)}
               tone={Tone}
             />
           </React.Fragment>
@@ -254,9 +267,7 @@ function App() {
         </button>
       </div>
 
-      <div className={styles.partDetailsContainer}>
-        <SelectedPartDetails currentNote={watch(`instrumentArray.songData.currentNote`)} />
-      </div>
+
     </div>
 
   );
