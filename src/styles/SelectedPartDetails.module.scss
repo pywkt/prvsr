@@ -1,12 +1,9 @@
 @import './globals.module.scss';
 
 .notesContainer {
-    width: 600px;
-    height: 600px;
-    // border: 1px solid lightblue;
-
+    // width: 600px;
+    // height: 600px;
     display: flex;
-    // position: relative;
 }
 
 .halfNoteContainer {
@@ -34,7 +31,6 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
 .halfNote {
     background-color: slategrey;
     transform: translateX($hNoteTranslateX);
-    // border-bottom: 1px solid $border;
     width: $hNoteWidth !important;
 }
 
@@ -42,7 +38,6 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
     background-color: ghostwhite;
     margin-top: 0px;
     height: $wNoteHeight !important;
-    // width: 10px !important;
     border-bottom: 1px solid $border;
 }
 
@@ -57,7 +52,6 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
 #n21,
 #n23 {
     margin-left: $hNoteMargin !important;
-    // box-shadow: $keyShadow;
 }
 
 .allNotes {
@@ -84,4 +78,20 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
 
 .filled {
     background-color: $accent;
+}
+
+.noteList {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    width: 375px;
+
+    & div {
+        padding-right: 1rem;
+            display: flex;
+    }
+}
+
+.chordName {
+    font-size: 0.75rem;
 }

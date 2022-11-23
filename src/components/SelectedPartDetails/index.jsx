@@ -7,38 +7,29 @@ const SelectedPartDetails = ({ currentNote }) => {
         return null
     }
 
-    if (currentNote) {
-        console.log('component:', currentNote)
-        console.log('tonal:', currentNote.map(Note.chroma))
-    }
-
-    // console.log('currentNote:', currentNote)
-    // console.log(Note.get(currentNote))
-
-    // const wholeNotes = Array.apply(null, { length: 7 })
-    // const halfNotes = Array.apply(null, { length: 5 })
-
     const allNotes = Array.apply(null, { length: 12 })
-
     const halfNoteIndexes = [1, 3, 6, 8, 10, 13, 15, 18, 20, 22]
 
     let noteIndex = currentNote?.map(Note.chroma)
-    // const currentOctave = [...currentNote?.map(n => n.substr(-1))]
-    // console.log("oct:", currentOctave)
-    
-    // if (currentOctave[0] === '4') {
-    //     const fff = noteIndex.map(n => n = n + 12)
-    //     console.log("fff:", fff)
-    //     noteIndex = fff
-    // }
 
-    // console.log("note:", noteIndex)
 
     return (
         <div>
-            {currentNote}
+            <div className={styles.noteList}>
+                <div>
+                    {currentNote.map(n => (
+                        <div>{Note.simplify(n)}</div>
+                    ))}
+                </div>
+
+
+                <div className={styles.chordName}>
+                    ({Chord.detect(currentNote)})
+                </div>
+            </div>
+
             <br />
-            {Chord.detect(currentNote)}
+
             <div className={styles.notesContainer}>
 
                 {allNotes.map((note, index) => {
@@ -67,13 +58,8 @@ const SelectedPartDetails = ({ currentNote }) => {
                             />
                         )
                     }
-
-                }
-                )}
-
-
+                })}
             </div>
-
         </div>
     )
 }
