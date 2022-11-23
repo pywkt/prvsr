@@ -1,3 +1,5 @@
+@import './globals.module.scss';
+
 .notesContainer {
     width: 600px;
     height: 600px;
@@ -9,16 +11,9 @@
 
 .halfNoteContainer {
     width: 600px;
-    // margin-left: -10px;
-    // transform: translateX(-10px)
-    // position: relative;
-    // display: flex;
-    // flex-direction: row;
-    // justify-content: center;
 }
 
 .wholeNoteContainer {
-    // width: 100%;
     position: relative;
     display: flex;
     flex-direction: row;
@@ -27,24 +22,16 @@
 }
 
 .halfNote {
-    background-color: lightcoral;
-    transform: translateX(-13px) // margin-left: -10px;
-        // display: inline-block;
-        // position: absolute;
-        // top: 0;
-        // left: 0;
-
+    background-color: slategrey;
+    transform: translateX(-13px);
+    border-bottom: 1px solid;
 }
 
 .wholeNote {
-    background-color: aquamarine;
-    margin-top: 40px;
-    // margin-left: 10px;
-
-    // display: inline-block;
-    // position: absolute;
-    // top: 40px;
-    // left: 0;
+    background-color: ghostwhite;
+    margin-top: 0px;
+    height: 60px !important;
+    border-bottom: 1px solid;
 }
 
 #n2,
@@ -58,13 +45,20 @@
 .allNotes {
     width: 20px;
     height: 40px;
-    // border: 1px solid lightseagreen;
     border-right: 1px solid;
+    border-radius: 3px;
+
+    &:first-child {
+        border-left: 1px solid;
+    }
+
     &:last-child {
         border: none;
+        border-bottom: 1px solid;
+        border-right: 1px solid;
     }
 }
 
 .filled {
-    background-color: bisque;
+    background-color: $accent;
 }
