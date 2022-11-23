@@ -1,0 +1,66 @@
+.notesContainer {
+    width: 600px;
+    height: 600px;
+    border: 1px solid lightblue;
+
+    display: flex;
+    // position: relative;
+}
+
+.halfNoteContainer {
+    width: 600px;
+    // margin-left: -10px;
+    // transform: translateX(-10px)
+    // position: relative;
+    // display: flex;
+    // flex-direction: row;
+    // justify-content: center;
+}
+
+.wholeNoteContainer {
+    // width: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px
+}
+
+.halfNote {
+    background-color: lightcoral;
+    transform: translateX(-13px) // margin-left: -10px;
+        // display: inline-block;
+        // position: absolute;
+        // top: 0;
+        // left: 0;
+
+}
+
+.wholeNote {
+    background-color: aquamarine;
+    margin-top: 40px;
+    // margin-left: 10px;
+
+    // display: inline-block;
+    // position: absolute;
+    // top: 40px;
+    // left: 0;
+}
+
+#n2,
+#n4,
+#n7,
+#n9,
+#n11 {
+    margin-left: -20px !important;
+}
+
+.allNotes {
+    width: 20px;
+    height: 40px;
+    // border: 1px solid lightseagreen;
+    border-right: 1px solid;
+    &:last-child {
+        border: none;
+    }
+}

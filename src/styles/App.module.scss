@@ -31,3 +31,33 @@
         }
     }
 }
+
+// .trashIcon {
+//     background-color: transparent;
+//     border: none;
+//     cursor: pointer;
+//     margin: 0;
+//     opacity: 0.3;
+//     transition: 0.2s;
+
+//     &:hover {
+//         opacity: 0.8;
+//         transition: 0.2s;
+//         border: none;
+//         background-color: transparent;
+//         box-shadow: none;
+//     }
+
+//     // padding: 0;
+
+//     & svg {
+//         stroke: $disabled;
+//         width: 24px;
+//         height: 24px;
+//     }
+// }
+
+.partDetailsContainer {
+    margin: 1rem;
+    padding: 1rem;
+}

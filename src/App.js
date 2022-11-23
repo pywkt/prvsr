@@ -14,9 +14,11 @@ import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
 import { ReactComponent as Plus } from './icons/plus.svg';
 import InstrumentPartRow from './components/InstrumentPartRow';
+import SelectedPartDetails from './components/SelectedPartDetails';
 import styles from './styles/App.module.scss';
 
 function App() {
+  // console.log('app')
   const { register, handleSubmit, setValue, control, getValues, watch } = useForm({
     defaultValues: {
       instrumentArray: {
@@ -29,7 +31,7 @@ function App() {
   });
   const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
-  const [scaleData, setScaleData] = useState({})
+  // const [scaleData, setScaleData] = useState({})
 
   const processMinor = (data) => {
     console.log('processMinor data:', data)
@@ -50,7 +52,7 @@ function App() {
     currentScaleData.current = data
     const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
 
-    setScaleData(currentLoop.scaleData)
+    // setScaleData(currentLoop.scaleData)
     return currentLoop
   }
 
@@ -137,6 +139,15 @@ function App() {
 
   const activeParts = useRef({})
 
+  const [selectedPart, setSelectedPart] = useState(0)
+  // const [currentNote, setCurrentNote] = useState('')
+
+  const noteRef = useRef('')
+
+  const setCurrentNote = (value) => {
+    setValue(`instrumentArray.songData.currentNote`, value)
+  }
+
   const addToTransport = async (data, index, steps) => {
     // console.log("data:", data)
     // Tone.Transport.bpm.value = 120
@@ -154,6 +165,13 @@ function App() {
         const isFM = /fmSynth/.test(instrument.name)
         const isAM = /amSynth/.test(instrument.name)
         const isPluck = /pluckSynth/.test(instrument.name)
+
+        // console.log(value.note)
+
+        if (selectedPart === index) {
+          setCurrentNote(value.note)
+        }
+
 
         instrument.triggerAttackRelease(isMono || isFM || isAM || isPluck ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
@@ -236,10 +254,9 @@ function App() {
         </button>
       </div>
 
-
-      <p>
-        <strong>{scaleData?.name}</strong>
-      </p>
+      <div className={styles.partDetailsContainer}>
+        <SelectedPartDetails currentNote={watch(`instrumentArray.songData.currentNote`)} />
+      </div>
     </div>
 
   );

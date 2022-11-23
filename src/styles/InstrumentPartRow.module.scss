@@ -1,3 +1,5 @@
+@import './globals.module.scss';
+
 .instrumentGrid {
     display: grid;
     grid-template-columns: auto 1fr 2fr;
@@ -107,5 +109,37 @@
 
     & input[type="number"] {
         width: 40px;
+    }
+}
+
+.addDeleteContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.trashIcon {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    opacity: 0.3;
+    transition: 0.2s;
+
+    &:hover {
+        opacity: 0.8;
+        transition: 0.2s;
+        border: none;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    // padding: 0;
+
+    & svg {
+        stroke: $disabled;
+        width: 24px;
+        height: 24px;
     }
 }
