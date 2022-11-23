@@ -3,7 +3,7 @@
 .notesContainer {
     width: 600px;
     height: 600px;
-    border: 1px solid lightblue;
+    // border: 1px solid lightblue;
 
     display: flex;
     // position: relative;
@@ -21,41 +21,64 @@
     gap: 20px
 }
 
+$scale: 2;
+$hNoteWidth: 20px * $scale;
+$hNoteMargin: -20px * $scale;
+$hNoteTranslateX: -10px * $scale;
+$wNoteHeight: 75px * $scale;
+$allNoteWidth: 25px * $scale;
+$allNoteHeight: 50px * $scale;
+$keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
+
+
 .halfNote {
     background-color: slategrey;
-    transform: translateX(-13px);
-    border-bottom: 1px solid;
+    transform: translateX($hNoteTranslateX);
+    // border-bottom: 1px solid $border;
+    width: $hNoteWidth !important;
 }
 
 .wholeNote {
     background-color: ghostwhite;
     margin-top: 0px;
-    height: 60px !important;
-    border-bottom: 1px solid;
+    height: $wNoteHeight !important;
+    // width: 10px !important;
+    border-bottom: 1px solid $border;
 }
 
 #n2,
 #n4,
 #n7,
 #n9,
-#n11 {
-    margin-left: -20px !important;
+#n11,
+#n14,
+#n16,
+#n19,
+#n21,
+#n23 {
+    margin-left: $hNoteMargin !important;
+    // box-shadow: $keyShadow;
 }
 
 .allNotes {
-    width: 20px;
-    height: 40px;
-    border-right: 1px solid;
-    border-radius: 3px;
+    width: $allNoteWidth;
+    height: $allNoteHeight;
+    border-top: 1px solid $border;
+    border-right: 1px solid $border;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    box-shadow: $keyShadow;
 
     &:first-child {
-        border-left: 1px solid;
+        border-left: 1px solid $border;
     }
 
     &:last-child {
         border: none;
-        border-bottom: 1px solid;
-        border-right: 1px solid;
+        border-top: 1px solid lightgrey;
+        border-bottom: 1px solid $border;
+        border-right: 1px solid $border;
     }
 }
 

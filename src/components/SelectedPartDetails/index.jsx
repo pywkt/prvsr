@@ -7,10 +7,10 @@ const SelectedPartDetails = ({ currentNote }) => {
         return null
     }
 
-    // if (currentNote) {
-        // console.log('component:', currentNote)
-    //     console.log('tonal:', currentNote.map(Note.chroma))
-    // }
+    if (currentNote) {
+        console.log('component:', currentNote)
+        console.log('tonal:', currentNote.map(Note.chroma))
+    }
 
     // console.log('currentNote:', currentNote)
     // console.log(Note.get(currentNote))
@@ -20,7 +20,19 @@ const SelectedPartDetails = ({ currentNote }) => {
 
     const allNotes = Array.apply(null, { length: 12 })
 
-    const halfNoteIndexes = [1, 3, 6, 8, 10]
+    const halfNoteIndexes = [1, 3, 6, 8, 10, 13, 15, 18, 20, 22]
+
+    let noteIndex = currentNote?.map(Note.chroma)
+    // const currentOctave = [...currentNote?.map(n => n.substr(-1))]
+    // console.log("oct:", currentOctave)
+    
+    // if (currentOctave[0] === '4') {
+    //     const fff = noteIndex.map(n => n = n + 12)
+    //     console.log("fff:", fff)
+    //     noteIndex = fff
+    // }
+
+    // console.log("note:", noteIndex)
 
     return (
         <div>
@@ -38,7 +50,7 @@ const SelectedPartDetails = ({ currentNote }) => {
                                 className={`
                                 ${styles.allNotes} 
                                 ${styles.halfNote} 
-                                ${currentNote?.map(Note.chroma).includes(index) ? styles.filled : ""}`}
+                                ${noteIndex.includes(index) ? styles.filled : ""}`}
                             />
 
                         )
