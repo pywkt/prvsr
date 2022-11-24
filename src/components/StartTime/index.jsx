@@ -3,8 +3,6 @@ import styles from '../../styles/globals.module.scss'
 
 const StartTime = ({ currentTime, index, register, setValue }) => {
     const setNewTime = () => {
-        console.log("currentTime:", currentTime)
-
         // const updatedTime = Number(currentTime.split(':')[0]) + 4
         const updatedTime = Number(currentTime.split(':')[0])
         setValue(`instrumentArray.${index}.startTime.bar`, updatedTime)
