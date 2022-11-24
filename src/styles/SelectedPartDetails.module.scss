@@ -88,7 +88,7 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
 
     & div {
         padding-right: 1rem;
-            display: flex;
+        display: flex;
     }
 }
 
@@ -98,4 +98,24 @@ $keyShadow: -1px 1px 2px rgba(0, 0, 0, 0.2);
 
 .partDetailsText {
     font-size: 0.75rem;
+}
+
+.hidePianoButton {
+    text-align: center;
+    margin-top: 1rem;
+
+    & button {
+        background-color: $background;
+        border: 1px solid $border;
+        font-size: 0.75rem;
+        transition: $transitionTime;
+        border-radius: 6px;;
+        padding: 0.2rem 0.6rem;
+        cursor: pointer;
+
+        &:hover {
+            background-color: $backgroundDark;
+            transition: $transitionTime;
+        }
+    }
 }
