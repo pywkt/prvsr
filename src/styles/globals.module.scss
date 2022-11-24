@@ -93,3 +93,27 @@ input[type="checkbox"] {
         transition: 0.15s;
     }
 }
+
+.simpleButton {
+    background-color: $background;
+    border: 1px solid $border;
+    font-size: 0.75rem;
+    transition: $transitionTime;
+    border-radius: 6px;
+    ;
+    padding: 0.2rem 0.6rem;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $backgroundDark;
+        transition: $transitionTime;
+    }
+
+    &:disabled {
+        cursor: default;
+
+        &:hover {
+            background-color: $background;
+        }
+    }
+}

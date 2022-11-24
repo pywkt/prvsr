@@ -227,6 +227,8 @@ function App() {
     }
   }
 
+  const logTime = () => Tone.Transport.position
+
   return (
     <div className="App">
 
@@ -242,6 +244,7 @@ function App() {
           <React.Fragment key={item.id}>
             <InstrumentPartRow
               commitInstrument={(i) => commitInstrument(i)}
+              currentTime={logTime()}
               data={getValues(`instrumentArray.${index}`)}
               deletePart={(i) => deletePart(i)}
               disabled={watch(`instrumentArray.${index}.slug`)}
@@ -251,6 +254,7 @@ function App() {
               register={register}
               setSelectedPart={setSelectedPart}
               setInstrumentName={(name) => setValue(`instrumentArray.songData.${index}.name`, name)}
+              setValue={setValue}
               tone={Tone}
             />
           </React.Fragment>

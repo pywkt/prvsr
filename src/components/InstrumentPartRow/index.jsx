@@ -6,7 +6,7 @@ import Effects from '../Effects';
 import { ReactComponent as Chevron } from '../../icons/chevron-up.svg';
 import styles from '../../styles/InstrumentPartRow.module.scss'
 
-const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index, instrument, instruments, register, setInstrumentName, setSelectedPart, tone }) => {
+const InstrumentPartRow = ({ commitInstrument, currentTime, data, deletePart, disabled, index, instrument, instruments, register, setInstrumentName, setSelectedPart, setValue, tone }) => {
     const { getCollapseProps, getToggleProps } = useCollapse({ defaultExpanded: true });
 
     const [instrumentOpen, setInstrumentOpen] = useState(false)
@@ -44,12 +44,14 @@ const InstrumentPartRow = ({ commitInstrument, data, deletePart, disabled, index
                     {/* Instrument Selector */}
                     <div className={styles.instrumentSelectorGrid}>
                         <InstrumentSelectorSection
+                            currentTime={currentTime}
                             index={index}
                             instruments={instruments}
                             register={register}
                             data={data}
                             commitInstrument={(i) => commitInstrument(i)}
                             deletePart={(i) => deletePart(i)}
+                            setValue={setValue}
                         />
                     </div>
 

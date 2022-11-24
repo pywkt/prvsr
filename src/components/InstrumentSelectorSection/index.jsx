@@ -13,7 +13,7 @@ import NotesToUse from '../NotesToUse';
 import { ReactComponent as Trash } from '../../icons/trash.svg';
 import styles from '../../styles/InstrumentPartRow.module.scss';
 
-const InstrumentSelectorSection = ({ instruments, register, index, data, commitInstrument, deletePart}) => {
+const InstrumentSelectorSection = ({ currentTime, setValue, instruments, register, index, data, commitInstrument, deletePart}) => {
 
     return (
         <>
@@ -36,7 +36,7 @@ const InstrumentSelectorSection = ({ instruments, register, index, data, commitI
             <div className={styles.partSettings}>
                 <UnisonCount index={index} register={register} />
                 <Octave index={index} register={register} />
-                <StartTime index={index} register={register} />
+                <StartTime currentTime={currentTime} index={index} register={register} setValue={setValue} />
                 <NumberOfBars index={index} register={register} />
                 <NumberOfLoops index={index} register={register} />
                 <ProbabilityAmount index={index} register={register} />
