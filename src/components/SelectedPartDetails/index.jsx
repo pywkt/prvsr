@@ -4,7 +4,6 @@ import styles from '../../styles/SelectedPartDetails.module.scss';
 
 const SelectedPartDetails = ({ currentNote, instrumentName }) => {
     const [isVisible, setIsVisible] = useState(true);
-    console.log(currentNote)
 
     const allNotes = Array.apply(null, { length: 12 })
     const halfNoteIndexes = [1, 3, 6, 8, 10, 13, 15, 18, 20, 22]
