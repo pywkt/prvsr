@@ -5,6 +5,9 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Sequencer from './components/Sequencer';
 import { piano01 } from './instruments/piano01'
+import { moog01 } from './instruments/moog01';
+import { stylophone01 } from './instruments/stylophone01';
+import { casio01 } from './instruments/casio01';
 import { synth01 } from './instruments/synth01'
 import { monoSynth } from './instruments/monoSynth';
 import { amSynth } from './instruments/amSynth';
@@ -68,7 +71,10 @@ function App() {
     { name: "AMSynth", slug: "amSynth", type: 'amSynth' },
     { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
     { name: "PluckSynth", slug: "pluckSynth", type: 'pluckSynth' },
-    { name: "Piano 01", slug: "piano01", type: 'piano' }
+    { name: "Piano 01", slug: "piano01", type: 'piano' },
+    { name: "Moog 01", slug: "moog01", type: 'moog01' },
+    { name: "Stylophone 01", slug: "stylophone01", type: 'stylophone01' },
+    { name: "Casio 01", slug: "casio01", type: 'casio01' }
   ]
   // const notesToUse = ['1n', '2n', '4n', '8n', '16n']
 
@@ -96,6 +102,12 @@ function App() {
           return fmSynth(index)
         case 'pluckSynth':
           return pluckSynth(index)
+        case 'moog01':
+          return moog01(index)
+        case 'stylophone01':
+          return stylophone01(index)
+        case 'casio01':
+          return casio01(index)
         default:
           return 'piano01-default'
       }
