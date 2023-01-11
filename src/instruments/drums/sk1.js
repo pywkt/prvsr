@@ -1,6 +1,6 @@
 export const sk1Data = {
     name: 'sk1',
-    baseUrl: "http://localhost:3000/samples/drums/sk1/",
+    baseUrl: "/samples/drums/sk1/",
     parts: ["kick", "snare", "hihat", "ohihat", "lowtom", "hitom"],
     samples: {
         C4: "kick.wav",

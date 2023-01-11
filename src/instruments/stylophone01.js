@@ -11,7 +11,7 @@ export const stylophone01 = (index, remove) => {
                 C4: "stylophone01.mp3"
             },
             release: 10,
-            baseUrl: "http://localhost:3000/samples/instruments/stylophone01/",
+            baseUrl: "/samples/instruments/stylophone01/",
         }), channel: new Tone.Channel({ channelCount: 2 })
     }
 

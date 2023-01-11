@@ -24,7 +24,7 @@ export const piano01 = (index, remove) => {
         G4: "g-4.mp3",
       },
       release: 10,
-      baseUrl: "http://localhost:3000/samples/",
+      baseUrl: "/samples/",
     }), channel: new Tone.Channel({ channelCount: 2 })
   }
 

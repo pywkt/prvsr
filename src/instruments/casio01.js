@@ -11,7 +11,7 @@ export const casio01 = (index, remove) => {
                 C4: "casio01.mp3"
             },
             release: 10,
-            baseUrl: "http://localhost:3000/samples/instruments/casio01/",
+            baseUrl: "/samples/instruments/casio01/",
         }), channel: new Tone.Channel({ channelCount: 2 })
     }
 

@@ -11,7 +11,7 @@ export const moog01 = (index, remove) => {
                 C4: "moog01.mp3"
             },
             release: 10,
-            baseUrl: "http://localhost:3000/samples/instruments/moog01/",
+            baseUrl: "/samples/instruments/moog01/",
         }), channel: new Tone.Channel({ channelCount: 2 })
     }
 
