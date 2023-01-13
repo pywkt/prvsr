@@ -16,7 +16,7 @@ const Sequencer = ({ setDrumPart, tone }) => {
 
     const drumRef = useRef([])
     const drumRateRef = useRef(2)
-    const newRef = useRef({ kick: [], snare: [], hihat: [], ohihat: [], lowtom: [], hitom: [] });
+    const newRef = useRef({ kick: [], kick1: [], snare: [], hihat: [], ohihat: [], lowtom: [], hitom: [], conga1: [], conga2: [] });
 
     const changeDrumSteps = (newSteps) => {
         setDrumSteps(Number(newSteps))
@@ -56,6 +56,7 @@ const Sequencer = ({ setDrumPart, tone }) => {
     }
 
     const handleKickChange = (index, track) => {
+        console.log('track:', track)
         const bars = String(index / 4).split(".")[0]
         const qNotes = index % 4
 
@@ -72,6 +73,10 @@ const Sequencer = ({ setDrumPart, tone }) => {
                 case 'lowtom':
                     return 'G4';
                 case 'hitom':
+                    return 'A4'
+                case 'conga1':
+                    return 'G4'
+                case 'conga2':
                     return 'A4'
                 default:
                     return 'C4'
