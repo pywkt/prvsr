@@ -1,7 +1,6 @@
 import { Chord, Note, Scale } from '@tonaljs/tonal';
 import { getProgression } from './getProgression';
 import { getRand } from '../getRand';
-// import { noteLens } from '../config';
 
 /**
  * Generates a major scale progression and/or a specified amount of chords from the generated progression

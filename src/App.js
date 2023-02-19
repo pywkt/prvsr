@@ -5,19 +5,8 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Sequencer from './components/Sequencer';
 import * as Sn from './instruments';
-// import { piano01 } from './instruments/piano01'
-// import { moog01 } from './instruments/moog01';
-// import { stylophone01 } from './instruments/stylophone01';
-// import { casio01 } from './instruments/casio01';
-// import { synth01 } from './instruments/synth01'
-// import { monoSynth } from './instruments/monoSynth';
-// import { amSynth } from './instruments/amSynth';
-// import { fmSynth } from './instruments/fmSynth';
-// import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
-// import { buildLoop } from './util/buildLoop';
-// import { getRand } from './util/getRand';
 import { ReactComponent as Plus } from './icons/plus.svg';
 import InstrumentPartRow from './components/InstrumentPartRow';
 import SelectedPartDetails from './components/SelectedPartDetails';
@@ -52,32 +41,12 @@ function App() {
   const getKeyData = (tonic, scale, partData) =>
     scale === "major" ? handleBuildLoop(Key.majorKey(tonic), partData) : processMinor(Key.minorKey(tonic))
 
-
-  // Move to a config file
-  const instruments = [
-    { name: "", slug: "" },
-    { name: "Synth 01", slug: "synth01", type: 'synth' },
-    { name: "MonoSynth", slug: "monoSynth", type: 'monoSynth' },
-    { name: "AMSynth", slug: "amSynth", type: 'amSynth' },
-    { name: "FMSynth", slug: "fmSynth", type: 'fmSynth' },
-    { name: "PluckSynth", slug: "pluckSynth", type: 'pluckSynth' },
-    { name: "Piano 01", slug: "piano01", type: 'piano' },
-    { name: "Moog 01", slug: "moog01", type: 'moog01' },
-    { name: "Stylophone 01", slug: "stylophone01", type: 'stylophone01' },
-    { name: "Casio 01", slug: "casio01", type: 'casio01' }
-  ]
-  // const notesToUse = ['1n', '2n', '4n', '8n', '16n']
-
   const onSubmit = async (data) => {
 
   }
 
   const buildIndividualPart = async (data, index) => {
-    console.log('onSubmit 01:', data)
-
-    const slug = instruments.find(i => i.slug === data.instrument)
-    console.log('slug:', slug)
-
+    const slug = Sn.instruments.find(i => i.slug === data.instrument)
     const getInstrumentData = () => {
       switch (slug.type) {
         case 'piano':
@@ -104,8 +73,6 @@ function App() {
     }
 
     const inst = await getInstrumentData()[`${slug.type}-${index}`]
-    console.log('*** inst:', inst)
-
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
 
@@ -136,30 +103,11 @@ function App() {
 
     return getValues(`instrumentArray.${index}`)
   }
-
-  // console.log('bpm:', watch(`instrumentArray.songData.bpm`))
-
   const activeParts = useRef({})
 
   const [selectedPart, setSelectedPart] = useState(0)
-  // console.log(selectedPart)
-  // const [currentNote, setCurrentNote] = useState('')
-
-  // const noteRef = useRef('')
-
-  // const setCurrentNote = (value, index) => {
-  //   console.log('value, index, selectedPart:', value, index, selectedPart)
-  //   console.log('songData:', getValues(`instrumentArray.songData`))
-  //   if (selectedPart === index) {
-  //     setValue(`instrumentArray.songData.${selectedPart}.currentNote`, value)
-  //   }
-  // }
 
   const addToTransport = async (data, index, steps) => {
-    // console.log("data:", data)
-    // Tone.Transport.bpm.value = 120
-    // Tone.Transport.bpm.value = watch(`instrumentArray.songData.bpm`);
-
     Tone.loaded().then(async () => {
 
       if (activeParts.current[index]) {
@@ -173,14 +121,7 @@ function App() {
         const isAM = /amSynth/.test(instrument.name)
         const isPluck = /pluckSynth/.test(instrument.name)
 
-        // console.log(value.note)
-
-        // if (selectedPart === index) {
-        // setCurrentNote(value.note, index)
-        // }
-
         setValue(`instrumentArray.songData.${index}.currentNote`, value.note)
-
 
         instrument.triggerAttackRelease(isMono || isFM || isAM || isPluck ? value.note[0] : value.note, value.noteLen, time, value.velocity);
       }), data.partData).start(`${data.startTime.bar}:${data.startTime.beat}:0`)
@@ -188,10 +129,7 @@ function App() {
 
       activeParts.current[index].probability = Number(data.probability)
 
-
       if ((data.type) === 'drum') {
-        // console.log("instrumentArray:", getValues(`instrumentArray`))
-        // console.log("activeParts:", activeParts.current)
         activeParts.current[index].loop = true
         activeParts.current[index].loopStart = "0:0:0"
         activeParts.current[index].loopEnd = `${steps / 4}:0:0`
@@ -201,9 +139,6 @@ function App() {
       setValue(`instrumentArray.${index}.part`, activeParts.current[index])
 
       delete activeParts[index]
-
-      const fff = getValues(`instrumentArray.${index}`)
-      console.log('fff:', fff)
     })
   }
 
@@ -222,7 +157,6 @@ function App() {
   }
 
   const setDrumPart = async (data, steps, drumRate) => {
-    // console.log('drumData:', data)
     setValue(`instrumentArray.songData.drumPlaybackRate`, drumRate)
     for (const [key, value] of Object.entries(data)) {
       await addToTransport(value, key, steps)
@@ -252,7 +186,7 @@ function App() {
               disabled={watch(`instrumentArray.${index}.slug`)}
               index={index}
               instrument={getValues(`instrumentArray.${index}.slug`)}
-              instruments={instruments}
+              instruments={Sn.instruments}
               register={register}
               setSelectedPart={setSelectedPart}
               setInstrumentName={(name) => setValue(`instrumentArray.songData.${index}.name`, name)}
@@ -272,10 +206,7 @@ function App() {
           Add <Plus />
         </button>
       </div>
-
-
     </div>
-
   );
 }
 

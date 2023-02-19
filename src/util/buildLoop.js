@@ -1,16 +1,4 @@
-// import {
-//     addOctave,
-//     generateNoteLengths,
-//     generateTimeBars,
-//     makeBars,
-//     makeLoops,
-//     // processMajor,
-//     trimNotes
-// } from './partBuilders';
-
 import * as PB from './partBuilders';
-
-// import { processMajor } from './partBuilders/processMajor';
 
 export const buildLoop = (data, unisonCount, maxBars, loopTimes, noteLensToUse, oct, startTime) => {
     const { partData, scaleData } = PB.processMajor(data, false, 30);
