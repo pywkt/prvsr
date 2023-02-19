@@ -6,8 +6,8 @@ export const sk5Data = {
     samples: {
         C4: "kick1.wav",
         D4: "snare1.wav",
-        E4: "hihat1.wav",
-        F4: "hihat2.wav",
+        E4: "hihat2.wav",
+        F4: "hihat1.wav",
         G4: "conga1.wav",
         A4: "conga2.wav"
         // C4: "kick1.wav",
