@@ -4,24 +4,26 @@ import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Sequencer from './components/Sequencer';
-import { piano01 } from './instruments/piano01'
-import { moog01 } from './instruments/moog01';
-import { stylophone01 } from './instruments/stylophone01';
-import { casio01 } from './instruments/casio01';
-import { synth01 } from './instruments/synth01'
-import { monoSynth } from './instruments/monoSynth';
-import { amSynth } from './instruments/amSynth';
-import { fmSynth } from './instruments/fmSynth';
-import { pluckSynth } from './instruments/pluckSynth';
+import * as Sn from './instruments';
+// import { piano01 } from './instruments/piano01'
+// import { moog01 } from './instruments/moog01';
+// import { stylophone01 } from './instruments/stylophone01';
+// import { casio01 } from './instruments/casio01';
+// import { synth01 } from './instruments/synth01'
+// import { monoSynth } from './instruments/monoSynth';
+// import { amSynth } from './instruments/amSynth';
+// import { fmSynth } from './instruments/fmSynth';
+// import { pluckSynth } from './instruments/pluckSynth';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
+// import { buildLoop } from './util/buildLoop';
+// import { getRand } from './util/getRand';
 import { ReactComponent as Plus } from './icons/plus.svg';
 import InstrumentPartRow from './components/InstrumentPartRow';
 import SelectedPartDetails from './components/SelectedPartDetails';
 import styles from './styles/App.module.scss';
 
 function App() {
-  // console.log('app')
   const { register, handleSubmit, setValue, control, getValues, watch } = useForm({
     defaultValues: {
       instrumentArray: {
@@ -32,9 +34,8 @@ function App() {
       }
     }
   });
-  const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
-  // const [scaleData, setScaleData] = useState({})
+  const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
   const processMinor = (data) => {
     console.log('processMinor data:', data)
@@ -42,20 +43,9 @@ function App() {
 
   const currentScaleData = useRef({})
 
-  /**
-   * buildLoop()
-   * @param {array} data 
-   * @param {number} unisonNotes
-   * @param {number} maxBars
-   * @param {number} loopTimes
-   * @returns 
-   */
   const handleBuildLoop = async (data, partData) => {
-    // console.log('partData:', partData)
     currentScaleData.current = data
     const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
-
-    // setScaleData(currentLoop.scaleData)
     return currentLoop
   }
 
@@ -91,23 +81,23 @@ function App() {
     const getInstrumentData = () => {
       switch (slug.type) {
         case 'piano':
-          return piano01(index)
+          return Sn.piano01(index)
         case 'synth':
-          return synth01(index)
+          return Sn.synth01(index)
         case 'monoSynth':
-          return monoSynth(index)
+          return Sn.monoSynth(index)
         case 'amSynth':
-          return amSynth(index)
+          return Sn.amSynth(index)
         case 'fmSynth':
-          return fmSynth(index)
+          return Sn.fmSynth(index)
         case 'pluckSynth':
-          return pluckSynth(index)
+          return Sn.pluckSynth(index)
         case 'moog01':
-          return moog01(index)
+          return Sn.moog01(index)
         case 'stylophone01':
-          return stylophone01(index)
+          return Sn.stylophone01(index)
         case 'casio01':
-          return casio01(index)
+          return Sn.casio01(index)
         default:
           return 'piano01-default'
       }
@@ -227,7 +217,7 @@ function App() {
   const deletePart = (index) => {
     const partToDelete = getValues(`instrumentArray.${index}.part`)
     partToDelete.dispose()
-    synth01(index, remove)
+    Sn.synth01(index, remove)
     remove(index)
   }
 
