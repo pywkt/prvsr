@@ -1,12 +1,14 @@
 @import './globals.module.scss';
 
 .songDetailsContainer {
-    padding: $sp_half;
+    padding: $sp_half $sp_half $sp_normal $sp_normal;
     text-align: right;
     font-size: $fSizeNormal;
     position: fixed;
     top: 70px;
     right: 0;
+    background-color: rgba($background, 0.6);
+    border-bottom-left-radius: 8px;
 
     & ul {
         padding: 0;

@@ -24,7 +24,7 @@ const InstrumentPartRow = ({ commitInstrument, currentTime, data, deletePart, di
         <>
             <div
                 {...getToggleProps({ onClick: handleInstrumentOpen })}
-                className={styles.sequencerAccordionLabel}
+                className={`${styles.sequencerAccordionLabel} ${index % 2 === 0 ? styles.even : styles.odd}`}
             >
                 <div className={styles.instrumentPartLabel}>
                     <span className={styles.titleAndButtonContainer}>

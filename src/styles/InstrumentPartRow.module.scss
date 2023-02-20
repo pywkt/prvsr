@@ -9,7 +9,7 @@
     margin: 0 2rem 2rem 2rem;
     font-size: 0.75rem;
     gap: 0.6rem;
-    border-bottom: 1px solid lightgrey;
+    // border-bottom: 1px solid lightgrey;
 }
 
 .instrumentSelectorGrid {
@@ -39,17 +39,24 @@
             width: 40px;
         }
     }
+
+
 }
 
 .instrumentEffectsGrid {
     grid-area: effects;
     padding: 1rem;
+
 }
 
 .sequencerAccordionLabel {
+    // background-color: #fafafa;
+    width: 100%;
+    border-top: 1px solid darken(#fafafa, 10%);
+    border-bottom: 1px solid darken(#fafafa, 10%);
     cursor: pointer;
-    font-size: 0.75rem;
-    padding-bottom: 0.3rem;
+    font-size: $fSizeNormal;
+    padding: 0.3rem 0;
 
     & .effectsLabel {
         display: flex;
@@ -62,6 +69,16 @@
         stroke-width: 1px;
         margin: 0 0.3rem;
     }
+}
+
+.odd {
+    background-color: $accordionLabel
+    // background-color: #fafafa;
+}
+
+.even {
+    background-color: darken($accordionLabel, 5%);
+    // background-color: darken(#fafafa, 2%);
 }
 
 .instrumentPartLabel {
@@ -134,8 +151,6 @@
         background-color: transparent;
         box-shadow: none;
     }
-
-    // padding: 0;
 
     & svg {
         stroke: $disabled;
