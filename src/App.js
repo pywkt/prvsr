@@ -4,6 +4,7 @@ import * as Tone from 'tone';
 import { useForm, useFieldArray } from 'react-hook-form';
 import Header from './components/Header';
 import Sequencer from './components/Sequencer';
+import SongDetails from './components/SongDetails';
 import * as Sn from './instruments';
 import { allNotes } from './config';
 import { buildLoop, getRand } from './util';
@@ -30,11 +31,13 @@ function App() {
     console.log('processMinor data:', data)
   }
 
-  const currentScaleData = useRef({})
+  const currentNoteDate = useRef({});
+  const currentScaleData = useRef({});
 
   const handleBuildLoop = async (data, partData) => {
-    currentScaleData.current = data
-    const currentLoop = buildLoop(!currentScaleData.current ? data : currentScaleData.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
+    currentNoteDate.current = data
+    const currentLoop = buildLoop(!currentNoteDate.current ? data : currentNoteDate.current, Number(partData.unisonCount), Number(partData.maxBars), Number(partData.numberOfLoops), partData.notesToUse, partData.octave, partData.startTime)
+    currentScaleData.current = currentLoop?.scaleData;
     return currentLoop
   }
 
@@ -76,9 +79,9 @@ function App() {
 
     const validNotes = Object.keys(data.notesToUse).filter(k => data.notesToUse[k] === true);
 
-    const newData = Object.keys(currentScaleData.current).length === 0 ?
+    const newData = Object.keys(currentNoteDate.current).length === 0 ?
       await getKeyData(allNotes[getRand(0, allNotes.length)], "major", { ...data, notesToUse: validNotes }) :
-      await getKeyData(currentScaleData.current.tonic, "major", { ...data, notesToUse: validNotes })
+      await getKeyData(currentNoteDate.current.tonic, "major", { ...data, notesToUse: validNotes })
 
     setValue(`instrumentArray.${index}.slug`, inst[slug.type])
     setValue(`instrumentArray.${index}.channel`, inst.channel)
@@ -169,6 +172,7 @@ function App() {
     <div className="App">
 
       <Header tone={Tone} />
+      <SongDetails scaleData={currentScaleData.current} />
       <Sequencer setDrumPart={(data, steps, drumRate) => setDrumPart(data, steps, drumRate)} tone={Tone} />
 
       <div className={styles.partDetailsContainer}>
