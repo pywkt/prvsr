@@ -25,7 +25,7 @@ export const synth01 = (index, remove) => {
         synth.name = `synth-${index}`
         channel.name = `channel-${index}`
 
-        console.log('*** making synth global:', globalEffects[index] || null)
+        // console.log('*** making synth global:', globalEffects[index] || null)
         synth.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
         // synth.connect(channel)
         // channel.toDestination()

@@ -42,14 +42,14 @@ const LowpassCombFilter = ({ global, effectArray, addEffect, allEffects, effect,
     }
 
     const setResonance = (e) => {
-        console.log('global:', global)
+        // console.log('global:', global)
         effectToUse.set({
             resonance: Number(e.target.value),
         })
     }
 
     const setDampening = (e) => {
-        console.log('global:', global)
+        // console.log('global:', global)
         effectToUse.set({
             dampening: Number(e.target.value),
         })

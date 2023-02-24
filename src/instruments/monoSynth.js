@@ -26,7 +26,7 @@ export const monoSynth = (index, remove) => {
         const { monoSynth, channel } = allSynths[`monoSynth-${index}`]
         monoSynth.name = `monoSynth-${index}`
         channel.name = `channel-${index}`
-        console.log('irsentirst:', globalEffects)
+        // console.log('irsentirst:', globalEffects)
         // monoSynth.filter.frequency.override = false
         if (globalMods?.oscillator) {
              monoSynth.set({oscillator: {...globalMods.oscillator}})

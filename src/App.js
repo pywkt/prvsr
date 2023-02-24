@@ -28,7 +28,7 @@ function App() {
   const { fields, append, remove } = useFieldArray({ control, name: "instrumentArray" })
 
   const processMinor = (data) => {
-    console.log('processMinor data:', data)
+    // console.log('processMinor data:', data)
   }
 
   const currentNoteDate = useRef({});

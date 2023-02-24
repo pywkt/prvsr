@@ -16,29 +16,29 @@ export const moog01 = (index, remove) => {
     }
 
     if (!allMoogs01[index]) {
-        console.log('*** !allMoogs01[index]')
+        // console.log('*** !allMoogs01[index]')
         allMoogs01[`moog01-${index}`] = makeNewMoog01()
     }
 
     if (remove) {
-        console.log('*** remove && Object.keys !== 0')
+        // console.log('*** remove && Object.keys !== 0')
         allMoogs01[`moog01-${index}`].moog01.dispose()
         delete allMoogs01[`moog01-${index}`]
     }
 
     if (allMoogs01[`moog01-${index}`]) {
         const { moog01, channel } = allMoogs01[`moog01-${index}`]
-        console.log('moog01ToChange:', moog01, channel)
-        console.log('*** moog01 exists. replacing:', allMoogs01)
+        // console.log('moog01ToChange:', moog01, channel)
+        // console.log('*** moog01 exists. replacing:', allMoogs01)
         moog01.name = `moog01-${index}`
         channel.name = `channel-${index}`
 
-        console.log('*** making moog01 global:', globalEffects[index] || null)
+        // console.log('*** making moog01 global:', globalEffects[index] || null)
         moog01.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
         // channel.toDestination()
     }
 
-    console.log('allMoogs01:', allMoogs01)
+    // console.log('allMoogs01:', allMoogs01)
 
     return allMoogs01
 }

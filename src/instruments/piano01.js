@@ -29,29 +29,29 @@ export const piano01 = (index, remove) => {
   }
 
   if (!allPianos[index]) {
-    console.log('*** !allPianos[index]')
+    // console.log('*** !allPianos[index]')
     allPianos[`piano-${index}`] = makeNewPiano()
   }
 
   if (remove) {
-    console.log('*** remove && Object.keys !== 0')
+    // console.log('*** remove && Object.keys !== 0')
     allPianos[`piano-${index}`].piano.dispose()
     delete allPianos[`piano-${index}`]
   }
 
   if (allPianos[`piano-${index}`]) {
     const { piano, channel } = allPianos[`piano-${index}`]
-    console.log('pianoToChange:', piano, channel)
-    console.log('*** piano exists. replacing:', allPianos)
+    // console.log('pianoToChange:', piano, channel)
+    // console.log('*** piano exists. replacing:', allPianos)
     piano.name = `piano-${index}`
     channel.name = `channel-${index}`
 
-    console.log('*** making piano global:', globalEffects[index] || null)
+    // console.log('*** making piano global:', globalEffects[index] || null)
     piano.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
     // channel.toDestination()
   }
 
-  console.log('allPianos:', allPianos)
+  // console.log('allPianos:', allPianos)
 
   return allPianos
 }

@@ -50,7 +50,7 @@ const Chorus = ({ global, effectArray, addEffect, allEffects, effect, index, dis
     }
 
     const handleWet = (e, effect) => {
-        console.log('wet:', effectRef.current)
+        // console.log('wet:', effectRef.current)
         // allEffects[effect].effect.set({
         //     wet: Number(e.target.value),
         // })

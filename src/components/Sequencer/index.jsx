@@ -27,9 +27,9 @@ const Sequencer = ({ setDrumPart, tone }) => {
     }
 
     const makeDrums = () => {
-        console.log("sss:", selectedKit)
+        // console.log("sss:", selectedKit)
         setSelectedKit(makeNewDrums(selectedKit.name))
-        console.log("sss02:", selectedKit)
+        // console.log("sss02:", selectedKit)
 
         const drumData = getValues(`drums`)
         const drumParts = Object.keys(drumData)
@@ -41,7 +41,7 @@ const Sequencer = ({ setDrumPart, tone }) => {
             return drumRef.current[d] = { partData: [...allDrums[i].map(ad => ad)], slug: selectedKit.instrument.kit, channel: selectedKit.instrument.channel, name: d, startTime: drumData.startTime, type: 'drum' }
         })
 
-        console.log("drumRef.current:", drumRef.current)
+        // console.log("drumRef.current:", drumRef.current)
 
         setValue(`drums.channel`, selectedKit.instrument.channel)
         setDrumPart(drumRef.current, drumSteps, drumRateRef.current)
@@ -56,7 +56,7 @@ const Sequencer = ({ setDrumPart, tone }) => {
     }
 
     const handleKickChange = (index, track) => {
-        console.log('track:', track)
+        // console.log('track:', track)
         const bars = String(index / 4).split(".")[0]
         const qNotes = index % 4
 

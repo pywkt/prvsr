@@ -67,7 +67,7 @@ const InstrumentMods = ({ instrument, index }) => {
     const changeRelease = (value) => {
         globalMods.release = value
         instrument.set({ release: value})
-        console.log(instrument.get())
+        // console.log(instrument.get())
     }
 
     // const changeModulation = (e, param) => {

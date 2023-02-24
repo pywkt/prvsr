@@ -37,7 +37,7 @@ const StereoWidener = ({ global, effectArray, addEffect, allEffects, effect, ind
     }
 
     const setWet = (e) => {
-        console.log('global:', global)
+        // console.log('global:', global)
         effectToUse.set({
             wet: Number(e.target.value),
         })

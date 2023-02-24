@@ -16,29 +16,29 @@ export const casio01 = (index, remove) => {
     }
 
     if (!allParts[index]) {
-        console.log('*** !allParts[index]')
+        // console.log('*** !allParts[index]')
         allParts[`casio01-${index}`] = makeNewCasio01()
     }
 
     if (remove) {
-        console.log('*** remove && Object.keys !== 0')
+        // console.log('*** remove && Object.keys !== 0')
         allParts[`casio01-${index}`].casio01.dispose()
         delete allParts[`casio01-${index}`]
     }
 
     if (allParts[`casio01-${index}`]) {
         const { casio01, channel } = allParts[`casio01-${index}`]
-        console.log('casio01ToChange:', casio01, channel)
-        console.log('*** casio01 exists. replacing:', allParts)
+        // console.log('casio01ToChange:', casio01, channel)
+        // console.log('*** casio01 exists. replacing:', allParts)
         casio01.name = `casio01-${index}`
         channel.name = `channel-${index}`
 
-        console.log('*** making casio01 global:', globalEffects[index] || null)
+        // console.log('*** making casio01 global:', globalEffects[index] || null)
         casio01.chain(channel, ...globalEffects?.[index] || [], Tone.Destination)
         // channel.toDestination()
     }
 
-    console.log('allParts:', allParts)
+    // console.log('allParts:', allParts)
 
     return allParts
 }

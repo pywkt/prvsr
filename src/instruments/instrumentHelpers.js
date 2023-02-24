@@ -12,9 +12,9 @@ export const removeInstrument = (all, type, num) => {
 }
 
 export const updateInstrument = (all, type, name, channel, num) => {
-    console.log('all:', all)
-    console.log("[type].name:", type)
-    console.log('channel:', channel)
+    // console.log('all:', all)
+    // console.log("[type].name:", type)
+    // console.log('channel:', channel)
     type['synth'] = `${type}-${num}`
     type['channel'].name = `channel-${num}`
     type['synth'].connect(channel)
