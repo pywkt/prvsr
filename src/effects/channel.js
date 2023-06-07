@@ -3,7 +3,7 @@ import * as Tone from 'tone'
 export const allChannels = {}
 
 export const makeChannel = (index) => {
-    console.log("start channel")
+    // console.log("start channel")
     if (!allChannels?.[`channel-${index}`]) {
         allChannels[`channel-${index}`] =
         {
